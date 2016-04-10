@@ -1,7 +1,10 @@
-package cz.vutbr.fit.mulplayer.model;
+package cz.vutbr.fit.mulplayer.entities;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cz.vutbr.fit.mulplayer.entities.BaseModel;
+import cz.vutbr.fit.mulplayer.entities.Song;
 
 /**
  * @author mlyko

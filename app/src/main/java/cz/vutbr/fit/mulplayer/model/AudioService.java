@@ -1,31 +1,65 @@
-package cz.vutbr.fit.mulplayer;
+package cz.vutbr.fit.mulplayer.model;
 
 import android.app.Service;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.provider.MediaStore;
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.vutbr.fit.mulplayer.model.Song;
+import cz.vutbr.fit.mulplayer.AudioController;
+import cz.vutbr.fit.mulplayer.entities.Song;
 
 /**
  * @author mlyko
  * @since 10.04.2016
  */
-public class AudioService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener {
-	@StringDef({PLAY, PAUSE, STOP})
+public class AudioService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, Loader.OnLoadCompleteListener<Cursor> {
+
+	private static final int LOADER_AUDIO_MUSIC = 0;
+
+	@StringDef({INIT, PLAY_PAUSE, STOP})
 	@interface AudioAction {
 	}
 
-	public static final String PLAY = "cz.vutbr.fit.mulplayer.action.PLAY";
-	public static final String PAUSE = "cz.vutbr.fit.mulplayer.action.PAUSE";
+	public static final String INIT = "cz.vutbr.fit.mulplayer.action.INIT";
+	public static final String PLAY_PAUSE = "cz.vutbr.fit.mulplayer.action.PLAY_PAUSE";
 	public static final String STOP = "cz.vutbr.fit.mulplayer.action.STOP";
+
+	@IntDef({PLAYING, PAUSED, STOPPED})
+	@interface AudioState {
+	}
+
+	public static final int STOPPED = 0;
+	public static final int PLAYING = 1;
+	public static final int PAUSED = 2;
+
+	public @AudioService.AudioState int mPlayerState = STOPPED;
+
+	public CursorLoader mCursorLoader;
+
+	//Some audio may be explicitly marked as not being music
+	String mAudioSelector = MediaStore.Audio.Media.IS_MUSIC + " != 0";
+
+	String[] mAudioProjector = {
+			MediaStore.Audio.Media._ID,
+			MediaStore.Audio.Media.ARTIST,
+			MediaStore.Audio.Media.TITLE,
+			MediaStore.Audio.Media.DATA,
+			MediaStore.Audio.Media.DISPLAY_NAME,
+			MediaStore.Audio.Media.DURATION
+	};
 
 	// TODO INIT?
 
@@ -47,32 +81,81 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 
 	List<Song> mPlayQueue = new ArrayList<>();
 
+	AudioController mController = AudioController.getInstance();
+
 	/**
-	 * Does action on service
+	 * Does setAction on service
 	 *
 	 * @param context application's context
 	 * @param action  {@link AudioAction}
 	 */
-	public static void action(Context context, @AudioAction String action) {
+	public static void setAction(Context context, @AudioAction String action) {
 		Intent intent = new Intent(context, AudioService.class);
 		intent.setAction(action);
 		context.startService(intent);
 	}
 
+	public interface IAudioPlayerListener {
+		void playPause();
+
+		void stop();
+
+		void next();
+
+		void previous();
+	}
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
+
+		mCursorLoader = new CursorLoader(
+				getApplicationContext(),
+				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+				mAudioProjector,
+				mAudioSelector,
+				null,
+				null
+		);
+
+		mCursorLoader.registerListener(LOADER_AUDIO_MUSIC, this);
+		mCursorLoader.startLoading();
+
 		mMediaPlayer = new MediaPlayer();
 		mMediaPlayer.setOnPreparedListener(this);
 		mMediaPlayer.setOnErrorListener(this);
 		mMediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
 	}
 
+	/**
+	 * Called on the thread that created the Loader when the load is complete.
+	 *
+	 * @param loader the loader that completed the load
+	 * @param cursor   the result of the load
+	 */
+	@Override
+	public void onLoadComplete(Loader<Cursor> loader, Cursor cursor) {
+		while (cursor.moveToNext()) {
+			String artist = cursor.getString(1);
+			String title = cursor.getString(2);
+			String data = cursor.getString(3);
+			String duration = cursor.getString(5);
+			Song song = new Song(artist, title, duration, data);
+			mController.mSongList.add(song);
+		}
+	}
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		mMediaPlayer.release();
+
+		// Stop the cursor loader
+		if (mCursorLoader != null) {
+			mCursorLoader.unregisterListener(this);
+			mCursorLoader.cancelLoad();
+			mCursorLoader.stopLoading();
+		}
 	}
 
 	@Override
@@ -83,11 +166,25 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 			// TODO
 		}
 
-		switch (intent.getAction()) {
-			case PLAY:
-//				mMediaPlayer.setDataSource(); // TODO
-				mMediaPlayer.prepareAsync();
-				break;
+		AudioController controller = AudioController.getInstance();
+		try {
+			switch (intent.getAction()) {
+				case PLAY_PAUSE:
+					switch (mPlayerState) {
+						case PAUSED:
+						case STOPPED:
+							mPlayerState = PLAYING;
+							mMediaPlayer.setDataSource(controller.mSongList.get(0).mData);
+							mMediaPlayer.prepareAsync();
+							break;
+
+						default:
+							mMediaPlayer.stop();
+					}
+					break;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
 

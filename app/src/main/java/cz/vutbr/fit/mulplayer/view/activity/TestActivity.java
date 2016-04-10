@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import cz.vutbr.fit.mulplayer.R;
-import cz.vutbr.fit.mulplayer.model.Song;
+import cz.vutbr.fit.mulplayer.entities.Song;
 
 public class TestActivity extends AppCompatActivity {
 	private Button b1, b2, b3, b4;
