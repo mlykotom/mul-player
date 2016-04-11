@@ -15,6 +15,6 @@ public class MainPresenter  extends BasePresenter{
 	 */
 	public MainPresenter(BaseActivity activity) {
 		super(activity);
-		AudioService.setAction(mActivity, AudioService.INIT);
+		AudioService.fireAction(mActivity, AudioService.INIT);
 	}
 }

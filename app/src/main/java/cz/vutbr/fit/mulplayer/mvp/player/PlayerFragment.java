@@ -37,6 +37,11 @@ public class PlayerFragment extends Fragment {
 	@Bind(R.id.playback_time)
 	TextView mPlaybackTime;
 
+	/**
+	 * Constructor for fragment which can't be constructed classical way because android manages its lifecycle
+	 *
+	 * @return instance of this fragment
+	 */
 	public static PlayerFragment newInstance() {
 		Bundle args = new Bundle();
 		PlayerFragment fragment = new PlayerFragment();
@@ -65,9 +70,11 @@ public class PlayerFragment extends Fragment {
 		super.onStop();
 	}
 
+	// ------ UI actions (ui -> presenter) ------ //
+
 	@OnClick(R.id.button_play_pause)
 	public void playPause() {
-		mPresenter.playPause();
+		mPresenter.playPauseSong();
 	}
 
 	@OnClick(R.id.button_prev)
@@ -94,6 +101,8 @@ public class PlayerFragment extends Fragment {
 		public void onStopTrackingTouch(SeekBar seekBar) {
 		}
 	};
+
+	// ------ UI setters (presenter -> ui) ------ //
 
 	public void setPlayPauseButton(boolean isPlaying) {
 		mPlayPauseButton.setImageResource(isPlaying ? R.drawable.ic_play_arrow_black_24dp : R.drawable.ic_pause_black_24dp);

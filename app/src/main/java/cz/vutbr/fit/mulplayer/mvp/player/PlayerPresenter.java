@@ -14,7 +14,10 @@ import cz.vutbr.fit.mulplayer.model.AudioService;
  */
 public class PlayerPresenter {
 	private static final String TAG = PlayerPresenter.class.getSimpleName();
+
 	PlayerFragment mFragment;
+
+	Song mActualSong;
 
 	int mEndTime;
 	int mActualTime;
@@ -28,32 +31,42 @@ public class PlayerPresenter {
 		EventBus.getDefault().unregister(this);
 	}
 
-	public void playPause() {
-		AudioService.setAction(mFragment.getActivity(), AudioService.PLAY_PAUSE);
+	public void playPauseSong() {
+		AudioService.fireAction(mFragment.getActivity(), AudioService.PLAY_PAUSE);
 	}
 
 	public void nextSong() {
-		AudioService.setAction(mFragment.getActivity(), AudioService.NEXT);
+		AudioService.fireAction(mFragment.getActivity(), AudioService.NEXT);
 	}
 
 	public void previousSong() {
-		AudioService.setAction(mFragment.getActivity(), AudioService.PREVIOUS);
+		AudioService.fireAction(mFragment.getActivity(), AudioService.PREVIOUS);
 	}
 
 	public void playbackSeekbarChanged(int actualTime) {
 		if (actualTime == mActualTime) return;
-		AudioService.setAction(mFragment.getActivity(), AudioService.SEEK_TO, actualTime);
+		AudioService.fireAction(mFragment.getActivity(), AudioService.SEEK_TO, actualTime);
 	}
 
+	/**
+	 * When new song should start/pause playing.
+	 *
+	 * @param event containing information about song and playback info
+	 */
 	@Subscribe
 	public void onEvent(SongEvent event) {
-		Song song = event.song;
+		mActualSong = event.song;
 		mFragment.setPlayPauseButton(!event.isPlaying);
-		mFragment.setPlaybackArtistTitle(song.artist, song.title);
-		mFragment.mPlaybackSeekbar.setMax(song.duration);
-		mEndTime = song.duration;
+		mFragment.setPlaybackArtistTitle(mActualSong.artist, mActualSong.title);
+		mFragment.mPlaybackSeekbar.setMax(mActualSong.duration);
+//		mActualTime = !event.isPlaying ? 0 : mActualTime; // TODO so that time stays the same when pause but from 0 when new song
+		mEndTime = mActualSong.duration;
 	}
 
+	/**
+	 * When song is playing and time changed (called every 100ms) so that UI can be refreshed
+	 * @param event
+	 */
 	@Subscribe
 	public void onEvent(PlaybackEvent event) {
 		mActualTime = event.time;

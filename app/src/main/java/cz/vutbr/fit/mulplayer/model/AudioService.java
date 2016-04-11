@@ -30,40 +30,38 @@ import cz.vutbr.fit.mulplayer.event.SongEvent;
  * @author mlyko
  * @since 10.04.2016
  */
-public class AudioService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, Loader.OnLoadCompleteListener<Cursor> {
+public class AudioService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, Loader.OnLoadCompleteListener<Cursor>, MediaPlayer.OnCompletionListener {
 
 	private static final int LOADER_AUDIO_MUSIC = 0;
 
-	@StringDef({INIT, PLAY_PAUSE, STOP, NEXT, PREVIOUS, SEEK_TO})
+	@StringDef({INIT, PLAY_PAUSE, NEXT, PREVIOUS, SEEK_TO, SHUFFLE_TOGGLE, REPEAT_TOGGLE})
 	@interface AudioAction {
 	}
 
+	private static final int UI_REFRESH_INTERVAL = 500;
+
+	// ----- player actions ----- //
 	public static final String INIT = "cz.vutbr.fit.mulplayer.action.INIT";
 	public static final String PLAY_PAUSE = "cz.vutbr.fit.mulplayer.action.PLAY_PAUSE";
-	public static final String STOP = "cz.vutbr.fit.mulplayer.action.STOP";
 	public static final String NEXT = "cz.vutbr.fit.mulplayer.action.NEXT";
 	public static final String PREVIOUS = "cz.vutbr.fit.mulplayer.action.PREVIOUS";
-
 	public static final String SEEK_TO = "cz.vutbr.fit.mulplayer.action.SEEK_TO";
+	public static final String SHUFFLE_TOGGLE = "cz.vutbr.fit.mulplayer.action.SHUFFLE_TOGGLE";
+	public static final String REPEAT_TOGGLE = "cz.vutbr.fit.mulplayer.action.REPEAT_TOGGLE";
 
 	public static final String ACTION_VALUE = "cz.vutbr.fit.mulplayer.action_value";
 
-	@IntDef({PLAYING, PAUSED, STOPPED})
+	// ----- player states ----- //
+	@IntDef({IDLE, PLAYING, PAUSED})
 	@interface AudioState {
 	}
 
-	public static final int STOPPED = 0;
+	public static final int IDLE = 0;
 	public static final int PLAYING = 1;
 	public static final int PAUSED = 2;
 
-	public @AudioService.AudioState int mPlayerState = STOPPED;
-
-	public CursorLoader mCursorLoader;
-
 	//Some audio may be explicitly marked as not being music
 	String mAudioSelector = MediaStore.Audio.Media.IS_MUSIC + " != 0";
-
-	EventBus mEventBus = EventBus.getDefault();
 
 	String[] mAudioProjector = {
 			MediaStore.Audio.Media._ID,
@@ -74,7 +72,13 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 			MediaStore.Audio.Media.DURATION
 	};
 
-	// TODO INIT?
+	public @AudioService.AudioState int mPlayerState = IDLE;
+	public CursorLoader mCursorLoader;
+	EventBus mEventBus = EventBus.getDefault();
+	MediaPlayer mMediaPlayer = null;
+	List<Song> mPlayQueue = new ArrayList<>();
+	public List<Song> mSongList = new ArrayList<>();
+	private Handler mHandler = new Handler();
 
 	// TODO implement as foreground service !!!
 //	String songName;
@@ -90,25 +94,19 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 //			"Playing: " + songName, pi);
 //	startForeground(NOTIFICATION_ID, notification);
 
-	MediaPlayer mMediaPlayer = null;
-
-	List<Song> mPlayQueue = new ArrayList<>();
-
-	public List<Song> mSongList = new ArrayList<>();
-
 	/**
-	 * Does setAction on service
+	 * Fires specified action on player's service
 	 *
 	 * @param context application's context
 	 * @param action  {@link AudioAction}
 	 */
-	public static void setAction(Context context, @AudioAction String action) {
+	public static void fireAction(Context context, @AudioAction String action) {
 		Intent intent = new Intent(context, AudioService.class);
 		intent.setAction(action);
 		context.startService(intent);
 	}
 
-	public static void setAction(Context context, @AudioAction String action, int value) {
+	public static void fireAction(Context context, @AudioAction String action, int value) {
 		Intent intent = new Intent(context, AudioService.class);
 		intent.setAction(action);
 		intent.putExtra(ACTION_VALUE, value);
@@ -134,6 +132,7 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 		mMediaPlayer = new MediaPlayer();
 		mMediaPlayer.setOnPreparedListener(this);
 		mMediaPlayer.setOnErrorListener(this);
+		mMediaPlayer.setOnCompletionListener(this);
 		mMediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
 	}
 
@@ -160,6 +159,8 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 		super.onDestroy();
 		mMediaPlayer.release();
 
+		mHandler.removeCallbacks(mUpdateSongTime);
+
 		// Stop the CURSOR loader
 		if (mCursorLoader != null) {
 			mCursorLoader.unregisterListener(this);
@@ -173,28 +174,27 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 	}
 
 	public void playSong(Song song) throws IOException {
-		mPlayerState = PLAYING;
 		mMediaPlayer.setDataSource(song.data);
 		mMediaPlayer.prepareAsync();
+		mPlayerState = PLAYING;
 		mEventBus.post(new SongEvent(song, true));
-		mHandler.postDelayed(UpdateSongTime, 100);
+		mHandler.postDelayed(mUpdateSongTime, UI_REFRESH_INTERVAL);
 	}
 
-	private Handler mHandler = new Handler();
 
-	private Runnable UpdateSongTime = new Runnable() {
+	private Runnable mUpdateSongTime = new Runnable() {
 		@SuppressLint("DefaultLocale")
 		public void run() {
 			int actualTime = mMediaPlayer.getCurrentPosition();
 			mEventBus.post(new PlaybackEvent(actualTime));
-			mHandler.postDelayed(this, 100);
+			mHandler.postDelayed(this, UI_REFRESH_INTERVAL);
 		}
 	};
 
 	public void pauseSong(Song song) {
 		mPlayerState = PAUSED;
 		mMediaPlayer.stop();
-		mHandler.removeCallbacks(UpdateSongTime);
+		mHandler.removeCallbacks(mUpdateSongTime);
 		mEventBus.post(new SongEvent(song, false));
 	}
 
@@ -203,29 +203,35 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 
+		String action;
 		if (intent == null) {
-			return START_STICKY;
-			// TODO
+			action = INIT;
+		} else {
+			action = intent.getAction();
 		}
 
 		try {
-			switch (intent.getAction()) {
+			switch (action) {
 				case PLAY_PAUSE:
-					switch (mPlayerState) {
-//						case PAUSED:
-						case STOPPED:
-							playSong(mSongList.get(test));
-							break;
-
-						case PLAYING:
-							pauseSong(mSongList.get(test));
-							break;
-					}
+					if (mPlayerState == PLAYING)
+						pauseSong(mSongList.get(test));
+					else if (mPlayerState == IDLE || mPlayerState == PAUSED)
+						playSong(mSongList.get(test));
 					break;
 
 				case NEXT:
 					test++;
 					mMediaPlayer.stop();
+					mMediaPlayer.reset();
+					mPlayerState = PAUSED;
+					playSong(mSongList.get(test));
+					break;
+
+				case PREVIOUS:
+					test--;
+					mMediaPlayer.stop();
+					mMediaPlayer.reset();
+					mPlayerState = PAUSED;
 					playSong(mSongList.get(test));
 					break;
 
@@ -239,9 +245,8 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 		}
 
 
-		return START_STICKY; // TODO should start after killed?
+		return START_STICKY;
 	}
-
 
 	/**
 	 * Called when the media file is ready for playback.
@@ -251,6 +256,24 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 	@Override
 	public void onPrepared(MediaPlayer mp) {
 		mp.start();
+	}
+
+	/**
+	 * Called when the end of a media source is reached during playback.
+	 *
+	 * @param mp the MediaPlayer that reached the end of the file
+	 */
+	@Override
+	public void onCompletion(MediaPlayer mp) {
+		// TODO should we somehow use 		mMediaPlayer.setNextMediaPlayer(); ??
+
+		mp.stop();
+		mp.reset();
+		try {
+			playSong(mSongList.get(++test));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
