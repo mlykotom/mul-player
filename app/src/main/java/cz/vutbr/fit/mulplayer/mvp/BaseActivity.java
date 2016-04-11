@@ -1,4 +1,4 @@
-package cz.vutbr.fit.mulplayer.view.activity;
+package cz.vutbr.fit.mulplayer.mvp;
 
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -13,7 +13,8 @@ import cz.vutbr.fit.mulplayer.R;
  * @since 10.04.2016
  */
 public class BaseActivity extends AppCompatActivity {
-	ActionBar mActionBar;
+	protected ActionBar mActionBar;
+	protected BasePresenter mPresenter;
 
 	/**
 	 * Helper for initializing app_toolbar and actionbar

@@ -1,4 +1,4 @@
-package cz.vutbr.fit.mulplayer.entities;
+package cz.vutbr.fit.mulplayer.entity;
 
 import java.util.ArrayList;
 import java.util.List;

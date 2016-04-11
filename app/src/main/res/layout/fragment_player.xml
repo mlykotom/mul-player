@@ -2,17 +2,56 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context=".view.fragment.PlayerFragment">
+                tools:context=".mvp.player.PlayerFragment"
+    >
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/playback_artist_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/playback_time"
+        android:layout_centerHorizontal="true"
+        tools:text="Chet Faker - Gold"
+        />
+
+    <TextView
+        android:id="@+id/playback_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/playback_seekbar"
+        android:layout_centerHorizontal="true"
+        tools:text="00:34/03:35"
+        />
+
+    <SeekBar
+        android:id="@+id/playback_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/playback_wrapper"
+        android:layout_alignLeft="@+id/playback_wrapper"
+        android:layout_alignRight="@+id/playback_wrapper"
+        android:layout_alignStart="@+id/playback_wrapper"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:orientation="horizontal">
+        />
 
-        <ImageView
+    <LinearLayout
+        android:id="@+id/playback_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/playback_seekbar"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginLeft="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginEnd="32dp"
+        >
+
+        <ImageButton
             android:id="@+id/button_prev"
+            style="@style/Widget.AppCompat.ImageButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
@@ -21,8 +60,9 @@
             android:src="@drawable/ic_skip_previous_black_24dp"
             />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/button_play_pause"
+            style="@style/Widget.AppCompat.ImageButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginLeft="8dp"
@@ -32,8 +72,9 @@
             android:src="@drawable/ic_play_arrow_black_24dp"
             />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/button_next"
+            style="@style/Widget.AppCompat.ImageButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
@@ -43,7 +84,6 @@
             android:padding="4dp"
             android:src="@drawable/ic_skip_next_black_24dp"
             />
-
     </LinearLayout>
 
 
