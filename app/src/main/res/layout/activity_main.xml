@@ -7,21 +7,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".mvp.main.MainActivity">
+    tools:context=".mvp.main.MainActivity"
+    >
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/appbar_padding_top"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        >
 
         <include layout="@layout/app_toolbar"/>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -32,5 +35,16 @@
         android:layout_weight="1"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
+
+
+    <!-- TODO fragment as bottom sheet -->
+    <!--<fragment-->
+        <!--android:id="@+id/asdfgh"-->
+        <!--android:name="cz.vutbr.fit.mulplayer.mvp.player.PlayerFragment"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="80dp"-->
+        <!--app:layout_behavior="@string/bottom_sheet_behavior"-->
+        <!--tools:layout="@layout/fragment_player"-->
+        <!--/>-->
 
 </android.support.design.widget.CoordinatorLayout>

@@ -67,7 +67,7 @@
             android:layout_height="48dp"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:background="@drawable/oval_accent"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
             android:src="@drawable/ic_play_arrow_black_24dp"
             />

@@ -215,10 +215,14 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 		try {
 			switch (action) {
 				case PLAY_PAUSE:
-					if (mPlayerState == PLAYING)
+					if (mMediaPlayer.isPlaying()) {
 						pauseSong(mSongList.get(test));
-					else if (mPlayerState == IDLE || mPlayerState == PAUSED)
-						playSong(mSongList.get(test));
+					} else {
+						if (mPlayerState == PAUSED)
+							mMediaPlayer.start();
+						else if (mPlayerState == IDLE)
+							playSong(mSongList.get(test));
+					}
 					break;
 
 				case NEXT:
