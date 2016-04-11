@@ -65,6 +65,12 @@ public class PlayerFragment extends Fragment implements IPlayerView {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+    @Override
     public void onStop() {
         mPresenter.onStop();
         super.onStop();

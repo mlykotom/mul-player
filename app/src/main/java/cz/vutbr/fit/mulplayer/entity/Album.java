@@ -10,7 +10,7 @@ import java.util.List;
 public class Album extends BaseModel {
 	public List<Song> mSongs = new ArrayList<>();
 
-	public Album(String mId) {
+	public Album(long mId) {
 		super(mId);
 	}
 }

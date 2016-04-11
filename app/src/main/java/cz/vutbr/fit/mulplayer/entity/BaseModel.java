@@ -5,17 +5,17 @@ package cz.vutbr.fit.mulplayer.entity;
  * @since 08.04.2016
  */
 public class BaseModel {
-    protected String mId;
+    protected long mId;
 
-    public BaseModel(String mId) {
-        this.mId = mId;
+    public BaseModel(long id) {
+        mId = id;
     }
 
-    public String getId() {
+    public long getId() {
         return mId;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         mId = id;
     }
 }

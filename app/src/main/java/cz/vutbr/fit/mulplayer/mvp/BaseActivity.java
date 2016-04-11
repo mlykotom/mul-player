@@ -13,31 +13,31 @@ import cz.vutbr.fit.mulplayer.R;
  * @author mlyko
  * @since 10.04.2016
  */
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 	protected ActionBar mActionBar;
-	protected BasePresenter mBasePresenter;
+	protected BasePresenter mPresenter;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mBasePresenter.onCreate(savedInstanceState);
+		mPresenter.onCreate(savedInstanceState);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mBasePresenter.onResume();
+		mPresenter.onResume();
 	}
 
 	@Override
 	protected void onPause() {
-		mBasePresenter.onPause();
+		mPresenter.onPause();
 		super.onPause();
 	}
 
 	@Override
 	protected void onDestroy() {
-		mBasePresenter.onDestroy();
+		mPresenter.onDestroy();
 		super.onDestroy();
 	}
 

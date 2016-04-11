@@ -8,8 +8,8 @@ import android.support.v4.app.Fragment;
  * @author mlyko
  * @since 10.04.2016
  */
-public class BaseFragment extends Fragment {
-    private BasePresenter mPresenter;
+public abstract class BaseFragment extends Fragment {
+    protected BasePresenter mPresenter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

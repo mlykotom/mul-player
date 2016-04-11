@@ -11,8 +11,8 @@ public class Song extends BaseModel {
 	public String data;
 	public int duration;
 
-	public Song(String artist, String title, int duration, String data) {
-		super("ASDFGHJ"); // TODO
+	public Song(long id, String artist, String title, int duration, String data) {
+		super(id);
 
 		this.artist = artist;
 		this.title = title;
