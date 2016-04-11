@@ -1,4 +1,4 @@
-package cz.vutbr.fit.mulplayer.entities;
+package cz.vutbr.fit.mulplayer.entity;
 
 /**
  * @author mlyko

@@ -1,5 +1,6 @@
 package cz.vutbr.fit.mulplayer.model;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.provider.MediaStore;
@@ -14,12 +16,15 @@ import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.vutbr.fit.mulplayer.AudioController;
-import cz.vutbr.fit.mulplayer.entities.Song;
+import cz.vutbr.fit.mulplayer.entity.Song;
+import cz.vutbr.fit.mulplayer.event.PlaybackEvent;
+import cz.vutbr.fit.mulplayer.event.SongEvent;
 
 /**
  * @author mlyko
@@ -29,13 +34,19 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 
 	private static final int LOADER_AUDIO_MUSIC = 0;
 
-	@StringDef({INIT, PLAY_PAUSE, STOP})
+	@StringDef({INIT, PLAY_PAUSE, STOP, NEXT, PREVIOUS, SEEK_TO})
 	@interface AudioAction {
 	}
 
 	public static final String INIT = "cz.vutbr.fit.mulplayer.action.INIT";
 	public static final String PLAY_PAUSE = "cz.vutbr.fit.mulplayer.action.PLAY_PAUSE";
 	public static final String STOP = "cz.vutbr.fit.mulplayer.action.STOP";
+	public static final String NEXT = "cz.vutbr.fit.mulplayer.action.NEXT";
+	public static final String PREVIOUS = "cz.vutbr.fit.mulplayer.action.PREVIOUS";
+
+	public static final String SEEK_TO = "cz.vutbr.fit.mulplayer.action.SEEK_TO";
+
+	public static final String ACTION_VALUE = "cz.vutbr.fit.mulplayer.action_value";
 
 	@IntDef({PLAYING, PAUSED, STOPPED})
 	@interface AudioState {
@@ -51,6 +62,8 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 
 	//Some audio may be explicitly marked as not being music
 	String mAudioSelector = MediaStore.Audio.Media.IS_MUSIC + " != 0";
+
+	EventBus mEventBus = EventBus.getDefault();
 
 	String[] mAudioProjector = {
 			MediaStore.Audio.Media._ID,
@@ -81,7 +94,7 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 
 	List<Song> mPlayQueue = new ArrayList<>();
 
-	AudioController mController = AudioController.getInstance();
+	public List<Song> mSongList = new ArrayList<>();
 
 	/**
 	 * Does setAction on service
@@ -95,14 +108,11 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 		context.startService(intent);
 	}
 
-	public interface IAudioPlayerListener {
-		void playPause();
-
-		void stop();
-
-		void next();
-
-		void previous();
+	public static void setAction(Context context, @AudioAction String action, int value) {
+		Intent intent = new Intent(context, AudioService.class);
+		intent.setAction(action);
+		intent.putExtra(ACTION_VALUE, value);
+		context.startService(intent);
 	}
 
 	@Override
@@ -131,7 +141,7 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 	 * Called on the thread that created the Loader when the load is complete.
 	 *
 	 * @param loader the loader that completed the load
-	 * @param cursor   the result of the load
+	 * @param cursor the result of the load
 	 */
 	@Override
 	public void onLoadComplete(Loader<Cursor> loader, Cursor cursor) {
@@ -139,9 +149,9 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 			String artist = cursor.getString(1);
 			String title = cursor.getString(2);
 			String data = cursor.getString(3);
-			String duration = cursor.getString(5);
+			int duration = cursor.getInt(5);
 			Song song = new Song(artist, title, duration, data);
-			mController.mSongList.add(song);
+			mSongList.add(song);
 		}
 	}
 
@@ -150,13 +160,45 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 		super.onDestroy();
 		mMediaPlayer.release();
 
-		// Stop the cursor loader
+		// Stop the CURSOR loader
 		if (mCursorLoader != null) {
 			mCursorLoader.unregisterListener(this);
 			mCursorLoader.cancelLoad();
 			mCursorLoader.stopLoading();
 		}
 	}
+
+	public void nextSong(Song song) {
+
+	}
+
+	public void playSong(Song song) throws IOException {
+		mPlayerState = PLAYING;
+		mMediaPlayer.setDataSource(song.data);
+		mMediaPlayer.prepareAsync();
+		mEventBus.post(new SongEvent(song, true));
+		mHandler.postDelayed(UpdateSongTime, 100);
+	}
+
+	private Handler mHandler = new Handler();
+
+	private Runnable UpdateSongTime = new Runnable() {
+		@SuppressLint("DefaultLocale")
+		public void run() {
+			int actualTime = mMediaPlayer.getCurrentPosition();
+			mEventBus.post(new PlaybackEvent(actualTime));
+			mHandler.postDelayed(this, 100);
+		}
+	};
+
+	public void pauseSong(Song song) {
+		mPlayerState = PAUSED;
+		mMediaPlayer.stop();
+		mHandler.removeCallbacks(UpdateSongTime);
+		mEventBus.post(new SongEvent(song, false));
+	}
+
+	private int test = 0;
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -166,21 +208,30 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 			// TODO
 		}
 
-		AudioController controller = AudioController.getInstance();
 		try {
 			switch (intent.getAction()) {
 				case PLAY_PAUSE:
 					switch (mPlayerState) {
-						case PAUSED:
+//						case PAUSED:
 						case STOPPED:
-							mPlayerState = PLAYING;
-							mMediaPlayer.setDataSource(controller.mSongList.get(0).mData);
-							mMediaPlayer.prepareAsync();
+							playSong(mSongList.get(test));
 							break;
 
-						default:
-							mMediaPlayer.stop();
+						case PLAYING:
+							pauseSong(mSongList.get(test));
+							break;
 					}
+					break;
+
+				case NEXT:
+					test++;
+					mMediaPlayer.stop();
+					playSong(mSongList.get(test));
+					break;
+
+				case SEEK_TO:
+					int seekTime = intent.getIntExtra(ACTION_VALUE, mMediaPlayer.getCurrentPosition());
+					mMediaPlayer.seekTo(seekTime);
 					break;
 			}
 		} catch (IOException e) {
@@ -229,6 +280,14 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 		return false;
 	}
 
+
+	/**
+	 * Note: ignore it
+	 * Useless cause service is not bound to any activity
+	 *
+	 * @param intent startup intent
+	 * @return binder
+	 */
 	@Nullable
 	@Override
 	public IBinder onBind(Intent intent) {
