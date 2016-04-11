@@ -15,14 +15,13 @@ import cz.vutbr.fit.mulplayer.model.AudioService;
 public class PlayerPresenter {
 	private static final String TAG = PlayerPresenter.class.getSimpleName();
 
-	PlayerFragment mFragment;
-
+	IPlayerView mFragment;
 	Song mActualSong;
 
 	int mEndTime;
 	int mActualTime;
 
-	public PlayerPresenter(PlayerFragment fragment) {
+	public PlayerPresenter(IPlayerView fragment) {
 		mFragment = fragment;
 		EventBus.getDefault().register(this);
 	}
@@ -58,7 +57,7 @@ public class PlayerPresenter {
 		mActualSong = event.song;
 		mFragment.setPlayPauseButton(!event.isPlaying);
 		mFragment.setPlaybackArtistTitle(mActualSong.artist, mActualSong.title);
-		mFragment.mPlaybackSeekbar.setMax(mActualSong.duration);
+		mFragment.setPlaybackSeekbarMax(mActualSong.duration);
 //		mActualTime = !event.isPlaying ? 0 : mActualTime; // TODO so that time stays the same when pause but from 0 when new song
 		mEndTime = mActualSong.duration;
 	}

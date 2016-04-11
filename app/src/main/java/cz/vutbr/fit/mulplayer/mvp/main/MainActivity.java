@@ -14,7 +14,7 @@ import cz.vutbr.fit.mulplayer.view.adapter.BaseFragmentPagerAdapter;
 import cz.vutbr.fit.mulplayer.mvp.player.PlayerFragment;
 
 public class MainActivity extends BaseActivity {
-
+	private MainPresenter mPresenter;
 	private BaseFragmentPagerAdapter mBaseFragmentPagerAdapter;
 	@Bind(R.id.container) ViewPager mViewPager;
 	@Bind(R.id.tabs) TabLayout mTabLayout;
