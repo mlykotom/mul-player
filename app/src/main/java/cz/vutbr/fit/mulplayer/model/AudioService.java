@@ -144,12 +144,14 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 	 */
 	@Override
 	public void onLoadComplete(Loader<Cursor> loader, Cursor cursor) {
+		DataRepository rep = DataRepository.getInstance();
 		while (cursor.moveToNext()) {
 			String artist = cursor.getString(1);
 			String title = cursor.getString(2);
 			String data = cursor.getString(3);
 			int duration = cursor.getInt(5);
 			Song song = new Song(artist, title, duration, data);
+			rep.mSongList.add(song); // TODO DIFFERENT WAY !!!!!!!!!!!!!
 			mSongList.add(song);
 		}
 	}
