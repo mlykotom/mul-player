@@ -47,13 +47,19 @@ public class AlbumsListAdapter extends CursorRecyclerAdapter<AlbumsListAdapter.A
 		if (artPath != null) {
 			mPicasso.load(new File(artPath)).transform(mCircleTransform).into(holder.mIcon);
 		}
+		else{
+//			holder.mIcon.setImageResource(); // TODO "no album image resource"
+		}
 
+		// album
 		String album = cursor.getString(from[2]);
 		holder.mAlbum.setText(album);
 
+		// artist
 		String artist = cursor.getString(from[3]);
 		holder.mArtist.setText(artist);
 
+		// song count
 		int songCount = cursor.getInt(from[4]);
 		String quantityString = mContext.getResources().getQuantityString(R.plurals.albums_songs, songCount, songCount);
 		holder.mSongCount.setText(quantityString);

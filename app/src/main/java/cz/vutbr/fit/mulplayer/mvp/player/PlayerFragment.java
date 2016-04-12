@@ -1,7 +1,7 @@
 package cz.vutbr.fit.mulplayer.mvp.player;
 
 
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,6 +11,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -109,8 +111,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 	// ------ UI setters (presenter -> ui) ------ //
 
 	@Override
-	public void setAlbumArtwork(Bitmap bitmap) {
-		mPlaybackAlbumArt.setImageBitmap(bitmap);
+	public void setAlbumArtwork(Uri albumArtwork) {
+		Picasso.with(getActivity()).load(albumArtwork).into(mPlaybackAlbumArt);
 	}
 
 	@Override

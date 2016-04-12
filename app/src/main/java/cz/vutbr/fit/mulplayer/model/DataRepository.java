@@ -20,8 +20,6 @@ public class DataRepository {
 
 	public SparseArray<Song> mSongsIdList = new SparseArray<>();
 
-	public Queue<Song> mActiveQueue = new ArrayDeque<>();
-
 	public static DataRepository getInstance() {
 		return ourInstance;
 	}

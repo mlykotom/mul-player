@@ -34,7 +34,6 @@ import cz.vutbr.fit.mulplayer.event.SongEvent;
 public class AudioService extends Service implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, Loader.OnLoadCompleteListener<Cursor>, MediaPlayer.OnCompletionListener {
 
 	private static final int LOADER_AUDIO_MUSIC = 0;
-	private static final int LOADER_AUDIO_IMAGE = 1;
 
 	@StringDef({INIT, PLAY_PAUSE, NEXT, PREVIOUS, SEEK_TO, SHUFFLE_TOGGLE, REPEAT_TOGGLE})
 	@interface AudioAction {
@@ -70,18 +69,21 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 			MediaStore.Audio.Media.ARTIST,
 			MediaStore.Audio.Media.TITLE,
 			MediaStore.Audio.Media.DATA,
-			MediaStore.Audio.Media.DISPLAY_NAME,
 			MediaStore.Audio.Media.DURATION,
-			MediaStore.Audio.Media.ALBUM_ID
+			MediaStore.Audio.Media.ALBUM_ID,
+			MediaStore.Audio.Media.ALBUM,
+			MediaStore.Audio.Media.TRACK,
+			// -- other (sorting,etc)
+			MediaStore.Audio.Media.ALBUM_KEY,
+			MediaStore.Audio.Media.ARTIST_KEY,
+			MediaStore.Audio.Media.TITLE_KEY,
 	};
 
 	public @AudioState int mPlayerState = IDLE;
 	public CursorLoader mAudioCursorLoader;
-	private CursorLoader mImageCursorLoader;
 
 	EventBus mEventBus = EventBus.getDefault();
 	MediaPlayer mMediaPlayer = null;
-	List<Song> mPlayQueue = new ArrayList<>();
 	public List<Song> mSongList = new ArrayList<>();
 	private Handler mHandler = new Handler();
 
@@ -104,11 +106,6 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 		context.startService(intent);
 	}
 
-	String[] projection = {
-			MediaStore.Audio.Albums._ID,
-			MediaStore.Audio.AlbumColumns.ALBUM_ART
-	};
-
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -122,21 +119,9 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 				null
 		);
 
-//		mImageCursorLoader = new CursorLoader(
-//				getApplicationContext(),
-//				MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
-//				projection,
-//				null,
-//				null,
-//				null
-//		);
-
-
 		mAudioCursorLoader.registerListener(LOADER_AUDIO_MUSIC, this);
 		mAudioCursorLoader.startLoading();
 
-//		mImageCursorLoader.registerListener(LOADER_AUDIO_IMAGE, this);
-//		mImageCursorLoader.startLoading();
 
 		mMediaPlayer = new MediaPlayer();
 		mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -160,8 +145,12 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 			String artist = cursor.getString(1);
 			String title = cursor.getString(2);
 			String filepath = cursor.getString(3);
-			int duration = cursor.getInt(5);
-			Song song = new Song(id, artist, title, duration, filepath);
+			int duration = cursor.getInt(4);
+			long albumId = cursor.getLong(5);
+			String album = cursor.getString(6);
+			int trackNum = cursor.getInt(7);
+
+			Song song = new Song(id, artist, title, duration, filepath, albumId, album);
 			rep.mSongList.add(song); // TODO DIFFERENT WAY !!!!!!!!!!!!!
 			mSongList = rep.mSongList;
 		}

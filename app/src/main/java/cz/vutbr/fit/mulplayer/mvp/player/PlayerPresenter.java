@@ -1,5 +1,9 @@
 package cz.vutbr.fit.mulplayer.mvp.player;
 
+import android.content.ContentUris;
+import android.net.Uri;
+import android.provider.MediaStore;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -49,6 +53,8 @@ public class PlayerPresenter extends BaseFragmentPresenter {
 		AudioService.fireAction(mFragment.getActivity(), AudioService.SEEK_TO, actualTime);
 	}
 
+	final public static Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
+
 	/**
 	 * When new song should start/pause playing.
 	 *
@@ -62,6 +68,9 @@ public class PlayerPresenter extends BaseFragmentPresenter {
 		mFragment.setPlaybackSeekbarMax(mActualSong.duration);
 //		mActualTime = !event.isPlaying ? 0 : mActualTime; // TODO so that time stays the same when pause but from 0 when new song
 		mEndTime = mActualSong.duration;
+		// getting URI for album artwork
+		Uri uri = ContentUris.withAppendedId(sArtworkUri, mActualSong.albumId);
+		mFragment.setAlbumArtwork(uri);
 	}
 
 	/**
