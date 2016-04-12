@@ -58,7 +58,7 @@ public class SongsListAdapter extends RecyclerViewSelectableAdapter<RecyclerView
 	}
 
 	/**
-	 * Updates data with new & tries to animate
+	 * Updates filepath with new & tries to animate
 	 *
 	 * @param songList
 	 */

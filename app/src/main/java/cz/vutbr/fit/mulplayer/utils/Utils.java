@@ -1,4 +1,4 @@
-package cz.vutbr.fit.mulplayer;
+package cz.vutbr.fit.mulplayer.utils;
 
 import android.annotation.SuppressLint;
 

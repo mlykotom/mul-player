@@ -8,15 +8,15 @@ public class Song extends BaseModel {
 
 	public String artist;
 	public String title;
-	public String data;
+	public String filepath;
 	public int duration;
 
-	public Song(long id, String artist, String title, int duration, String data) {
+	public Song(long id, String artist, String title, int duration, String filepath) {
 		super(id);
 
 		this.artist = artist;
 		this.title = title;
 		this.duration = duration;
-		this.data = data;
+		this.filepath = filepath;
 	}
 }

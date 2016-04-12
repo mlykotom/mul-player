@@ -7,12 +7,14 @@ import cz.vutbr.fit.mulplayer.entity.Song;
 import cz.vutbr.fit.mulplayer.event.PlaybackEvent;
 import cz.vutbr.fit.mulplayer.event.SongEvent;
 import cz.vutbr.fit.mulplayer.model.AudioService;
+import cz.vutbr.fit.mulplayer.mvp.BaseFragmentPresenter;
+import cz.vutbr.fit.mulplayer.mvp.IBaseView;
 
 /**
  * @author mlyko
  * @since 11.04.2016
  */
-public class PlayerPresenter {
+public class PlayerPresenter extends BaseFragmentPresenter {
 	private static final String TAG = PlayerPresenter.class.getSimpleName();
 
 	IPlayerView mFragment;
@@ -21,8 +23,8 @@ public class PlayerPresenter {
 	int mEndTime;
 	int mActualTime;
 
-	public PlayerPresenter(IPlayerView fragment) {
-		mFragment = fragment;
+	public PlayerPresenter(IBaseView fragment) {
+		mFragment = (IPlayerView) fragment;
 		EventBus.getDefault().register(this);
 	}
 
@@ -64,6 +66,7 @@ public class PlayerPresenter {
 
 	/**
 	 * When song is playing and time changed (called every 100ms) so that UI can be refreshed
+	 *
 	 * @param event
 	 */
 	@Subscribe

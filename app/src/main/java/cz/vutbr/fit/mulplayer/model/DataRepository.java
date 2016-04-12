@@ -2,8 +2,10 @@ package cz.vutbr.fit.mulplayer.model;
 
 import android.util.SparseArray;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 import cz.vutbr.fit.mulplayer.entity.Song;
 
@@ -17,6 +19,8 @@ public class DataRepository {
 	public List<Song> mSongList = new ArrayList<>();
 
 	public SparseArray<Song> mSongsIdList = new SparseArray<>();
+
+	public Queue<Song> mActiveQueue = new ArrayDeque<>();
 
 	public static DataRepository getInstance() {
 		return ourInstance;
