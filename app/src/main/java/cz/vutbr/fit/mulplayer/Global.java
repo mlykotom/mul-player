@@ -16,7 +16,7 @@ public class Global extends Application {
 		Picasso.Builder builder = new Picasso.Builder(this);
 		Picasso built = builder.build();
 		built.setIndicatorsEnabled(true);
-		built.setLoggingEnabled(true);
+		built.setLoggingEnabled(false);
 		Picasso.setSingletonInstance(built);
 	}
 }

@@ -1,5 +1,6 @@
 package cz.vutbr.fit.mulplayer.mvp;
 
+import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
@@ -12,7 +13,7 @@ import cz.vutbr.fit.mulplayer.R;
  * @author mlyko
  * @since 10.04.2016
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements IBaseView{
 	protected ActionBar mActionBar;
 	protected BaseActivityPresenter mPresenter;
 
@@ -32,6 +33,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 	protected void onDestroy() {
 		mPresenter.onDestroy();
 		super.onDestroy();
+	}
+
+	@Override
+	public Activity getActivity() {
+		return this;
 	}
 
 	/**

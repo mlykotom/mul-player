@@ -1,5 +1,7 @@
 package cz.vutbr.fit.mulplayer.mvp.main;
 
+import android.os.Bundle;
+
 import cz.vutbr.fit.mulplayer.model.AudioService;
 import cz.vutbr.fit.mulplayer.mvp.BaseActivity;
 import cz.vutbr.fit.mulplayer.mvp.BaseActivityPresenter;
@@ -9,13 +11,13 @@ import cz.vutbr.fit.mulplayer.mvp.BaseActivityPresenter;
  * @since 11.04.2016
  */
 public class MainPresenter extends BaseActivityPresenter {
-	/**
-	 * Behaves like constructor + onCreate()
-	 *
-	 * @param activity bound to
-	 */
 	public MainPresenter(BaseActivity activity) {
 		super(activity);
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		AudioService.fireAction(mBaseActivity, AudioService.INIT);
 	}
 }

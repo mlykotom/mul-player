@@ -14,6 +14,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.mvp.BaseFragment;
+import cz.vutbr.fit.mulplayer.utils.SimpleDividerItemDecoration;
 
 /**
  * @author mlyko
@@ -68,9 +69,10 @@ public class AlbumsListFragment extends BaseFragment implements IAlbumsListView 
 		mAlbumsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 		mAlbumsList.setItemAnimator(new DefaultItemAnimator());
 		mAlbumsList.setAdapter(mAlbumsListAdapter);
+		mAlbumsList.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
 	}
 
 	public void updateList(Cursor data){
-		mAlbumsListAdapter.swapCursor(data);
+		mAlbumsListAdapter.changeCursor(data);
 	}
 }

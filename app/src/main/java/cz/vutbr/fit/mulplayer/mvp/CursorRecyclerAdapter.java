@@ -1,5 +1,4 @@
-package cz.vutbr.fit.mulplayer.mvp;
-/*
+package cz.vutbr.fit.mulplayer.mvp;/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2015 ARNAUD FRUGIER

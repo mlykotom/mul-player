@@ -17,8 +17,8 @@ import cz.vutbr.fit.mulplayer.mvp.IBaseView;
 public class PlayerPresenter extends BaseFragmentPresenter {
 	private static final String TAG = PlayerPresenter.class.getSimpleName();
 
-	IPlayerView mFragment;
-	Song mActualSong;
+	public IPlayerView mFragment;
+	public Song mActualSong;
 
 	int mEndTime;
 	int mActualTime;

@@ -10,5 +10,5 @@
     android:layout_marginTop="8dp"
     app:layoutManager="LinearLayoutManager"
     tools:context=".mvp.albums_list.AlbumsListFragment"
-    tools:listitem="@layout/item_list_artist"
+    tools:listitem="@layout/item_list_album"
     />

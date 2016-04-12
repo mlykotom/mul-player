@@ -7,4 +7,19 @@
     <!-- Menu -->
     <!--<string name="menu.settings">Settings</string>-->
     <string name="image.description.album_art">Album\'s art</string>
+
+    <!-- albums -->
+    <string name="albums.title">Albums</string>
+
+    <plurals name="albums_songs">
+        <item quantity="one">1 song</item>
+        <item quantity="other">%d songs</item>
+    </plurals>
+
+    <!-- songs -->
+    <string name="songs.title">Songs</string>
+
+    <!-- playback -->
+    <string name="playback.title">Now playing</string>
+    <string name="playback.play">Play</string>
 </resources>

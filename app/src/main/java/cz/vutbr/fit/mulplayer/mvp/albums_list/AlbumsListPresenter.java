@@ -21,7 +21,9 @@ public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader
 	String[] mProjection = {
 			MediaStore.Audio.Albums._ID,
 			MediaStore.Audio.Albums.ALBUM_ART,
-			MediaStore.Audio.Albums.ALBUM
+			MediaStore.Audio.Albums.ALBUM,
+			MediaStore.Audio.Albums.ARTIST,
+			MediaStore.Audio.Albums.NUMBER_OF_SONGS
 	};
 
 	public AlbumsListPresenter(AlbumsListFragment fragment) {
@@ -37,7 +39,7 @@ public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader
 				mProjection,
 				null,
 				null,
-				null
+				MediaStore.Audio.Albums.ALBUM_KEY
 		);
 
 		mCursorLoader.registerListener(LOADER_ALBUMS_MUSIC, this);

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.io.File;
 
@@ -17,16 +18,18 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.mvp.CursorRecyclerAdapter;
+import cz.vutbr.fit.mulplayer.utils.CircleTransform;
 
 /**
  * @author mlyko
  * @since 12.04.2016
  */
-public class AlbumsListAdapter extends CursorRecyclerAdapter<AlbumsListAdapter.ArtistViewHolder> {
+public class AlbumsListAdapter extends CursorRecyclerAdapter<AlbumsListAdapter.AlbumViewHolder> {
 	private int[] mFrom;
 	private String[] mOriginalFrom;
 	private Context mContext;
 	private Picasso mPicasso;
+	private Transformation mCircleTransform = new CircleTransform();
 
 	public AlbumsListAdapter(Context context, Cursor c, String[] from) {
 		super(c);
@@ -37,22 +40,29 @@ public class AlbumsListAdapter extends CursorRecyclerAdapter<AlbumsListAdapter.A
 	}
 
 	@Override
-	public void onBindViewHolder(final ArtistViewHolder holder, Cursor cursor) {
+	public void onBindViewHolder(final AlbumViewHolder holder, Cursor cursor) {
 		final int[] from = mFrom;
 
 		String artPath = cursor.getString(from[1]);
 		if (artPath != null) {
-			mPicasso.load(new File(artPath)).into(holder.mIcon);
+			mPicasso.load(new File(artPath)).transform(mCircleTransform).into(holder.mIcon);
 		}
 
-		String artist = cursor.getString(from[2]);
-		holder.mTitle.setText(artist);
+		String album = cursor.getString(from[2]);
+		holder.mAlbum.setText(album);
+
+		String artist = cursor.getString(from[3]);
+		holder.mArtist.setText(artist);
+
+		int songCount = cursor.getInt(from[4]);
+		String quantityString = mContext.getResources().getQuantityString(R.plurals.albums_songs, songCount, songCount);
+		holder.mSongCount.setText(quantityString);
 	}
 
 	@Override
-	public ArtistViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_artist, parent, false);
-		return new ArtistViewHolder(v);
+	public AlbumViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_album, parent, false);
+		return new AlbumViewHolder(v);
 	}
 
 
@@ -85,17 +95,19 @@ public class AlbumsListAdapter extends CursorRecyclerAdapter<AlbumsListAdapter.A
 	}
 
 	/**
-	 * Artist viewholder
+	 * Album viewholder
 	 */
-	class ArtistViewHolder extends RecyclerView.ViewHolder {
+	class AlbumViewHolder extends RecyclerView.ViewHolder {
 		@Bind(R.id.item_icon)
 		public ImageView mIcon;
 		@Bind(R.id.item_title)
-		public TextView mTitle;
+		public TextView mAlbum;
 		@Bind(R.id.item_subtitle)
-		public TextView mSubTitle;
+		public TextView mArtist;
+		@Bind(R.id.item_additional)
+		public TextView mSongCount;
 
-		public ArtistViewHolder(View itemView) {
+		public AlbumViewHolder(View itemView) {
 			super(itemView);
 			ButterKnife.bind(this, itemView);
 		}
