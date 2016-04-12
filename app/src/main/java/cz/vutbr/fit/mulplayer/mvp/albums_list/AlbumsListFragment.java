@@ -6,13 +6,16 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.R;
+import cz.vutbr.fit.mulplayer.model.adapter.ClickableRecyclerAdapter;
 import cz.vutbr.fit.mulplayer.mvp.BaseFragment;
 import cz.vutbr.fit.mulplayer.utils.SimpleDividerItemDecoration;
 
@@ -65,7 +68,12 @@ public class AlbumsListFragment extends BaseFragment implements IAlbumsListView 
 	// ------ UI setters (presenter -> ui) ------ //
 
 	public void initList(String[] projection) {
-		mAlbumsListAdapter = new AlbumsListAdapter(getActivity(), null, projection);
+		mAlbumsListAdapter = new AlbumsListAdapter(getActivity(), null, projection, new ClickableRecyclerAdapter.OnItemClickListener() {
+			@Override
+			public void onRecyclerViewItemClick(int position, int viewType) {
+				Toast.makeText(getActivity(), "ASDFGHJ", Toast.LENGTH_LONG).show();
+			}
+		});
 		mAlbumsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 		mAlbumsList.setItemAnimator(new DefaultItemAnimator());
 		mAlbumsList.setAdapter(mAlbumsListAdapter);

@@ -1,4 +1,4 @@
-package cz.vutbr.fit.mulplayer.mvp;/*
+package cz.vutbr.fit.mulplayer.model.adapter;/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2015 ARNAUD FRUGIER
@@ -44,7 +44,7 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
 	}
 
 	@Override
-	public final void onBindViewHolder (VH holder, int position) {
+	public final void onBindViewHolder(VH holder, int position) {
 		if (!mDataValid) {
 			throw new IllegalStateException("this should only be called when the cursor is valid");
 		}
@@ -62,7 +62,7 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
 	}
 
 	@Override
-	public int getItemCount () {
+	public int getItemCount() {
 		if (mDataValid && mCursor != null) {
 			return mCursor.getCount();
 		} else {
@@ -71,8 +71,8 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
 	}
 
 	@Override
-	public long getItemId (int position) {
-		if(hasStableIds() && mDataValid && mCursor != null){
+	public long getItemId(int position) {
+		if (hasStableIds() && mDataValid && mCursor != null) {
 			if (mCursor.moveToPosition(position)) {
 				return mCursor.getLong(mRowIDColumn);
 			} else {

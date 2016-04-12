@@ -2,7 +2,6 @@ package cz.vutbr.fit.mulplayer.mvp.albums_list;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,8 @@ import java.io.File;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.R;
-import cz.vutbr.fit.mulplayer.mvp.CursorRecyclerAdapter;
+import cz.vutbr.fit.mulplayer.model.adapter.ClickableRecyclerAdapter;
+import cz.vutbr.fit.mulplayer.model.adapter.CursorRecyclerAdapter;
 import cz.vutbr.fit.mulplayer.utils.CircleTransform;
 
 /**
@@ -30,11 +30,14 @@ public class AlbumsListAdapter extends CursorRecyclerAdapter<AlbumsListAdapter.A
 	private Context mContext;
 	private Picasso mPicasso;
 	private Transformation mCircleTransform = new CircleTransform();
+	private ClickableRecyclerAdapter.OnItemClickListener mOnItemClickListener;
 
-	public AlbumsListAdapter(Context context, Cursor c, String[] from) {
+
+	public AlbumsListAdapter(Context context, Cursor c, String[] from, ClickableRecyclerAdapter.OnItemClickListener itemClickListener) {
 		super(c);
 		mContext = context;
 		mOriginalFrom = from;
+		mOnItemClickListener = itemClickListener;
 		mPicasso = Picasso.with(mContext);
 		findColumns(c, from);
 	}
@@ -46,8 +49,7 @@ public class AlbumsListAdapter extends CursorRecyclerAdapter<AlbumsListAdapter.A
 		String artPath = cursor.getString(from[1]);
 		if (artPath != null) {
 			mPicasso.load(new File(artPath)).transform(mCircleTransform).into(holder.mIcon);
-		}
-		else{
+		} else {
 //			holder.mIcon.setImageResource(); // TODO "no album image resource"
 		}
 
@@ -68,7 +70,9 @@ public class AlbumsListAdapter extends CursorRecyclerAdapter<AlbumsListAdapter.A
 	@Override
 	public AlbumViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_album, parent, false);
-		return new AlbumViewHolder(v);
+		AlbumViewHolder vh = new AlbumViewHolder(v);
+		vh.setOnItemClickListener(mOnItemClickListener);
+		return vh;
 	}
 
 
@@ -103,7 +107,7 @@ public class AlbumsListAdapter extends CursorRecyclerAdapter<AlbumsListAdapter.A
 	/**
 	 * Album viewholder
 	 */
-	class AlbumViewHolder extends RecyclerView.ViewHolder {
+	class AlbumViewHolder extends ClickableRecyclerAdapter.ViewHolder {
 		@Bind(R.id.item_icon)
 		public ImageView mIcon;
 		@Bind(R.id.item_title)
