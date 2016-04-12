@@ -33,4 +33,26 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+
+    <!-- Dividers -->
+
+    <!--<style name="Divider">-->
+        <!--<item name="android:layout_width">match_parent</item>-->
+        <!--<item name="android:layout_height">@dimen/divider_size</item>-->
+        <!--<item name="android:background">@drawable/line_divider</item> &lt;!&ndash; TODO inset &ndash;&gt;-->
+    <!--</style>-->
+
+    <!--<style name="Divider.Full">-->
+        <!--<item name="android:background">@color/line_divider</item>-->
+    <!--</style>-->
+
+    <!--<style name="DividerListView">-->
+        <!--<item name="android:divider">@drawable/beeeon_divider_inset</item>-->
+        <!--<item name="android:dividerHeight">@dimen/divider_size</item>-->
+    <!--</style>-->
+
+    <!--<style name="DividerListView.Full">-->
+        <!--<item name="android:divider">@color/beeeon_divider</item>-->
+    <!--</style>-->
+    <!---->
 </resources>

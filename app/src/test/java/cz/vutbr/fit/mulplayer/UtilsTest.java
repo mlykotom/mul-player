@@ -2,6 +2,8 @@ package cz.vutbr.fit.mulplayer;
 
 import org.junit.Test;
 
+import cz.vutbr.fit.mulplayer.utils.Utils;
+
 import static org.junit.Assert.assertEquals;
 
 /**

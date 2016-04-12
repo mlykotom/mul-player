@@ -10,20 +10,32 @@
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
     android:paddingStart="8dp"
-    tools:showIn="@layout/fragment_songs_list"
     >
+
+    <ImageView
+        android:id="@+id/item_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/oval_accent"
+        />
 
     <TextView
         android:id="@+id/item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_toLeftOf="@+id/item_additional"
-        android:layout_toStartOf="@+id/item_additional"
+        android:layout_alignTop="@+id/item_icon"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="-2dp"
+        android:layout_toEndOf="@+id/item_icon"
+        android:layout_toRightOf="@+id/item_icon"
         android:singleLine="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textColor="@color/primary"
-        tools:text="Magic"
+        tools:text="Tourist History"
         />
 
     <TextView
@@ -35,23 +47,8 @@
         android:layout_below="@+id/item_title"
         android:layout_toLeftOf="@+id/item_additional"
         android:layout_toStartOf="@+id/item_additional"
-        android:singleLine="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         tools:text="Two Door Cinema Club"
-        />
-
-    <TextView
-        android:id="@+id/item_album"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/item_subtitle"
-        android:layout_alignStart="@+id/item_subtitle"
-        android:layout_below="@+id/item_subtitle"
-        android:layout_toLeftOf="@+id/item_additional"
-        android:layout_toStartOf="@+id/item_additional"
-        android:singleLine="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        tools:text="Tourist History"
         />
 
     <TextView
@@ -60,8 +57,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/item_title"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-        tools:text="03:33"
+        tools:text="11 songs"
         />
 </RelativeLayout>

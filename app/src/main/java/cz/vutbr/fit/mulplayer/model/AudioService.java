@@ -7,6 +7,7 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.IBinder;
@@ -22,9 +23,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.vutbr.fit.mulplayer.entity.Song;
-import cz.vutbr.fit.mulplayer.event.PlaybackEvent;
-import cz.vutbr.fit.mulplayer.event.SongEvent;
+import cz.vutbr.fit.mulplayer.model.entity.Song;
+import cz.vutbr.fit.mulplayer.model.event.PlaybackEvent;
+import cz.vutbr.fit.mulplayer.model.event.SongEvent;
 
 /**
  * @author mlyko
@@ -68,31 +69,23 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 			MediaStore.Audio.Media.ARTIST,
 			MediaStore.Audio.Media.TITLE,
 			MediaStore.Audio.Media.DATA,
-			MediaStore.Audio.Media.DISPLAY_NAME,
-			MediaStore.Audio.Media.DURATION
+			MediaStore.Audio.Media.DURATION,
+			MediaStore.Audio.Media.ALBUM_ID,
+			MediaStore.Audio.Media.ALBUM,
+			MediaStore.Audio.Media.TRACK,
+			// -- other (sorting,etc)
+			MediaStore.Audio.Media.ALBUM_KEY,
+			MediaStore.Audio.Media.ARTIST_KEY,
+			MediaStore.Audio.Media.TITLE_KEY,
 	};
 
-	public @AudioService.AudioState int mPlayerState = IDLE;
-	public CursorLoader mCursorLoader;
+	public @AudioState int mPlayerState = IDLE;
+	public CursorLoader mAudioCursorLoader;
+
 	EventBus mEventBus = EventBus.getDefault();
 	MediaPlayer mMediaPlayer = null;
-	List<Song> mPlayQueue = new ArrayList<>();
 	public List<Song> mSongList = new ArrayList<>();
 	private Handler mHandler = new Handler();
-
-	// TODO implement as foreground service !!!
-//	String songName;
-//	// assign the song name to songName
-//	PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0,
-//			new Intent(getApplicationContext(), MainActivity.class),
-//			PendingIntent.FLAG_UPDATE_CURRENT);
-//	Notification notification = new Notification();
-//	notification.tickerText = text;
-//	notification.icon = R.drawable.play0;
-//	notification.flags |= Notification.FLAG_ONGOING_EVENT;
-//	notification.setLatestEventInfo(getApplicationContext(), "MusicPlayerSample",
-//			"Playing: " + songName, pi);
-//	startForeground(NOTIFICATION_ID, notification);
 
 	/**
 	 * Fires specified action on player's service
@@ -117,7 +110,7 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 	public void onCreate() {
 		super.onCreate();
 
-		mCursorLoader = new CursorLoader(
+		mAudioCursorLoader = new CursorLoader(
 				getApplicationContext(),
 				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
 				mAudioProjector,
@@ -126,10 +119,12 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 				null
 		);
 
-		mCursorLoader.registerListener(LOADER_AUDIO_MUSIC, this);
-		mCursorLoader.startLoading();
+		mAudioCursorLoader.registerListener(LOADER_AUDIO_MUSIC, this);
+		mAudioCursorLoader.startLoading();
+
 
 		mMediaPlayer = new MediaPlayer();
+		mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		mMediaPlayer.setOnPreparedListener(this);
 		mMediaPlayer.setOnErrorListener(this);
 		mMediaPlayer.setOnCompletionListener(this);
@@ -146,13 +141,18 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 	public void onLoadComplete(Loader<Cursor> loader, Cursor cursor) {
 		DataRepository rep = DataRepository.getInstance();
 		while (cursor.moveToNext()) {
+			long id = cursor.getLong(0);
 			String artist = cursor.getString(1);
 			String title = cursor.getString(2);
-			String data = cursor.getString(3);
-			int duration = cursor.getInt(5);
-			Song song = new Song(artist, title, duration, data);
+			String filepath = cursor.getString(3);
+			int duration = cursor.getInt(4);
+			long albumId = cursor.getLong(5);
+			String album = cursor.getString(6);
+			int trackNum = cursor.getInt(7);
+
+			Song song = new Song(id, artist, title, duration, filepath, albumId, album);
 			rep.mSongList.add(song); // TODO DIFFERENT WAY !!!!!!!!!!!!!
-			mSongList.add(song);
+			mSongList = rep.mSongList;
 		}
 	}
 
@@ -164,10 +164,10 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 		mHandler.removeCallbacks(mUpdateSongTime);
 
 		// Stop the CURSOR loader
-		if (mCursorLoader != null) {
-			mCursorLoader.unregisterListener(this);
-			mCursorLoader.cancelLoad();
-			mCursorLoader.stopLoading();
+		if (mAudioCursorLoader != null) {
+			mAudioCursorLoader.unregisterListener(this);
+			mAudioCursorLoader.cancelLoad();
+			mAudioCursorLoader.stopLoading();
 		}
 	}
 
@@ -176,7 +176,7 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 	}
 
 	public void playSong(Song song) throws IOException {
-		mMediaPlayer.setDataSource(song.data);
+		mMediaPlayer.setDataSource(song.filepath);
 		mMediaPlayer.prepareAsync();
 		mPlayerState = PLAYING;
 		mEventBus.post(new SongEvent(song, true));
@@ -309,6 +309,19 @@ public class AudioService extends Service implements MediaPlayer.OnPreparedListe
 		return false;
 	}
 
+	// TODO implement as foreground service !!!
+//	String songName;
+//	// assign the song name to songName
+//	PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0,
+//			new Intent(getApplicationContext(), MainActivity.class),
+//			PendingIntent.FLAG_UPDATE_CURRENT);
+//	Notification notification = new Notification();
+//	notification.tickerText = text;
+//	notification.icon = R.drawable.play0;
+//	notification.flags |= Notification.FLAG_ONGOING_EVENT;
+//	notification.setLatestEventInfo(getApplicationContext(), "MusicPlayerSample",
+//			"Playing: " + songName, pi);
+//	startForeground(NOTIFICATION_ID, notification);
 
 	/**
 	 * Note: ignore it
