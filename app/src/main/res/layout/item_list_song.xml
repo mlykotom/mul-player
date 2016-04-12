@@ -1,46 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="56dp"
+    android:layout_height="72dp"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingEnd="8dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingStart="8dp"
+    tools:showIn="@layout/fragment_songs_list"
     >
-
-    <ImageView
-        android:id="@+id/item_icon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:background="@drawable/oval_accent"
-        android:padding="4dp"
-        android:src="@drawable/ic_skip_previous_black_24dp"
-        />
 
     <TextView
         android:id="@+id/item_title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/item_icon"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="-2dp"
-        android:layout_toEndOf="@+id/item_icon"
-        android:layout_toRightOf="@+id/item_icon"
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@+id/item_additional"
+        android:layout_toStartOf="@+id/item_additional"
         android:singleLine="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        tools:text="Two Door Cinema Club"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="@color/primary"
+        tools:text="Magic"
         />
 
     <TextView
         android:id="@+id/item_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/item_title"
+        android:layout_alignStart="@+id/item_title"
+        android:layout_below="@+id/item_title"
+        android:layout_toLeftOf="@+id/item_additional"
+        android:layout_toStartOf="@+id/item_additional"
+        android:singleLine="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        tools:text="Two Door Cinema Club"
+        />
+
+    <TextView
+        android:id="@+id/item_album"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/item_subtitle"
+        android:layout_alignStart="@+id/item_subtitle"
+        android:layout_below="@+id/item_subtitle"
+        android:layout_toLeftOf="@+id/item_additional"
+        android:layout_toStartOf="@+id/item_additional"
+        android:singleLine="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        tools:text="Tourist History"
+        />
+
+    <TextView
+        android:id="@+id/item_additional"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/item_title"
-        android:layout_alignStart="@id/item_title"
-        android:layout_below="@id/item_title"
-        android:textAppearance="?attr/textAppearanceListItem"
-        tools:text="Do you know"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        tools:text="03:33"
         />
 </RelativeLayout>

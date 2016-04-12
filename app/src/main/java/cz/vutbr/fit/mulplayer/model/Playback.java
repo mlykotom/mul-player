@@ -4,7 +4,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.support.annotation.IntDef;
 
-import cz.vutbr.fit.mulplayer.entity.Song;
+import cz.vutbr.fit.mulplayer.model.entity.Song;
 
 /**
  * @author mlyko

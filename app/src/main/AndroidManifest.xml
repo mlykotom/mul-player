@@ -18,7 +18,7 @@
         >
 
         <activity
-            android:name=".mvp.main.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:label="@string/main.title"
             >
             <intent-filter>

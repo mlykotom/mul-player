@@ -9,6 +9,6 @@
     android:layout_height="match_parent"
     android:layout_marginTop="8dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="cz.vutbr.fit.mulplayer.mvp.songs_list.SongsListFragment"
+    tools:context="cz.vutbr.fit.mulplayer.ui.songs_list.SongsListFragment"
     tools:listitem="@layout/item_list_song"
     />

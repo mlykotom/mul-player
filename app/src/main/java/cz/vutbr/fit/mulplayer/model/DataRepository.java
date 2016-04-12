@@ -2,12 +2,10 @@ package cz.vutbr.fit.mulplayer.model;
 
 import android.util.SparseArray;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
-import cz.vutbr.fit.mulplayer.entity.Song;
+import cz.vutbr.fit.mulplayer.model.entity.Song;
 
 /**
  * @author mlyko

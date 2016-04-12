@@ -23,9 +23,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.vutbr.fit.mulplayer.entity.Song;
-import cz.vutbr.fit.mulplayer.event.PlaybackEvent;
-import cz.vutbr.fit.mulplayer.event.SongEvent;
+import cz.vutbr.fit.mulplayer.model.entity.Song;
+import cz.vutbr.fit.mulplayer.model.event.PlaybackEvent;
+import cz.vutbr.fit.mulplayer.model.event.SongEvent;
 
 /**
  * @author mlyko

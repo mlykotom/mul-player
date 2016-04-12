@@ -9,6 +9,6 @@
     android:layout_height="match_parent"
     android:layout_marginTop="8dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context=".mvp.albums_list.AlbumsListFragment"
+    tools:context=".ui.albums_list.AlbumsListFragment"
     tools:listitem="@layout/item_list_album"
     />

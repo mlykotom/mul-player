@@ -6,6 +6,10 @@
     android:background="?attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
+    android:paddingEnd="8dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingStart="8dp"
     >
 
     <ImageView
@@ -13,8 +17,8 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
         android:background="@drawable/oval_accent"
         />
 
@@ -22,9 +26,7 @@
         android:id="@+id/item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/item_additional"
-        android:layout_alignRight="@+id/item_additional"
-        android:layout_alignTop="@id/item_icon"
+        android:layout_alignTop="@+id/item_icon"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="-2dp"
@@ -40,11 +42,11 @@
         android:id="@+id/item_subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@id/item_title"
-        android:layout_alignStart="@id/item_title"
-        android:layout_below="@id/item_title"
-        android:layout_toLeftOf="@id/item_additional"
-        android:layout_toStartOf="@id/item_additional"
+        android:layout_alignLeft="@+id/item_title"
+        android:layout_alignStart="@+id/item_title"
+        android:layout_below="@+id/item_title"
+        android:layout_toLeftOf="@+id/item_additional"
+        android:layout_toStartOf="@+id/item_additional"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         tools:text="Two Door Cinema Club"
         />
@@ -56,8 +58,6 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/item_title"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         tools:text="11 songs"
         />
