@@ -47,8 +47,13 @@ public class AlbumsListAdapter extends CursorRecyclerAdapter<AlbumsListAdapter.A
 		final int[] from = mFrom;
 
 		String artPath = cursor.getString(from[1]);
+
 		if (artPath != null) {
-			mPicasso.load(new File(artPath)).transform(mCircleTransform).into(holder.mIcon);
+			if (holder.mArtworkFile == null) {
+				holder.mArtworkFile = new File(artPath); // TODO should check if artPath hasn't changed
+			}
+
+			mPicasso.load(holder.mArtworkFile).transform(mCircleTransform).into(holder.mIcon);
 		} else {
 //			holder.mIcon.setImageResource(); // TODO "no album image resource"
 		}
@@ -116,6 +121,8 @@ public class AlbumsListAdapter extends CursorRecyclerAdapter<AlbumsListAdapter.A
 		public TextView mArtist;
 		@Bind(R.id.item_additional)
 		public TextView mSongCount;
+
+		public File mArtworkFile;
 
 		public AlbumViewHolder(View itemView) {
 			super(itemView);
