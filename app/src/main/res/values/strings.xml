@@ -11,6 +11,7 @@
     <string name="menu.sort.album.name">Album name</string>
     <string name="menu.sort.album.year">Album year</string>
 
+    <string name="image.description.album_art">Album\'s art</string>
 
     <!-- artists -->
     <string name="artists.title">Artists</string>
@@ -29,6 +30,7 @@
     </plurals>
 
     <!-- songs -->
+    <string name="menu.sort">Sort</string>
     <string name="songs.title">Songs</string>
 
     <!-- playback -->

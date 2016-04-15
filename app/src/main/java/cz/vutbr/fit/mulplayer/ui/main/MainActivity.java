@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MotionEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Toast;
 
@@ -36,12 +37,21 @@ public class MainActivity extends BaseActivity {
 	PlayerFragment mPlayerFragment;
 	SongsListFragment mSongsListFragment;
 	AlbumsListFragment mAlbumsListFragment;
-//	MusicPlayerFragment mMusicPlayerFragment;
+
+
+	Menu mMenu;
 
 
 	private BottomSheetBehavior mBottomSheetBehavior;
 
 	private BottomSheetBehavior mBottomSheetBehavior;
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		mMenu = menu;
+		return true;
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +67,7 @@ public class MainActivity extends BaseActivity {
 		ButterKnife.bind(this);
 
 		mPlayerFragment = (PlayerFragment) getSupportFragmentManager().findFragmentById(R.id.player_fragment);
-
+		final MenuInflater inflater = getMenuInflater();
 
 
 		mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
@@ -67,10 +77,14 @@ public class MainActivity extends BaseActivity {
 				switch (newState) {
 					case BottomSheetBehavior.STATE_COLLAPSED:
 						setIndicator(INDICATOR_NONE);
+						mMenu.clear();
+						inflater.inflate(R.menu.songs_list_menu, mMenu);
 						break;
 
 					case BottomSheetBehavior.STATE_EXPANDED:
 						setIndicator(INDICATOR_DISCARD);
+						mMenu.clear();
+						inflater.inflate(R.menu.player_menu, mMenu);
 						break;
 				}
 			}

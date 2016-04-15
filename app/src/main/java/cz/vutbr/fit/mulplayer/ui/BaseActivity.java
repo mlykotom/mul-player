@@ -17,6 +17,7 @@ import cz.vutbr.fit.mulplayer.R;
  */
 public abstract class BaseActivity extends AppCompatActivity implements IBaseView {
 	protected ActionBar mActionBar;
+	protected Toolbar mToolbar;
 	protected BaseActivityPresenter mBasePresenter;
 
 	@IntDef({INDICATOR_NONE, INDICATOR_BACK, INDICATOR_DISCARD, INDICATOR_ACCEPT})
@@ -66,10 +67,10 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
 	 */
 	@Nullable
 	public Toolbar setupToolbar(String title, @IndicatorType int indicatorType) {
-		Toolbar toolbar = (Toolbar) findViewById(R.id.app_toolbar);
-		if (toolbar != null) {
-			setSupportActionBar(toolbar);
-			toolbar.setTitle(title);
+		mToolbar = (Toolbar) findViewById(R.id.app_toolbar);
+		if (mToolbar != null) {
+			setSupportActionBar(mToolbar);
+			mToolbar.setTitle(title);
 		}
 		mActionBar = getSupportActionBar();
 		if (mActionBar != null) {
@@ -77,7 +78,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
 			setIndicator(indicatorType);
 		}
 
-		return toolbar;
+		return mToolbar;
 	}
 
 	public void setIndicator(@IndicatorType int indicatorType) {

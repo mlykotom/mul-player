@@ -40,7 +40,7 @@
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/bottom_player"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="360dp"
         android:background="@color/primary"
         android:clipToPadding="true"
         android:minHeight="72dp"
