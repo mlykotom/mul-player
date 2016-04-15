@@ -165,8 +165,7 @@ public class MusicService extends Service implements Playback.IPlaybackCallback 
 
 	@Override
 	public void onPlaybackCompleted() {
-//		Song nextSong = mData.mQueueSongs.get(NEXT_SONG_ID) // TODO
-//		mPlayback.play();
+		playFromQueue(mActiveQueuePosition + 1);
 	}
 
 	@Override
