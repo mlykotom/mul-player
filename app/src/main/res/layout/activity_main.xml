@@ -41,11 +41,10 @@
         android:id="@+id/bottom_player"
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:background="@color/background"
+        android:background="@color/primary"
         android:clipToPadding="true"
         android:minHeight="72dp"
         app:behavior_peekHeight="72dp"
-        app:elevation="4dp"
         app:layout_behavior="@string/bottom_sheet_behavior"
         >
 

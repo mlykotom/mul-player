@@ -1,13 +1,16 @@
 package cz.vutbr.fit.mulplayer.ui.main;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.MotionEvent;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -26,6 +29,8 @@ public class MainActivity extends BaseActivity {
 	ViewPager mViewPager;
 	@Bind(R.id.tabs)
 	TabLayout mTabLayout;
+	@Bind(R.id.bottom_player)
+	View mBottomSheet;
 
 	ArtistsListFragment mArtistsListFragment;
 	PlayerFragment mPlayerFragment;
@@ -53,8 +58,28 @@ public class MainActivity extends BaseActivity {
 
 		mPlayerFragment = (PlayerFragment) getSupportFragmentManager().findFragmentById(R.id.player_fragment);
 
-		View bottomSheet = findViewById(R.id.bottom_player);
-		mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+
+
+		mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+		mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+			@Override
+			public void onStateChanged(@NonNull View bottomSheet, int newState) {
+				switch (newState) {
+					case BottomSheetBehavior.STATE_COLLAPSED:
+						setIndicator(INDICATOR_NONE);
+						break;
+
+					case BottomSheetBehavior.STATE_EXPANDED:
+						setIndicator(INDICATOR_DISCARD);
+						break;
+				}
+			}
+
+			@Override
+			public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+			}
+		});
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.
@@ -68,9 +93,6 @@ public class MainActivity extends BaseActivity {
 
 		mSongsListFragment = SongsListFragment.newInstance();
 		mBaseFragmentPagerAdapter.addFragment(mSongsListFragment, getString(R.string.songs_title));
-
-//		mPlayerFragment = PlayerFragment.newInstance();
-//		mBaseFragmentPagerAdapter.addFragment(mPlayerFragment, getString(R.string.playback_title));
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager.setAdapter(mBaseFragmentPagerAdapter);

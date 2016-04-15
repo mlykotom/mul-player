@@ -1,100 +1,130 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.player.PlayerFragment"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".ui.player.PlayerFragment"
     >
 
-    <ImageView
-        android:id="@+id/playback_album_art"
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="200dp"
-        android:scaleType="centerInside"
-        android:contentDescription="@string/playback.album_art.content_description"
-        />
-
-    <TextView
-        android:id="@+id/playback_artist_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/playback_time"
-        android:layout_below="@+id/playback_album_art"
-        android:layout_centerHorizontal="true"
-        tools:text="Chet Faker - Gold"
-        />
-
-    <TextView
-        android:id="@+id/playback_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/playback_seekbar"
-        android:layout_centerHorizontal="true"
-        tools:text="00:34/03:35"
-        />
-
-    <SeekBar
-        android:id="@+id/playback_seekbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/playback_wrapper"
-        android:layout_alignLeft="@+id/playback_wrapper"
-        android:layout_alignRight="@+id/playback_wrapper"
-        android:layout_alignStart="@+id/playback_wrapper"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        />
-
-    <LinearLayout
-        android:id="@+id/playback_wrapper"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/playback_seekbar"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
-        android:layout_marginStart="32dp"
-        android:gravity="center"
-        android:orientation="horizontal"
+        android:layout_height="72dp"
+        android:paddingRight="8dp"
+        android:paddingEnd="8dp"
         >
 
-        <ImageButton
-            android:id="@+id/button_prev"
-            style="@style/Widget.AppCompat.ImageButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/oval_accent"
-            android:padding="4dp"
-            android:src="@drawable/ic_skip_previous_black_24dp"
+        <ImageView
+            android:id="@+id/playback_album_art"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:contentDescription="@string/image.description.album_art"
+            android:minHeight="200dp"
+            android:scaleType="fitCenter"
+            android:background="@color/primary_light"
+            android:src="@drawable/ic_audio_placeholder"
             />
+
+        <TextView
+            android:id="@+id/playback_artist_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_toLeftOf="@+id/button_play_pause"
+            android:layout_toStartOf="@+id/button_play_pause"
+            android:layout_toEndOf="@+id/playback_album_art"
+            android:layout_toRightOf="@+id/playback_album_art"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            tools:text="Chet Faker - Gold"
+            />
+
+        <!--android:background="?attr/selectableItemBackgroundBorderless"-->
 
         <ImageButton
             android:id="@+id/button_play_pause"
             style="@style/Widget.AppCompat.ImageButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/oval_accent"
             android:padding="8dp"
             android:src="@drawable/ic_play_arrow_black_24dp"
             />
 
-        <ImageButton
-            android:id="@+id/button_next"
-            style="@style/Widget.AppCompat.ImageButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/oval_accent"
-            android:padding="4dp"
-            android:src="@drawable/ic_skip_next_black_24dp"
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+
+
+        <TextView
+            android:id="@+id/playback_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/playback_seekbar"
+            android:layout_centerHorizontal="true"
+            tools:text="00:34/03:35"
             />
-    </LinearLayout>
+
+        <SeekBar
+            android:id="@+id/playback_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/playback_wrapper"
+            android:layout_alignLeft="@+id/playback_wrapper"
+            android:layout_alignRight="@+id/playback_wrapper"
+            android:layout_alignStart="@+id/playback_wrapper"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            />
+
+        <LinearLayout
+            android:id="@+id/playback_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/playback_seekbar"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="32dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginStart="32dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            >
+
+            <ImageButton
+                android:id="@+id/button_prev"
+                style="@style/Widget.AppCompat.ImageButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/oval_accent"
+                android:padding="4dp"
+                android:src="@drawable/ic_skip_previous_black_24dp"
+                />
 
 
+            <ImageButton
+                android:id="@+id/button_next"
+                style="@style/Widget.AppCompat.ImageButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/oval_accent"
+                android:padding="4dp"
+                android:src="@drawable/ic_skip_next_black_24dp"
+                />
+        </LinearLayout>
+
+    </RelativeLayout>
 </RelativeLayout>

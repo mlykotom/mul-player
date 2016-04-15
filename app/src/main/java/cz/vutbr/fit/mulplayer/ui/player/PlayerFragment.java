@@ -19,6 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.ui.BaseFragment;
+import cz.vutbr.fit.mulplayer.utils.CircleTransform;
 import cz.vutbr.fit.mulplayer.utils.Utils;
 
 /**
@@ -112,7 +113,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 
 	@Override
 	public void setAlbumArtwork(Uri albumArtwork) {
-		Picasso.with(getActivity()).load(albumArtwork).into(mPlaybackAlbumArt);
+		Picasso.with(getActivity()).load(albumArtwork).into(mPlaybackAlbumArt); //.transform(new CircleTransform())
 	}
 
 	@Override
