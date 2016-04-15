@@ -41,9 +41,8 @@ public class AlbumsListFragment extends BaseFragment implements IAlbumsListView 
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
-		mPresenter = new AlbumsListPresenter(this);
-		super.onCreate(mPresenter, savedInstanceState);
-		mPresenter.onCreate(savedInstanceState);
+		mBasePresenter = mPresenter = new AlbumsListPresenter(this);
+		super.onCreate(savedInstanceState);
 	}
 
 	@Nullable

@@ -18,8 +18,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.vutbr.fit.mulplayer.R;
-import cz.vutbr.fit.mulplayer.utils.Utils;
 import cz.vutbr.fit.mulplayer.ui.BaseFragment;
+import cz.vutbr.fit.mulplayer.utils.Utils;
 
 /**
  * @author mlyko
@@ -57,8 +57,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
-		mPresenter = new PlayerPresenter(this);
-		super.onCreate(mPresenter, savedInstanceState);
+		mBasePresenter = mPresenter = new PlayerPresenter(this);
+		super.onCreate(savedInstanceState);
 	}
 
 	@Override

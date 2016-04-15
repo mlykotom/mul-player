@@ -1,6 +1,7 @@
 package cz.vutbr.fit.mulplayer.ui;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
@@ -13,25 +14,31 @@ import cz.vutbr.fit.mulplayer.R;
  * @author mlyko
  * @since 10.04.2016
  */
-public abstract class BaseActivity extends AppCompatActivity implements IBaseView{
+public abstract class BaseActivity extends AppCompatActivity implements IBaseView {
 	protected ActionBar mActionBar;
-	protected BaseActivityPresenter mPresenter;
+	protected BaseActivityPresenter mBasePresenter;
+
+	@Override
+	protected void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if (mBasePresenter != null) mBasePresenter.onCreate(savedInstanceState);
+	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mPresenter.onResume();
+		if (mBasePresenter != null) mBasePresenter.onResume();
 	}
 
 	@Override
 	protected void onPause() {
-		mPresenter.onPause();
+		if (mBasePresenter != null) mBasePresenter.onPause();
 		super.onPause();
 	}
 
 	@Override
 	protected void onDestroy() {
-		mPresenter.onDestroy();
+		if (mBasePresenter != null) mBasePresenter.onDestroy();
 		super.onDestroy();
 	}
 

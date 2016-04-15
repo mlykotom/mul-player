@@ -9,34 +9,35 @@ import android.support.v4.app.Fragment;
  * @since 10.04.2016
  */
 public abstract class BaseFragment extends Fragment {
-	protected BaseFragmentPresenter mPresenter;
+	protected BaseFragmentPresenter mBasePresenter;
 
-	public void onCreate(BaseFragmentPresenter presenter, @Nullable Bundle savedInstanceState) {
-		mPresenter = presenter;
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if (mBasePresenter != null) mBasePresenter.onCreate(savedInstanceState);
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (mPresenter != null) mPresenter.onResume();
+		if (mBasePresenter != null) mBasePresenter.onResume();
 	}
 
 	@Override
 	public void onPause() {
-		if (mPresenter != null) mPresenter.onPause();
+		if (mBasePresenter != null) mBasePresenter.onPause();
 		super.onPause();
 	}
 
 	@Override
 	public void onStop() {
-		if (mPresenter != null) mPresenter.onStop();
+		if (mBasePresenter != null) mBasePresenter.onStop();
 		super.onStop();
 	}
 
 	@Override
 	public void onDestroy() {
-		if (mPresenter != null) mPresenter.onDestroy();
+		if (mBasePresenter != null) mBasePresenter.onDestroy();
 		super.onDestroy();
 	}
 }
