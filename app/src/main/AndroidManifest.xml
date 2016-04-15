@@ -29,7 +29,7 @@
         </activity>
 
         <service
-            android:name=".model.AudioService"
+            android:name=".model.MusicService"
             android:exported="false"
             />
 

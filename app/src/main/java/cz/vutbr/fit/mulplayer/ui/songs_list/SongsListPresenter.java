@@ -6,6 +6,10 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
+import cz.vutbr.fit.mulplayer.Constants;
+import cz.vutbr.fit.mulplayer.model.DataRepository;
+import cz.vutbr.fit.mulplayer.model.MusicService;
+import cz.vutbr.fit.mulplayer.model.entity.Song;
 import cz.vutbr.fit.mulplayer.ui.BaseFragmentPresenter;
 
 /**
@@ -17,20 +21,7 @@ public class SongsListPresenter extends BaseFragmentPresenter implements Loader.
 
 	ISongsListView mFragment;
 	CursorLoader mCursorLoader;
-
-	//Some audio may be explicitly marked as not being music
-	String mSelection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
-
-	String[] mProjection = {
-			MediaStore.Audio.Media._ID,
-			MediaStore.Audio.Media.ARTIST,
-			MediaStore.Audio.Media.TITLE,
-			MediaStore.Audio.Media.DATA,
-			MediaStore.Audio.Media.DURATION,
-			MediaStore.Audio.Media.ALBUM_ID,
-			MediaStore.Audio.Media.ALBUM,
-			MediaStore.Audio.Media.TRACK
-	};
+	DataRepository mData = DataRepository.getInstance();
 
 	public SongsListPresenter(ISongsListView songsListFragment) {
 		mFragment = songsListFragment;
@@ -42,8 +33,8 @@ public class SongsListPresenter extends BaseFragmentPresenter implements Loader.
 		mCursorLoader = new CursorLoader(
 				mFragment.getActivity(),
 				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-				mProjection,
-				mSelection,
+				Constants.SONG_PROJECTOR,
+				Constants.MUSIC_SELECTOR,
 				null,
 				MediaStore.Audio.Media.TITLE_KEY
 		);
@@ -55,13 +46,17 @@ public class SongsListPresenter extends BaseFragmentPresenter implements Loader.
 	@Override
 	public void onCreateView() {
 		super.onCreateView();
-		mFragment.initList(mProjection);
+		mFragment.initList(Constants.SONG_PROJECTOR);
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		mCursorLoader.reset();
+
+		mCursorLoader.reset(); // TODO how to reset it?
+//		mCursorLoader.unregisterListener(this);
+//		mCursorLoader.cancelLoad();
+//		mCursorLoader.stopLoading();
 	}
 
 	@Override
@@ -71,8 +66,8 @@ public class SongsListPresenter extends BaseFragmentPresenter implements Loader.
 	}
 
 	@Override
-	public void onLoadComplete(Loader<Cursor> loader, Cursor data) {
-		mFragment.updateList(data);
+	public void onLoadComplete(Loader<Cursor> loader, Cursor cursor) {
+		mFragment.updateList(cursor);
 	}
 
 	/**
@@ -82,6 +77,20 @@ public class SongsListPresenter extends BaseFragmentPresenter implements Loader.
 	 * @param viewType
 	 */
 	public void setOnRecyclerItemClick(int position, int viewType) {
+		SongsListAdapter adapter = mFragment.getSongsListAdapter();
+		Cursor cursor = adapter.getCursor();
+		queueAllSongs(cursor);
+		MusicService.fireAction(mFragment.getActivity(), MusicService.CMD_PLAY_PAUSE, position - 1); // TODO why position - 1?
+	}
 
+	private void queueAllSongs(Cursor cursor) {
+//		cursor.getCount()
+		cursor.moveToFirst();
+		while (cursor.moveToNext()) {
+			Song song = Song.from(cursor);
+//			if(mData.mQueueSongs.keyAt())
+			mData.mQueueSongs.put(song.getId(), song);
+			mData.mQueueOrderList.add(song.getId());
+		}
 	}
 }

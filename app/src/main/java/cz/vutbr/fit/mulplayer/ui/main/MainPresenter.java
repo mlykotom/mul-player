@@ -2,7 +2,7 @@ package cz.vutbr.fit.mulplayer.ui.main;
 
 import android.os.Bundle;
 
-import cz.vutbr.fit.mulplayer.model.AudioService;
+import cz.vutbr.fit.mulplayer.model.MusicService;
 import cz.vutbr.fit.mulplayer.ui.BaseActivity;
 import cz.vutbr.fit.mulplayer.ui.BaseActivityPresenter;
 
@@ -18,6 +18,6 @@ public class MainPresenter extends BaseActivityPresenter {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		AudioService.fireAction(mBaseActivity, AudioService.INIT);
+		MusicService.fireAction(mBaseActivity, MusicService.CMD_REBUILD); // TODO necessary?
 	}
 }

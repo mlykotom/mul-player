@@ -20,4 +20,6 @@ public interface ISongsListView extends IBaseView {
 	 * @param data
 	 */
 	void updateList(Cursor data);
+
+	SongsListAdapter getSongsListAdapter();
 }
