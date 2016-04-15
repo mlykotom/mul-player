@@ -6,10 +6,10 @@ import android.net.Uri;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import cz.vutbr.fit.mulplayer.model.MusicService;
 import cz.vutbr.fit.mulplayer.model.entity.Song;
 import cz.vutbr.fit.mulplayer.model.event.PlaybackEvent;
 import cz.vutbr.fit.mulplayer.model.event.SongEvent;
-import cz.vutbr.fit.mulplayer.model.AudioService;
 import cz.vutbr.fit.mulplayer.ui.BaseFragmentPresenter;
 import cz.vutbr.fit.mulplayer.ui.IBaseView;
 
@@ -36,20 +36,20 @@ public class PlayerPresenter extends BaseFragmentPresenter {
 	}
 
 	public void playPauseSong() {
-		AudioService.fireAction(mFragment.getActivity(), AudioService.PLAY_PAUSE);
+		MusicService.fireAction(mFragment.getActivity(), MusicService.CMD_PLAY_PAUSE);
 	}
 
 	public void nextSong() {
-		AudioService.fireAction(mFragment.getActivity(), AudioService.NEXT);
+		MusicService.fireAction(mFragment.getActivity(), MusicService.CMD_NEXT);
 	}
 
 	public void previousSong() {
-		AudioService.fireAction(mFragment.getActivity(), AudioService.PREVIOUS);
+		MusicService.fireAction(mFragment.getActivity(), MusicService.CMD_PREVIOUS);
 	}
 
 	public void playbackSeekbarChanged(int actualTime) {
 		if (actualTime == mActualTime) return;
-		AudioService.fireAction(mFragment.getActivity(), AudioService.SEEK_TO, actualTime);
+		MusicService.fireAction(mFragment.getActivity(), MusicService.CMD_SEEK_TO, actualTime);
 	}
 
 	final public static Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");

@@ -24,7 +24,7 @@ import cz.vutbr.fit.mulplayer.utils.SimpleDividerItemDecoration;
 public class SongsListFragment extends Fragment implements ISongsListView {
 	SongsListPresenter mPresenter;
 	@Bind(R.id.songs_list) RecyclerView mSongsRecyclerView;
-	SongsListAdapter mSongsListAdapter;
+	public SongsListAdapter mSongsListAdapter;
 
 	/**
 	 * Constructor for fragment which can't be constructed classical way because android manages its lifecycle
@@ -77,5 +77,10 @@ public class SongsListFragment extends Fragment implements ISongsListView {
 
 	public void updateList(Cursor data) {
 		mSongsListAdapter.changeCursor(data);
+	}
+
+	@Override
+	public SongsListAdapter getSongsListAdapter() {
+		return mSongsListAdapter;
 	}
 }
