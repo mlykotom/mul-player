@@ -37,15 +37,26 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
 
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/bottom_player"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:background="@color/background"
+        android:clipToPadding="true"
+        android:minHeight="72dp"
+        app:behavior_peekHeight="72dp"
+        app:elevation="4dp"
+        app:layout_behavior="@string/bottom_sheet_behavior"
+        >
 
-    <!-- TODO fragment as bottom sheet -->
-    <!--<fragment-->
-        <!--android:id="@+id/asdfgh"-->
-        <!--android:name="cz.vutbr.fit.mulplayer.mvp.player.PlayerFragment"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="80dp"-->
-        <!--app:layout_behavior="@string/bottom_sheet_behavior"-->
-        <!--tools:layout="@layout/fragment_player"-->
-        <!--/>-->
+        <fragment
+            android:id="@+id/player_fragment"
+            android:tag="player_fragment"
+            android:name="cz.vutbr.fit.mulplayer.ui.player.PlayerFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_player"
+            />
+    </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

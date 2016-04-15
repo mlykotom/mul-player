@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.View;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -30,6 +31,10 @@ public class MainActivity extends BaseActivity {
 	PlayerFragment mPlayerFragment;
 	SongsListFragment mSongsListFragment;
 	AlbumsListFragment mAlbumsListFragment;
+//	MusicPlayerFragment mMusicPlayerFragment;
+
+
+	private BottomSheetBehavior mBottomSheetBehavior;
 
 	private BottomSheetBehavior mBottomSheetBehavior;
 
@@ -46,6 +51,11 @@ public class MainActivity extends BaseActivity {
 
 		ButterKnife.bind(this);
 
+		mPlayerFragment = (PlayerFragment) getSupportFragmentManager().findFragmentById(R.id.player_fragment);
+
+		View bottomSheet = findViewById(R.id.bottom_player);
+		mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.
 		mBaseFragmentPagerAdapter = new BaseFragmentPagerAdapter(getSupportFragmentManager());
@@ -59,8 +69,8 @@ public class MainActivity extends BaseActivity {
 		mSongsListFragment = SongsListFragment.newInstance();
 		mBaseFragmentPagerAdapter.addFragment(mSongsListFragment, getString(R.string.songs_title));
 
-		mPlayerFragment = PlayerFragment.newInstance();
-		mBaseFragmentPagerAdapter.addFragment(mPlayerFragment, getString(R.string.playback_title));
+//		mPlayerFragment = PlayerFragment.newInstance();
+//		mBaseFragmentPagerAdapter.addFragment(mPlayerFragment, getString(R.string.playback_title));
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager.setAdapter(mBaseFragmentPagerAdapter);
