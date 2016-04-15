@@ -72,7 +72,7 @@ public class SongsListFragment extends Fragment implements ISongsListView {
 		mSongsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 		mSongsRecyclerView.setItemAnimator(new DefaultItemAnimator());
 		mSongsRecyclerView.setAdapter(mSongsListAdapter);
-		mSongsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+		mSongsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity(), SimpleDividerItemDecoration.LINE_WHOLE));
 	}
 
 	public void updateList(Cursor data) {
