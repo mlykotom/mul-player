@@ -28,10 +28,17 @@ public class PlayerPresenter extends BaseFragmentPresenter {
 
 	public PlayerPresenter(IBaseView fragment) {
 		mFragment = (IPlayerView) fragment;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
 		EventBus.getDefault().register(this);
 	}
 
-	public void onStop() {
+	@Override
+	public void onPause() {
+		super.onPause();
 		EventBus.getDefault().unregister(this);
 	}
 
@@ -61,8 +68,9 @@ public class PlayerPresenter extends BaseFragmentPresenter {
 	 */
 	@Subscribe
 	public void onEvent(SongEvent event) {
-		mActualSong = event.song;
 		mFragment.setPlayPauseButton(!event.isPlaying);
+		mActualSong = event.song;
+		if (mActualSong == null) return;
 		mFragment.setPlaybackArtistTitle(mActualSong.artist, mActualSong.title);
 		mFragment.setPlaybackSeekbarMax(mActualSong.duration);
 //		mActualTime = !event.isPlaying ? 0 : mActualTime; // TODO so that time stays the same when pause but from 0 when new song

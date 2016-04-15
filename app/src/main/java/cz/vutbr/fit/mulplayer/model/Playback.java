@@ -11,6 +11,9 @@ import java.io.IOException;
 import cz.vutbr.fit.mulplayer.model.entity.Song;
 
 /**
+ * Class for handling one song (playing, pausing, seeking, ...).
+ * Base on itself's state, handles device logic (wakelocking, noise reduction,...)
+ *
  * @author mlyko
  * @since 12.04.2016
  */
@@ -21,6 +24,7 @@ public class Playback implements MediaPlayer.OnPreparedListener, MediaPlayer.OnE
 	protected IPlaybackCallback mCallback;
 
 	private @Nullable Song mActiveSong;
+	private volatile int mCurrentPosition;
 
 	Playback(MusicService service, IPlaybackCallback callback) {
 		mService = service;
@@ -48,59 +52,91 @@ public class Playback implements MediaPlayer.OnPreparedListener, MediaPlayer.OnE
 	 * Artificial destructor because media player must be released
 	 */
 	public void release() {
-
 		if (mMediaPlayer == null) return;
 		mMediaPlayer.release();
 		mMediaPlayer.reset();
 		mMediaPlayer = null;
 	}
 
-	public int getCurrentPosition() {
-		if (mMediaPlayer == null) return 0;
-
-		return mMediaPlayer.getCurrentPosition();
-	}
-
 	/**
-	 * Prepares playing
+	 * Playing specified song. Handles unpausing, playing from the beginning.
+	 * Notifies callback about playback status change
+	 * States:
+	 * - STOPPED -> BUFFERING
+	 * - PAUSED -> PLAYING
 	 *
-	 * @param song
+	 * @param song which will be played
 	 */
 	public void play(Song song) {
-		onSaveCreate();
-		assert mMediaPlayer != null; // media player here  won't be null because onSaveCreate() always creates it
+		boolean isTheSameSong = song.equals(mActiveSong);
 
-		try {
-			mMediaPlayer.setDataSource(song.filepath);
-			mMediaPlayer.prepareAsync();
-			mState = PlaybackStateCompat.STATE_BUFFERING;
-			mActiveSong = song;
-			mCallback.onPlaybackStatusChanged(mState);
-		} catch (IOException e) {
-			e.printStackTrace();        // TODO pryc
-			mCallback.onError(e.getMessage());
+		if (mState == PlaybackStateCompat.STATE_PAUSED && mMediaPlayer != null && isTheSameSong) {
+			// check if jumped to different location when paused
+			if (mMediaPlayer.getCurrentPosition() != mCurrentPosition) {
+				mMediaPlayer.seekTo(mCurrentPosition);
+			}
+
+			mMediaPlayer.start();
+			mState = PlaybackStateCompat.STATE_PLAYING;
+		} else {
+			mState = PlaybackStateCompat.STATE_STOPPED;
+			onSaveCreate();
+			assert mMediaPlayer != null; // media player here  won't be null because onSaveCreate() always creates it
+			try {
+				mMediaPlayer.setDataSource(song.filepath);
+				mMediaPlayer.prepareAsync();
+				mState = PlaybackStateCompat.STATE_BUFFERING;
+				mActiveSong = song;
+			} catch (IOException e) {
+				mCallback.onError(e.getMessage());
+			}
 		}
+
+		mCallback.onPlaybackStatusChanged(mState);
 	}
 
 	/**
-	 * @return
+	 * Pauses actual song, saves current position and notifies callback
+	 */
+	public void pause() {
+		if (mState == PlaybackStateCompat.STATE_PLAYING) {
+			if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
+				mMediaPlayer.pause();
+				mCurrentPosition = getCurrentPosition();
+			}
+		}
+
+		mState = PlaybackStateCompat.STATE_PAUSED;
+		mCallback.onPlaybackStatusChanged(mState);
+	}
+
+	/**
+	 * @return whether song is playing or not
 	 */
 	public boolean isPlaying() {
 		return mMediaPlayer != null && mMediaPlayer.isPlaying();
 	}
 
+	/**
+	 * Jumps to specified time. If out of range, selects 0 or max time
+	 *
+	 * @param seekTime in milliseconds
+	 */
 	public void seekTo(int seekTime) {
+		if (seekTime < 0) seekTime = 0;
+//		if(seekTime > mMediaPlayer.getDuration()) seekTime = mMediaPlayer.getDuration(); // TODO check if seektime better than duration
+		mCurrentPosition = seekTime;
 		if (mMediaPlayer == null) return;
 		mMediaPlayer.seekTo(seekTime);
 	}
 
-	public void pause() {
-		// TODO
-
-//		mPlayerState = PAUSED;
-//		mMediaPlayer.stop();
-//		mHandler.removeCallbacks(mUpdateSongTime);
-//		mEventBus.post(new SongEvent(song, false));
+	/**
+	 * Returns current position from media player or from inner state
+	 *
+	 * @return current position in ms
+	 */
+	public int getCurrentPosition() {
+		return mMediaPlayer == null ? mCurrentPosition : mMediaPlayer.getCurrentPosition();
 	}
 
 	@Nullable
@@ -109,6 +145,7 @@ public class Playback implements MediaPlayer.OnPreparedListener, MediaPlayer.OnE
 	}
 
 	public void stop() {
+		// TODO needed?
 		mActiveSong = null;
 	}
 

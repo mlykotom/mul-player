@@ -38,4 +38,9 @@ public class Song extends BaseModel {
 
 		return new Song(_id, artist, title, duration, filepath, albumId, album);
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		return super.equals(o); // TODO only compare ids?
+	}
 }
