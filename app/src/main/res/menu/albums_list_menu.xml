@@ -23,7 +23,7 @@
                     />
 
                 <item
-                    android:id="@+id/sort_artist_name"
+                    android:id="@+id/sort_album_songs_number"
                     android:title="@string/menu.sort.artist.name"
                     />
             </group>

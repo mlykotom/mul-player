@@ -52,6 +52,7 @@ public class AlbumsListFragment extends BaseFragment implements IAlbumsListView 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.albums_list_menu, menu);
+		mPresenter.onCreateOptionsMenu(menu, inflater);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 

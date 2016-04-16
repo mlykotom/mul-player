@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import cz.vutbr.fit.mulplayer.Constants;
@@ -20,12 +22,15 @@ import cz.vutbr.fit.mulplayer.ui.BaseFragmentPresenter;
 public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader.OnLoadCompleteListener<Cursor> {
 	private static final int LOADER_ALBUMS_MUSIC = 0;
 
+	public static final String PREF_ORDER_KEY = "albums_order";
+	public static final String PREF_ORDER_KEY_ASC_DESC = "albums_order_asc_desc";
+
 	AlbumsListFragment mFragment;
 	CursorLoader mCursorLoader;
 	SharedPreferences mPreferences;
 
-	String mOrderKey = MediaStore.Audio.Albums.ALBUM_KEY;
-	private String mOrderAscDesc = Constants.DB_ORDER_ASC;
+	String mOrderKey;
+	private String mOrderAscDesc;
 
 	public AlbumsListPresenter(AlbumsListFragment fragment) {
 		mFragment = fragment;
@@ -36,11 +41,13 @@ public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader
 		super.onCreate(savedInstanceState);
 
 		mPreferences = mFragment.getPreferences(Context.MODE_PRIVATE);
+		mOrderKey = mPreferences.getString(PREF_ORDER_KEY, MediaStore.Audio.Albums.ALBUM_KEY);
+		mOrderAscDesc = mPreferences.getString(PREF_ORDER_KEY_ASC_DESC, Constants.DB_ORDER_ASC);
 
 		mCursorLoader = new CursorLoader(mFragment.getActivity());
 		mCursorLoader.setUri(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI);
 		mCursorLoader.setProjection(Constants.ALBUMS_PROJECTOR);
-		mCursorLoader.setSortOrder(mOrderKey + Constants.DB_ORDER_ASC);
+		mCursorLoader.setSortOrder(mOrderKey + mOrderAscDesc);
 		mCursorLoader.registerListener(LOADER_ALBUMS_MUSIC, this);
 		mCursorLoader.startLoading();
 	}
@@ -85,7 +92,7 @@ public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader
 				else item.setChecked(true);
 				return true;
 
-			case R.id.sort_artist_name:
+			case R.id.sort_album_songs_number:
 				if (item.isChecked()) item.setChecked(false);
 				else item.setChecked(true);
 				return true;
@@ -95,10 +102,27 @@ public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader
 		}
 	}
 
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		switch (mOrderKey) {
+			case MediaStore.Audio.Albums.NUMBER_OF_SONGS:
+				menu.findItem(R.id.sort_album_songs_number).setChecked(true);
+				break;
+
+			case MediaStore.Audio.Albums.ALBUM_KEY:
+				menu.findItem(R.id.sort_album_name).setChecked(true);
+				break;
+
+			case MediaStore.Audio.Albums.FIRST_YEAR:
+				menu.findItem(R.id.sort_album_year).setChecked(true);
+				break;
+		}
+
+		menu.findItem(R.id.sort_asc_desc).setChecked(mOrderAscDesc.equals(Constants.DB_ORDER_ASC));
+	}
 
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.sort_artist_name:
+			case R.id.sort_album_songs_number:
 				mOrderKey = MediaStore.Audio.Albums.NUMBER_OF_SONGS;
 				break;
 
@@ -119,6 +143,11 @@ public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader
 		}
 
 		item.setChecked(!item.isChecked());
+
+		mPreferences.edit()
+				.putString(PREF_ORDER_KEY, mOrderKey)
+				.putString(PREF_ORDER_KEY_ASC_DESC, mOrderAscDesc)
+				.apply();
 
 		mCursorLoader.setSortOrder(mOrderKey + mOrderAscDesc);
 		mCursorLoader.reset();
