@@ -23,4 +23,11 @@ public class Constants {
 //			MediaStore.Audio.Media.ARTIST_KEY,
 //			MediaStore.Audio.Media.TITLE_KEY,
 	};
+
+	public static final String[] ARTISTS_PROJECTOR = {
+			MediaStore.Audio.Artists._ID,
+			MediaStore.Audio.Artists.ARTIST,
+			MediaStore.Audio.Artists.NUMBER_OF_ALBUMS,
+			MediaStore.Audio.Artists.NUMBER_OF_TRACKS,
+	};
 }

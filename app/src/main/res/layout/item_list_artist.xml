@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="wrap_content"
+                android:layout_height="72dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingEnd="8dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingStart="8dp"
+    >
+    <!--tools:showIn="@layout/fragment_artists_list"-->
+
+    <TextView
+        android:id="@+id/item_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:singleLine="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="@color/primary"
+        tools:text="Two Door Cinema Club"
+        />
+
+    <TextView
+        android:id="@+id/item_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/item_title"
+        android:layout_alignStart="@+id/item_title"
+        android:layout_below="@+id/item_title"
+        android:singleLine="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        tools:text="1 album | 33 songs"
+        />
+</RelativeLayout>
