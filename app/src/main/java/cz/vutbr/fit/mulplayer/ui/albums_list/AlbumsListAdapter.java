@@ -62,7 +62,7 @@ public class AlbumsListAdapter extends SongsListAdapter {
 
 		// song count
 		int songCount = cursor.getInt(from[4]);
-		String quantityString = mContext.getResources().getQuantityString(R.plurals.albums_songs, songCount, songCount);
+		String quantityString = mContext.getResources().getQuantityString(R.plurals.songs_count, songCount, songCount);
 		holder.mSongCount.setText(quantityString);
 	}
 

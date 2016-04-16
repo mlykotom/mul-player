@@ -5,20 +5,13 @@ import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
-
-import java.io.File;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.model.adapter.ClickableRecyclerAdapter;
 import cz.vutbr.fit.mulplayer.ui.songs_list.SongsListAdapter;
-import cz.vutbr.fit.mulplayer.utils.CircleTransform;
 
 /**
  * @author mlyko
@@ -43,8 +36,9 @@ public class ArtistsListAdapter extends SongsListAdapter {
 		// albums | song count
 		int albumCount = cursor.getInt(from[2]);
 		int songCount = cursor.getInt(from[3]);
-		String quantityString = mContext.getResources().getQuantityString(R.plurals.albums_songs, songCount, songCount);
-		holder.mArtist.setText(String.format("%s | %s", albumCount, quantityString));
+		String albumQuantityString = mContext.getResources().getQuantityString(R.plurals.albums_count, albumCount, albumCount);
+		String songQuantityString = mContext.getResources().getQuantityString(R.plurals.songs_count, songCount, songCount);
+		holder.mArtist.setText(String.format("%s | %s", albumQuantityString, songQuantityString));
 	}
 
 	@Override
