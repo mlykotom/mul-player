@@ -43,13 +43,13 @@ public class AlbumsListAdapter extends SongsListAdapter {
 		String artPath = cursor.getString(from[1]);
 
 		if (artPath != null) {
-			if (holder.mArtworkFile == null) {
-				holder.mArtworkFile = new File(artPath); // TODO should check if artPath hasn't changed
+			if (holder.mArtworkFile == null || !holder.mArtworkFile.getPath().equals(artPath)) {
+				holder.mArtworkFile = new File(artPath);
 			}
 
 			mPicasso.load(holder.mArtworkFile).transform(mCircleTransform).into(holder.mIcon);
 		} else {
-//			holder.mIcon.setImageResource(); // TODO "no album image resource"
+			holder.mIcon.setImageResource(R.drawable.ic_audio_placeholder);
 		}
 
 		// album
