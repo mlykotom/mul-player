@@ -7,6 +7,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -43,6 +46,18 @@ public class AlbumsListFragment extends BaseFragment implements IAlbumsListView 
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		mBasePresenter = mPresenter = new AlbumsListPresenter(this);
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.albums_list_menu, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return mPresenter.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
 	}
 
 	@Nullable

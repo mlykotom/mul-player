@@ -15,6 +15,7 @@ import org.greenrobot.eventbus.EventBus;
 import cz.vutbr.fit.mulplayer.model.entity.Song;
 import cz.vutbr.fit.mulplayer.model.event.PlaybackEvent;
 import cz.vutbr.fit.mulplayer.model.event.SongEvent;
+import cz.vutbr.fit.mulplayer.model.persistance.DataRepository;
 
 /**
  * @author mlyko

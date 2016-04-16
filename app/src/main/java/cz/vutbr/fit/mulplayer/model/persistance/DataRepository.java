@@ -1,7 +1,6 @@
-package cz.vutbr.fit.mulplayer.model;
+package cz.vutbr.fit.mulplayer.model.persistance;
 
 import android.util.LongSparseArray;
-import android.util.SparseArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,5 +19,7 @@ public class DataRepository {
 
 	public LongSparseArray<Song> mQueueSongs = new LongSparseArray<>();
 	public List<Long> mQueueOrderList = new ArrayList<>();
+
+
 
 }
