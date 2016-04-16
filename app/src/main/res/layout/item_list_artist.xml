@@ -10,8 +10,8 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:paddingStart="8dp"
+                tools:showIn="@layout/fragment_artists_list"
     >
-    <!--tools:showIn="@layout/fragment_artists_list"-->
 
     <TextView
         android:id="@+id/item_title"

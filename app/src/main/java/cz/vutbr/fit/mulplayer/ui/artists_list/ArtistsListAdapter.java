@@ -25,12 +25,8 @@ import cz.vutbr.fit.mulplayer.utils.CircleTransform;
  * @since 12.04.2016
  */
 public class ArtistsListAdapter extends SongsListAdapter {
-	private Picasso mPicasso;
-	private Transformation mCircleTransform = new CircleTransform();
-
 	public ArtistsListAdapter(Context context, Cursor c, String[] from, ClickableRecyclerAdapter.OnItemClickListener itemClickListener) {
 		super(context, c, from, itemClickListener);
-		mPicasso = Picasso.with(mContext);
 	}
 
 	@Override
@@ -40,22 +36,9 @@ public class ArtistsListAdapter extends SongsListAdapter {
 		// we know its only song adapter
 		ArtistViewHolder holder = (ArtistViewHolder) viewHolder;
 
-//		String artPath = cursor.getString(from[1]);
-//
-//		if (artPath != null) {
-//			if (holder.mArtworkFile == null) {
-//				holder.mArtworkFile = new File(artPath); // TODO should check if artPath hasn't changed
-//			}
-//
-//			mPicasso.load(holder.mArtworkFile).transform(mCircleTransform).into(holder.mIcon);
-//		} else {
-////			holder.mIcon.setImageResource(); // TODO "no album image resource"
-//		}
-
 		// album
 		String album = cursor.getString(from[1]);
 		holder.mAlbum.setText(album);
-
 
 		// albums | song count
 		int albumCount = cursor.getInt(from[2]);
@@ -66,7 +49,7 @@ public class ArtistsListAdapter extends SongsListAdapter {
 
 	@Override
 	public ClickableRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_album, parent, false);
+		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_artist, parent, false);
 		ArtistViewHolder vh = new ArtistViewHolder(v);
 		vh.setOnItemClickListener(mOnItemClickListener);
 		return vh;
@@ -76,14 +59,10 @@ public class ArtistsListAdapter extends SongsListAdapter {
 	 * Album viewholder
 	 */
 	class ArtistViewHolder extends ClickableRecyclerAdapter.ViewHolder {
-		@Bind(R.id.item_icon)
-		public ImageView mIcon;
 		@Bind(R.id.item_title)
 		public TextView mAlbum;
 		@Bind(R.id.item_subtitle)
 		public TextView mArtist;
-
-		public File mArtworkFile;
 
 		public ArtistViewHolder(View itemView) {
 			super(itemView);

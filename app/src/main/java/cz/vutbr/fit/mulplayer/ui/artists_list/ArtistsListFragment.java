@@ -71,7 +71,7 @@ public class ArtistsListFragment extends BaseFragment implements IArtistsListVie
 		mAlbumsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 		mAlbumsList.setItemAnimator(new DefaultItemAnimator());
 		mAlbumsList.setAdapter(mArtistsListAdapter);
-		mAlbumsList.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+		mAlbumsList.addItemDecoration(new SimpleDividerItemDecoration(getActivity(), SimpleDividerItemDecoration.LINE_WHOLE));
 	}
 
 	public void updateList(Cursor data) {
