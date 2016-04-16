@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="72dp"
-    android:background="?attr/selectableItemBackground"
-    android:clickable="true"
-    android:focusable="true"
-    android:paddingEnd="8dp"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp"
-    android:paddingStart="8dp"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="wrap_content"
+                android:layout_height="72dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingEnd="8dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingStart="8dp"
     >
 
-    <ImageView
+    <TextView
         android:id="@+id/item_icon"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
+        tools:text="TD"
+        android:gravity="center"
+        android:textColor="@color/icons"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:background="@drawable/oval_primary"
-        android:src="@drawable/ic_audio_placeholder_small"
-        android:padding="8dp"
         />
 
     <TextView
@@ -37,7 +39,7 @@
         android:singleLine="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textColor="@color/primary"
-        tools:text="Tourist History"
+        tools:text="Two Door Cinema Club"
         />
 
     <TextView
@@ -47,20 +49,8 @@
         android:layout_alignLeft="@+id/item_title"
         android:layout_alignStart="@+id/item_title"
         android:layout_below="@+id/item_title"
-        android:layout_toLeftOf="@+id/item_additional"
-        android:layout_toStartOf="@+id/item_additional"
+        android:singleLine="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        tools:text="Two Door Cinema Club"
-        />
-
-    <TextView
-        android:id="@+id/item_additional"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/item_title"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-        tools:text="11 songs"
+        tools:text="1 album | 33 songs"
         />
 </RelativeLayout>

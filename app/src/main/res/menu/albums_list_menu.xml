@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_action_sort"
+        android:icon="@drawable/ic_sort_24dp"
+        android:title="@string/menu.sort"
+        app:showAsAction="always|collapseActionView"
+        >
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/sort_album_name"
+                    android:checked="true"
+                    android:title="@string/menu.sort.album.name"
+                    />
+
+                <item
+                    android:id="@+id/sort_album_year"
+                    android:title="@string/menu.sort.album.year"
+                    />
+
+                <item
+                    android:id="@+id/sort_album_songs_number"
+                    android:title="@string/menu.sort.artist.name"
+                    />
+            </group>
+
+            <group android:checkableBehavior="all">
+                <item
+                    android:id="@+id/sort_asc_desc"
+                    android:checked="true"
+                    android:title="@string/menu.sort.asc_desc"
+                    />
+            </group>
+        </menu>
+    </item>
+</menu>

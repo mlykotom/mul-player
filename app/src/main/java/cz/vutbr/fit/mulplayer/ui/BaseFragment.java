@@ -1,5 +1,6 @@
 package cz.vutbr.fit.mulplayer.ui;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -39,5 +40,9 @@ public abstract class BaseFragment extends Fragment {
 	public void onDestroy() {
 		if (mBasePresenter != null) mBasePresenter.onDestroy();
 		super.onDestroy();
+	}
+
+	public SharedPreferences getPreferences(int mode){
+		return getActivity().getPreferences(mode);
 	}
 }

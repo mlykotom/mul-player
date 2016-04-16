@@ -1,4 +1,4 @@
-package cz.vutbr.fit.mulplayer.ui.albums_list;
+package cz.vutbr.fit.mulplayer.ui.artists_list;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -22,49 +21,35 @@ import cz.vutbr.fit.mulplayer.utils.SimpleDividerItemDecoration;
 
 /**
  * @author mlyko
- * @since 12.04.2016
+ * @since 16.04.2016
  */
-public class AlbumsListFragment extends BaseFragment implements IAlbumsListView {
-
-	public AlbumsListPresenter mPresenter;
-	@Bind(R.id.albums_list) RecyclerView mAlbumsList;
-	public AlbumsListAdapter mAlbumsListAdapter;
+public class ArtistsListFragment extends BaseFragment implements IArtistsListView {
+	public ArtistsListPresenter mPresenter;
+	@Bind(R.id.artists_list) RecyclerView mAlbumsList;
+	public ArtistsListAdapter mArtistsListAdapter;
 
 	/**
 	 * Constructor for fragment which can't be constructed classical way because android manages its lifecycle
 	 *
 	 * @return instance of this fragment
 	 */
-	public static AlbumsListFragment newInstance() {
+	public static ArtistsListFragment newInstance() {
 		Bundle args = new Bundle();
-		AlbumsListFragment fragment = new AlbumsListFragment();
+		ArtistsListFragment fragment = new ArtistsListFragment();
 		fragment.setArguments(args);
 		return fragment;
 	}
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
-		mBasePresenter = mPresenter = new AlbumsListPresenter(this);
+		mBasePresenter = mPresenter = new ArtistsListPresenter(this);
 		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);
-	}
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.albums_list_menu, menu);
-		mPresenter.onCreateOptionsMenu(menu, inflater);
-		super.onCreateOptionsMenu(menu, inflater);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		return mPresenter.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
 	}
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_albums_list, container, false);
+		View view = inflater.inflate(R.layout.fragment_artists_list, container, false);
 		ButterKnife.bind(this, view);
 		mPresenter.onCreateView();
 		return view;
@@ -79,7 +64,7 @@ public class AlbumsListFragment extends BaseFragment implements IAlbumsListView 
 	// ------ UI setters (presenter -> ui) ------ //
 
 	public void initList(String[] projection) {
-		mAlbumsListAdapter = new AlbumsListAdapter(getActivity(), null, projection, new ClickableRecyclerAdapter.OnItemClickListener() {
+		mArtistsListAdapter = new ArtistsListAdapter(getActivity(), null, projection, new ClickableRecyclerAdapter.OnItemClickListener() {
 			@Override
 			public void onRecyclerViewItemClick(int position, int viewType) {
 				mPresenter.setOnRecyclerItemClick(position, viewType);
@@ -87,11 +72,11 @@ public class AlbumsListFragment extends BaseFragment implements IAlbumsListView 
 		});
 		mAlbumsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 		mAlbumsList.setItemAnimator(new DefaultItemAnimator());
-		mAlbumsList.setAdapter(mAlbumsListAdapter);
-		mAlbumsList.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+		mAlbumsList.setAdapter(mArtistsListAdapter);
+		mAlbumsList.addItemDecoration(new SimpleDividerItemDecoration(getActivity(), SimpleDividerItemDecoration.LINE_WHOLE));
 	}
 
 	public void updateList(Cursor data) {
-		mAlbumsListAdapter.changeCursor(data);
+		mArtistsListAdapter.changeCursor(data);
 	}
 }

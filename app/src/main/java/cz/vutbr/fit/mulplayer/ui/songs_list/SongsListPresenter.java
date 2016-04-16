@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 
 import cz.vutbr.fit.mulplayer.Constants;
-import cz.vutbr.fit.mulplayer.model.DataRepository;
+import cz.vutbr.fit.mulplayer.model.persistance.DataRepository;
 import cz.vutbr.fit.mulplayer.model.MusicService;
 import cz.vutbr.fit.mulplayer.model.entity.Song;
 import cz.vutbr.fit.mulplayer.ui.BaseFragmentPresenter;

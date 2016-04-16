@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:minHeight="200dp"
         android:scaleType="centerInside"
-        android:contentDescription="@string/image.description.album_art"
+        android:contentDescription="@string/playback.album_art.content_description"
         />
 
     <TextView

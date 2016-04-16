@@ -5,15 +5,27 @@
     <string name="main.title">MULplayer</string>
 
     <!-- Menu -->
-    <!--<string name="menu.settings">Settings</string>-->
-    <string name="image.description.album_art">Album\'s art</string>
+    <string name="menu.sort">Sort</string>
+    <string name="menu.sort.asc_desc">Ascending</string>
+    <string name="menu.sort.artist.name">Artist name</string>
+    <string name="menu.sort.album.name">Album name</string>
+    <string name="menu.sort.album.year">Album year</string>
+
+
+    <!-- artists -->
+    <string name="artists.title">Artists</string>
 
     <!-- albums -->
     <string name="albums.title">Albums</string>
 
-    <plurals name="albums_songs">
+    <plurals name="songs_count">
         <item quantity="one">1 song</item>
         <item quantity="other">%d songs</item>
+    </plurals>
+
+    <plurals name="albums_count">
+        <item quantity="one">1 album</item>
+        <item quantity="other">%d albums</item>
     </plurals>
 
     <!-- songs -->
@@ -22,4 +34,6 @@
     <!-- playback -->
     <string name="playback.title">Now playing</string>
     <string name="playback.play">Play</string>
+    <string name="playback.album_art.content_description">Album\'s art</string>
+
 </resources>

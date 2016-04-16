@@ -9,6 +9,10 @@ import android.provider.MediaStore;
 public class Constants {
 	public static final String MUSIC_SELECTOR = MediaStore.Audio.Media.IS_MUSIC + " != 0";
 
+	public static final String DB_ORDER_ASC = " ASC";
+	public static final String DB_ORDER_DESC = " DESC";
+
+
 	public static final String[] SONG_PROJECTOR = {
 			MediaStore.Audio.Media._ID,
 			MediaStore.Audio.Media.ARTIST,
@@ -22,5 +26,20 @@ public class Constants {
 //			MediaStore.Audio.Media.ALBUM_KEY,
 //			MediaStore.Audio.Media.ARTIST_KEY,
 //			MediaStore.Audio.Media.TITLE_KEY,
+	};
+
+	public static final String[] ARTISTS_PROJECTOR = {
+			MediaStore.Audio.Artists._ID,
+			MediaStore.Audio.Artists.ARTIST,
+			MediaStore.Audio.Artists.NUMBER_OF_ALBUMS,
+			MediaStore.Audio.Artists.NUMBER_OF_TRACKS,
+	};
+
+	public static final String[] ALBUMS_PROJECTOR = {
+			MediaStore.Audio.Albums._ID,
+			MediaStore.Audio.Albums.ALBUM_ART,
+			MediaStore.Audio.Albums.ALBUM,
+			MediaStore.Audio.Albums.ARTIST,
+			MediaStore.Audio.Albums.NUMBER_OF_SONGS
 	};
 }
