@@ -10,14 +10,32 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:paddingStart="8dp"
-                tools:showIn="@layout/fragment_artists_list"
     >
+
+    <TextView
+        android:id="@+id/item_icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        tools:text="TD"
+        android:gravity="center"
+        android:textColor="@color/icons"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:background="@drawable/oval_primary"
+        />
 
     <TextView
         android:id="@+id/item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_alignTop="@+id/item_icon"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="-2dp"
+        android:layout_toEndOf="@+id/item_icon"
+        android:layout_toRightOf="@+id/item_icon"
         android:singleLine="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textColor="@color/primary"

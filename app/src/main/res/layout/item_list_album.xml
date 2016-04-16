@@ -19,7 +19,9 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/oval_accent"
+        android:background="@drawable/oval_primary"
+        android:src="@drawable/ic_audio_placeholder_small"
+        android:padding="8dp"
         />
 
     <TextView

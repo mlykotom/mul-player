@@ -12,6 +12,7 @@ import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.model.adapter.ClickableRecyclerAdapter;
 import cz.vutbr.fit.mulplayer.ui.songs_list.SongsListAdapter;
+import cz.vutbr.fit.mulplayer.utils.Utils;
 
 /**
  * @author mlyko
@@ -29,9 +30,12 @@ public class ArtistsListAdapter extends SongsListAdapter {
 		// we know its only song adapter
 		ArtistViewHolder holder = (ArtistViewHolder) viewHolder;
 
-		// album
-		String album = cursor.getString(from[1]);
-		holder.mAlbum.setText(album);
+		// artist
+		String artist = cursor.getString(from[1]);
+
+		holder.mIcon.setText(Utils.getFirstLetters(artist, 2)); // TODO somehow optimize?
+
+		holder.mAlbum.setText(artist);
 
 		// albums | song count
 		int albumCount = cursor.getInt(from[2]);
@@ -53,6 +57,8 @@ public class ArtistsListAdapter extends SongsListAdapter {
 	 * Album viewholder
 	 */
 	class ArtistViewHolder extends ClickableRecyclerAdapter.ViewHolder {
+		@Bind(R.id.item_icon)
+		public TextView mIcon;
 		@Bind(R.id.item_title)
 		public TextView mAlbum;
 		@Bind(R.id.item_subtitle)

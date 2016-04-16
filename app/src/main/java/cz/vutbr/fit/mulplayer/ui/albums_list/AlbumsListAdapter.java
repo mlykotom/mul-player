@@ -2,6 +2,7 @@ package cz.vutbr.fit.mulplayer.ui.albums_list;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +29,12 @@ public class AlbumsListAdapter extends SongsListAdapter {
 	private Picasso mPicasso;
 	private Transformation mCircleTransform = new CircleTransform();
 
+	static int sPaddingInPixels;
+
 	public AlbumsListAdapter(Context context, Cursor c, String[] from, ClickableRecyclerAdapter.OnItemClickListener itemClickListener) {
 		super(context, c, from, itemClickListener);
 		mPicasso = Picasso.with(mContext);
+		sPaddingInPixels = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, context.getResources().getDisplayMetrics());
 	}
 
 	@Override
@@ -48,8 +52,10 @@ public class AlbumsListAdapter extends SongsListAdapter {
 			}
 
 			mPicasso.load(holder.mArtworkFile).transform(mCircleTransform).into(holder.mIcon);
+			holder.mIcon.setPadding(0, 0, 0, 0);
 		} else {
-			holder.mIcon.setImageResource(R.drawable.ic_audio_placeholder);
+			holder.mIcon.setImageResource(R.drawable.ic_audio_placeholder_small);
+			holder.mIcon.setPadding(sPaddingInPixels, sPaddingInPixels, sPaddingInPixels, sPaddingInPixels);
 		}
 
 		// album

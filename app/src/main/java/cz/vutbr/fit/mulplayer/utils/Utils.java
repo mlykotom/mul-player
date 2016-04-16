@@ -23,4 +23,24 @@ public class Utils {
 		return String.format("%02d:%02d", minutes, seconds);
 	}
 
+
+	/**
+	 * Returns string of first letters of any word in string
+	 *
+	 * @param text where fill be searched
+	 * @param maxNum maximum number count
+	 * @return string of first lettesr
+	 */
+	public static String getFirstLetters(String text, int maxNum) {
+		String firstLetters = "";
+		text = text.replaceAll("[.,]", ""); // Replace dots, etc (optional)
+		int i = 1;
+		for (String s : text.split(" ")) {
+			if (i > maxNum) break;    // we have enough
+			if (s.length() == 0) continue;
+			firstLetters += s.charAt(0);
+			i++;
+		}
+		return firstLetters;
+	}
 }

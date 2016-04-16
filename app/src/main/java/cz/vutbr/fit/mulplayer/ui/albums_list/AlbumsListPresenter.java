@@ -82,7 +82,7 @@ public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader
 	 * @param viewType
 	 */
 	public void setOnRecyclerItemClick(int position, int viewType) {
-
+		// TODO show new ??fragment?? with album songs
 	}
 
 	public boolean menuItemSelected(MenuItem item) {
