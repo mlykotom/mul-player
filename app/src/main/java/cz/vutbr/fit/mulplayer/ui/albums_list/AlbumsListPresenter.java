@@ -2,6 +2,7 @@ package cz.vutbr.fit.mulplayer.ui.albums_list;
 
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import cz.vutbr.fit.mulplayer.Constants;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.ui.BaseFragmentPresenter;
+import cz.vutbr.fit.mulplayer.ui.album.AlbumActivity;
 
 /**
  * @author mlyko
@@ -82,7 +84,8 @@ public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader
 	 * @param viewType
 	 */
 	public void setOnRecyclerItemClick(int position, int viewType) {
-		// TODO show new ??fragment?? with album songs
+		Intent intent = new Intent(mFragment.getActivity(), AlbumActivity.class);
+		mFragment.getActivity().startActivity(intent);
 	}
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

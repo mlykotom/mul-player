@@ -20,6 +20,8 @@
     <!-- albums -->
     <string name="albums.title">Albums</string>
 
+    <string name="album.title">Album</string>
+
     <plurals name="songs_count">
         <item quantity="one">1 song</item>
         <item quantity="other">%d songs</item>
