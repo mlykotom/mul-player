@@ -85,23 +85,6 @@ public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader
 		// TODO show new ??fragment?? with album songs
 	}
 
-	public boolean menuItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.sort_album_name:
-				if (item.isChecked()) item.setChecked(false);
-				else item.setChecked(true);
-				return true;
-
-			case R.id.sort_album_songs_number:
-				if (item.isChecked()) item.setChecked(false);
-				else item.setChecked(true);
-				return true;
-
-			default:
-				return false;
-		}
-	}
-
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		switch (mOrderKey) {
 			case MediaStore.Audio.Albums.NUMBER_OF_SONGS:

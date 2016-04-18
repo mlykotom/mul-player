@@ -8,6 +8,7 @@
     <string name="menu.sort">Sort</string>
     <string name="menu.sort.asc_desc">Ascending</string>
     <string name="menu.sort.artist.name">Artist name</string>
+    <string name="menu.sort.album.songs_number">Album songs</string>
     <string name="menu.sort.album.name">Album name</string>
     <string name="menu.sort.album.year">Album year</string>
 
