@@ -1,14 +1,13 @@
-package cz.vutbr.fit.mulplayer.ui.albums_list;
+package cz.vutbr.fit.mulplayer.ui;
 
 import android.database.Cursor;
-
-import cz.vutbr.fit.mulplayer.ui.IBaseView;
+import android.support.v7.widget.RecyclerView;
 
 /**
  * @author mlyko
  * @since 12.04.2016
  */
-public interface IAlbumsListView extends IBaseView {
+public interface IBaseListView<AdapterType extends RecyclerView.Adapter> extends IBaseView {
 	/**
 	 * Initializes adapter and RecyclerView for showing data
 	 * @param projection
@@ -20,4 +19,10 @@ public interface IAlbumsListView extends IBaseView {
 	 * @param data
 	 */
 	void updateList(Cursor data);
+
+	/**
+	 * Returns adapter for getting data
+	 * @return recyclerview adapter with specific type
+	 */
+	AdapterType getSongsListAdapter();
 }

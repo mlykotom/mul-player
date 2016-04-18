@@ -14,7 +14,9 @@ import android.view.MenuItem;
 
 import cz.vutbr.fit.mulplayer.Constants;
 import cz.vutbr.fit.mulplayer.R;
+import cz.vutbr.fit.mulplayer.adapter.AlbumsListAdapter;
 import cz.vutbr.fit.mulplayer.ui.BaseFragmentPresenter;
+import cz.vutbr.fit.mulplayer.ui.IBaseListView;
 import cz.vutbr.fit.mulplayer.ui.album.AlbumActivity;
 
 /**
@@ -27,7 +29,7 @@ public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader
 	public static final String PREF_ORDER_KEY = "albums_order";
 	public static final String PREF_ORDER_KEY_ASC_DESC = "albums_order_asc_desc";
 
-	AlbumsListFragment mFragment;
+	IBaseListView<AlbumsListAdapter> mFragment;
 	CursorLoader mCursorLoader;
 	SharedPreferences mPreferences;
 
@@ -42,7 +44,7 @@ public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mPreferences = mFragment.getPreferences(Context.MODE_PRIVATE);
+		mPreferences = mFragment.getActivity().getPreferences(Context.MODE_PRIVATE);
 		mOrderKey = mPreferences.getString(PREF_ORDER_KEY, MediaStore.Audio.Albums.ALBUM_KEY);
 		mOrderAscDesc = mPreferences.getString(PREF_ORDER_KEY_ASC_DESC, Constants.DB_ORDER_ASC);
 
@@ -85,6 +87,12 @@ public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader
 	 */
 	public void setOnRecyclerItemClick(int position, int viewType) {
 		Intent intent = new Intent(mFragment.getActivity(), AlbumActivity.class);
+
+		AlbumsListAdapter adapter = mFragment.getSongsListAdapter();
+//		Cursor cursor = adapter.getCursor();
+		long albumId = adapter.getItemId(position);
+
+		intent.putExtra(AlbumActivity.EXTRA_ALBUM_ID, albumId);
 		mFragment.getActivity().startActivity(intent);
 	}
 

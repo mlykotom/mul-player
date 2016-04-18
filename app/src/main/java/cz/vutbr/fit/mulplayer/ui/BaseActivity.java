@@ -89,7 +89,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
 			if (indicatorType > INDICATOR_BACK) {
 				mActionBar.setHomeAsUpIndicator(indicatorType);
 			}
-		} else {
+		}
+		else{
 			mActionBar.setHomeButtonEnabled(false);
 			mActionBar.setDisplayHomeAsUpEnabled(false);
 		}
@@ -102,20 +103,6 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	public void setIndicator(@IndicatorType int indicatorType) {
-		if (indicatorType != INDICATOR_NONE) {
-			mActionBar.setHomeButtonEnabled(true);
-			mActionBar.setDisplayHomeAsUpEnabled(true);
-			if (indicatorType > INDICATOR_BACK) {
-				mActionBar.setHomeAsUpIndicator(indicatorType);
-			}
-		}
-		else{
-			mActionBar.setHomeButtonEnabled(false);
-			mActionBar.setDisplayHomeAsUpEnabled(false);
-		}
 	}
 
 	public Toolbar setupToolbar(String title) {
