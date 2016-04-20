@@ -40,11 +40,11 @@
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/bottom_player"
         android:layout_width="match_parent"
-        android:layout_height="360dp"
+        android:layout_height="match_parent"
         android:background="@color/primary"
         android:clipToPadding="true"
-        android:minHeight="72dp"
-        app:behavior_peekHeight="72dp"
+        android:minHeight="?attr/actionBarSize"
+        app:behavior_peekHeight="?attr/actionBarSize"
         app:layout_behavior="@string/bottom_sheet_behavior"
         >
 
