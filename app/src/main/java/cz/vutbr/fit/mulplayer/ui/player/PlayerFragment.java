@@ -138,6 +138,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 		));
 	}
 
+
 	@Override
 	public void setPlaybackSeekbarMax(int duration) {
 		mPlaybackSeekbar.setMax(duration);

@@ -51,12 +51,10 @@
         android:id="@+id/bottom_player"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/primary"
         android:clipToPadding="true"
         android:minHeight="?attr/actionBarSize"
         app:behavior_hideable="false"
         app:behavior_peekHeight="?attr/actionBarSize"
-        app:elevation="16dp"
         app:layout_behavior="@string/bottom_sheet_behavior"
         >
 
