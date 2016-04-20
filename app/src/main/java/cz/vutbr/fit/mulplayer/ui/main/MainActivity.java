@@ -7,7 +7,6 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,13 +24,13 @@ import cz.vutbr.fit.mulplayer.ui.songs_list.SongsListFragment;
 
 public class MainActivity extends BaseActivity {
 	private MainPresenter mPresenter;
-	private BaseFragmentPagerAdapter mBaseFragmentPagerAdapter;
 	@Bind(R.id.container)
 	ViewPager mViewPager;
 	@Bind(R.id.tabs)
 	TabLayout mTabLayout;
 	@Bind(R.id.bottom_player)
 	View mBottomSheet;
+	// fragments
 	ArtistsListFragment mArtistsListFragment;
 	PlayerFragment mPlayerFragment;
 	SongsListFragment mSongsListFragment;
@@ -40,36 +39,13 @@ public class MainActivity extends BaseActivity {
 	Menu mMenu;
 	private BottomSheetBehavior mBottomSheetBehavior;
 
-	private void showPlayer() {
-		setIndicator(INDICATOR_DISCARD);
-		mMenu.clear();
-		getMenuInflater().inflate(R.menu.player_menu, mMenu);
-	}
-
-	private void hidePlayer() {
-		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.container + ":" + mViewPager.getCurrentItem());
-		mMenu.clear();
-		setIndicator(INDICATOR_NONE);
-		if (page instanceof IMenuGetter) {
-			IMenuGetter menuGetter = ((IMenuGetter) page);
-			if (menuGetter.getMenuResource() > 0) {
-				getMenuInflater().inflate(menuGetter.getMenuResource(), mMenu);
-			}
-		}
-	}
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		mBasePresenter = mPresenter = new MainPresenter(this);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		Toolbar toolbar = setupToolbar(""); //R.string.app_name
-//		toolbar.setLogo(R.mipmap.ic_launcher);
-		// TODO do this in XML ?
-		AppBarLayout.LayoutParams p = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-		p.setScrollFlags(0);
-		toolbar.setLayoutParams(p);
-
+		setupToolbar("");
+		disableAppBarScrollFlags();
 		ButterKnife.bind(this);
 
 		mPlayerFragment = (PlayerFragment) getSupportFragmentManager().findFragmentById(R.id.player_fragment);
@@ -97,19 +73,19 @@ public class MainActivity extends BaseActivity {
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.
-		mBaseFragmentPagerAdapter = new BaseFragmentPagerAdapter(getSupportFragmentManager());
+		BaseFragmentPagerAdapter baseFragmentPagerAdapter = new BaseFragmentPagerAdapter(getSupportFragmentManager());
 
 		mArtistsListFragment = ArtistsListFragment.newInstance();
-		mBaseFragmentPagerAdapter.addFragment(mArtistsListFragment, getString(R.string.artists_title));
+		baseFragmentPagerAdapter.addFragment(mArtistsListFragment, getString(R.string.artists_title));
 
 		mAlbumsListFragment = AlbumsListFragment.newInstance();
-		mBaseFragmentPagerAdapter.addFragment(mAlbumsListFragment, getString(R.string.albums_title));
+		baseFragmentPagerAdapter.addFragment(mAlbumsListFragment, getString(R.string.albums_title));
 
 		mSongsListFragment = SongsListFragment.newInstance();
-		mBaseFragmentPagerAdapter.addFragment(mSongsListFragment, getString(R.string.songs_title));
+		baseFragmentPagerAdapter.addFragment(mSongsListFragment, getString(R.string.songs_title));
 
 		// Set up the ViewPager with the sections adapter.
-		mViewPager.setAdapter(mBaseFragmentPagerAdapter);
+		mViewPager.setAdapter(baseFragmentPagerAdapter);
 		mTabLayout.setupWithViewPager(mViewPager);
 	}
 
@@ -131,11 +107,41 @@ public class MainActivity extends BaseActivity {
 
 	@Override
 	public void onBackPressed() {
-		if(mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED){
+		if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
 			mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-		}
-		else{
+		} else {
 			super.onBackPressed();
+		}
+	}
+
+	// -- ui actions -- //
+
+	/**
+	 * TODO if possible, do it in XML
+	 * Disables scroll flags on appbar, so that it stays always on top
+	 * MUST BE CALLED AFTER {@link BaseActivity#setupToolbar(int, int)}
+	 */
+	private void disableAppBarScrollFlags() {
+		if (mToolbar == null) return;
+		AppBarLayout.LayoutParams p = (AppBarLayout.LayoutParams) mToolbar.getLayoutParams();
+		p.setScrollFlags(0);
+		mToolbar.setLayoutParams(p);
+	}
+
+	private void showPlayer() {
+		setIndicator(INDICATOR_DISCARD);
+		mMenu.clear();
+		getMenuInflater().inflate(R.menu.player_menu, mMenu);
+	}
+
+	private void hidePlayer() {
+		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.container + ":" + mViewPager.getCurrentItem());
+		mMenu.clear();
+		setIndicator(INDICATOR_NONE);
+		if (page instanceof IMenuGetter) {
+			IMenuGetter menuGetter = ((IMenuGetter) page);
+			if (menuGetter.getMenuResource() <= 0) return;
+			getMenuInflater().inflate(menuGetter.getMenuResource(), mMenu);
 		}
 	}
 }

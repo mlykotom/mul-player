@@ -18,7 +18,7 @@ import cz.vutbr.fit.mulplayer.R;
  */
 public abstract class BaseActivity extends AppCompatActivity implements IBaseView {
 	protected ActionBar mActionBar;
-	protected Toolbar mToolbar;
+	protected @Nullable Toolbar mToolbar;
 	protected BaseActivityPresenter mBasePresenter;
 
 	@IntDef({INDICATOR_NONE, INDICATOR_BACK, INDICATOR_DISCARD, INDICATOR_ACCEPT})
@@ -89,8 +89,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
 			if (indicatorType > INDICATOR_BACK) {
 				mActionBar.setHomeAsUpIndicator(indicatorType);
 			}
-		}
-		else{
+		} else {
 			mActionBar.setHomeButtonEnabled(false);
 			mActionBar.setDisplayHomeAsUpEnabled(false);
 		}
@@ -98,13 +97,13 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId() == android.R.id.home){
+		if (item.getItemId() == android.R.id.home) {
 			finish();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+	
 	public Toolbar setupToolbar(String title) {
 		return setupToolbar(title, INDICATOR_NONE);
 	}
