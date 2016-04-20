@@ -4,21 +4,25 @@ package cz.vutbr.fit.mulplayer.ui.player;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.ui.BaseFragment;
+import cz.vutbr.fit.mulplayer.utils.CircleTransform;
 import cz.vutbr.fit.mulplayer.utils.Utils;
 
 /**
@@ -27,21 +31,21 @@ import cz.vutbr.fit.mulplayer.utils.Utils;
  */
 public class PlayerFragment extends BaseFragment implements IPlayerView {
 	PlayerPresenter mPresenter;
-
-	@Bind(R.id.button_play_pause)
-	ImageButton mPlayPauseButton;
-	@Bind(R.id.button_next)
-	ImageButton mNextButton;
-	@Bind(R.id.button_prev)
-	ImageButton mPreviousButton;
-	@Bind(R.id.playback_seekbar)
-	SeekBar mPlaybackSeekbar;
-	@Bind(R.id.playback_artist_title)
-	TextView mArtistTitle;
-	@Bind(R.id.playback_time)
-	TextView mPlaybackTime;
-	@Bind(R.id.playback_album_art)
-	ImageView mPlaybackAlbumArt;
+	private static Transformation sCircleTransformation = new CircleTransform();
+	// mini player
+	@Bind(R.id.mini_player_album_art) ImageView mMiniPlayerAlbumArt;
+	@Bind(R.id.mini_player_artist) TextView mMiniPlayerArtist;
+	@Bind(R.id.mini_player_title) TextView mMiniPlayerTitle;
+	@Bind(R.id.mini_player_button_play_pause) FloatingActionButton mMiniPlayerButtonPlayPause;
+	// large player
+	@Bind(R.id.player_button_play_pause) FloatingActionButton mPlayerButtonPlayPause;
+	@Bind(R.id.player_button_next) FloatingActionButton mPlayerButtonNext;
+	@Bind(R.id.player_button_previous) FloatingActionButton mPlayerButtonPrevious;
+	@Bind(R.id.player_seekbar) SeekBar mPlayerSeekbar;
+	@Bind(R.id.player_artist) TextView mPlayerArtist;
+	@Bind(R.id.player_title) TextView mPlayerTitle;
+	@Bind(R.id.player_playback_time) TextView mPlayerPlaybackTime;
+	@Bind(R.id.player_album_art) ImageView mPlayerAlbumArt;
 
 	/**
 	 * Constructor for fragment which can't be constructed classical way because android manages its lifecycle
@@ -66,7 +70,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_player, container, false);
 		ButterKnife.bind(this, view);
-		mPlaybackSeekbar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
+		mPlayerSeekbar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
 		return view;
 	}
 
@@ -78,17 +82,17 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 
 	// ------ UI actions (ui -> presenter) ------ //
 
-	@OnClick(R.id.button_play_pause)
+	@OnClick({R.id.mini_player_button_play_pause, R.id.player_button_play_pause})
 	public void playPause() {
 		mPresenter.playPauseSong();
 	}
 
-	@OnClick(R.id.button_prev)
+	@OnClick(R.id.player_button_previous)
 	public void previousSong() {
 		mPresenter.previousSong();
 	}
 
-	@OnClick(R.id.button_next)
+	@OnClick(R.id.player_button_next)
 	public void nextSong() {
 		mPresenter.nextSong();
 	}
@@ -112,23 +116,33 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 
 	@Override
 	public void setAlbumArtwork(Uri albumArtwork) {
-		Picasso.with(getActivity()).load(albumArtwork).into(mPlaybackAlbumArt);
+		Picasso.with(getActivity()).load(albumArtwork).transform(sCircleTransformation).into(mPlayerAlbumArt);
+		// TODO maybe optimize for loading only once
+		Picasso.with(getActivity()).load(albumArtwork).into(mMiniPlayerAlbumArt);
 	}
 
-	@Override
-	public void setPlayPauseButton(boolean isPlaying) {
-		mPlayPauseButton.setImageResource(isPlaying ? R.drawable.ic_play_arrow_black_24dp : R.drawable.ic_pause_black_24dp);
+	public void setPlayerButtonPlayPause(boolean isPlaying) {
+		if (isPlaying) {
+			mPlayerButtonPlayPause.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+			mMiniPlayerButtonPlayPause.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+		} else {
+			mPlayerButtonPlayPause.setImageResource(R.drawable.ic_pause_black_24dp);
+			mMiniPlayerButtonPlayPause.setImageResource(R.drawable.ic_pause_black_24dp);
+		}
 	}
 
 	@Override
 	public void setPlaybackArtistTitle(String artist, String title) {
-		mArtistTitle.setText(String.format("%s - %s", artist, title));
+		mMiniPlayerArtist.setText(artist);
+		mMiniPlayerTitle.setText(title);
+		mPlayerArtist.setText(artist);
+		mPlayerTitle.setText(title);
 	}
 
 	@Override
 	public void setPlaybackTime(int actualTime, int endTime) {
-		mPlaybackSeekbar.setProgress(actualTime);
-		mPlaybackTime.setText(String.format(
+		mPlayerSeekbar.setProgress(actualTime);
+		mPlayerPlaybackTime.setText(String.format(
 				"%s / %s",
 				Utils.formatTime(actualTime),
 				Utils.formatTime(endTime)
@@ -137,6 +151,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 
 	@Override
 	public void setPlaybackSeekbarMax(int duration) {
-		mPlaybackSeekbar.setMax(duration);
+		mPlayerSeekbar.setMax(duration);
 	}
 }

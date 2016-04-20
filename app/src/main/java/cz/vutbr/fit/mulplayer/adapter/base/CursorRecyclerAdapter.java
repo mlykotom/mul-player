@@ -1,4 +1,4 @@
-package cz.vutbr.fit.mulplayer.model.adapter;/*
+package cz.vutbr.fit.mulplayer.adapter.base;/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2015 ARNAUD FRUGIER
@@ -63,7 +63,7 @@ public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> 
 
 	@Override
 	public int getItemCount() {
-		if (mDataValid && mCursor != null) {
+		if (mDataValid && mCursor != null && !mCursor.isClosed()) {
 			return mCursor.getCount();
 		} else {
 			return 0;

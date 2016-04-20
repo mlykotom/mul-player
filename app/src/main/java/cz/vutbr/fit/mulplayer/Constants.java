@@ -7,11 +7,13 @@ import android.provider.MediaStore;
  * @since 15.04.2016
  */
 public class Constants {
+
+	public static final String QUEUE_PERSISTENCE_NAME = "queue_persistence";
+
 	public static final String MUSIC_SELECTOR = MediaStore.Audio.Media.IS_MUSIC + " != 0";
 
 	public static final String DB_ORDER_ASC = " ASC";
 	public static final String DB_ORDER_DESC = " DESC";
-
 
 	public static final String[] SONG_PROJECTOR = {
 			MediaStore.Audio.Media._ID,
@@ -22,10 +24,6 @@ public class Constants {
 			MediaStore.Audio.Media.ALBUM_ID,
 			MediaStore.Audio.Media.ALBUM,
 			MediaStore.Audio.Media.TRACK,
-			// -- other (sorting,etc)
-//			MediaStore.Audio.Media.ALBUM_KEY,
-//			MediaStore.Audio.Media.ARTIST_KEY,
-//			MediaStore.Audio.Media.TITLE_KEY,
 	};
 
 	public static final String[] ARTISTS_PROJECTOR = {

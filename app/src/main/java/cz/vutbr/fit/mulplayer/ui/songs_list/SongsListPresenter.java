@@ -7,9 +7,9 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 
 import cz.vutbr.fit.mulplayer.Constants;
-import cz.vutbr.fit.mulplayer.model.persistance.DataRepository;
+import cz.vutbr.fit.mulplayer.adapter.SongsListAdapter;
 import cz.vutbr.fit.mulplayer.model.MusicService;
-import cz.vutbr.fit.mulplayer.model.entity.Song;
+import cz.vutbr.fit.mulplayer.model.persistance.DataRepository;
 import cz.vutbr.fit.mulplayer.ui.BaseFragmentPresenter;
 
 /**
@@ -79,18 +79,7 @@ public class SongsListPresenter extends BaseFragmentPresenter implements Loader.
 	public void setOnRecyclerItemClick(int position, int viewType) {
 		SongsListAdapter adapter = mFragment.getSongsListAdapter();
 		Cursor cursor = adapter.getCursor();
-		queueAllSongs(cursor);
+		mData.queueSongs(cursor);
 		MusicService.fireAction(mFragment.getActivity(), MusicService.CMD_PLAY_PAUSE, position - 1); // TODO why position - 1?
-	}
-
-	private void queueAllSongs(Cursor cursor) {
-//		cursor.getCount()
-		cursor.moveToFirst();
-		while (cursor.moveToNext()) {
-			Song song = Song.from(cursor);
-//			if(mData.mQueueSongs.keyAt())
-			mData.mQueueSongs.put(song.getId(), song);
-			mData.mQueueOrderList.add(song.getId());
-		}
 	}
 }

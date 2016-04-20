@@ -16,15 +16,17 @@ import android.view.ViewGroup;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.R;
-import cz.vutbr.fit.mulplayer.model.adapter.ClickableRecyclerAdapter;
+import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
+import cz.vutbr.fit.mulplayer.adapter.AlbumsListAdapter;
 import cz.vutbr.fit.mulplayer.ui.BaseFragment;
+import cz.vutbr.fit.mulplayer.ui.IMenuGetter;
 import cz.vutbr.fit.mulplayer.utils.SimpleDividerItemDecoration;
 
 /**
  * @author mlyko
  * @since 12.04.2016
  */
-public class AlbumsListFragment extends BaseFragment implements IAlbumsListView {
+public class AlbumsListFragment extends BaseFragment implements IAlbumsListView, IMenuGetter {
 
 	public AlbumsListPresenter mPresenter;
 	@Bind(R.id.albums_list) RecyclerView mAlbumsList;
@@ -49,9 +51,18 @@ public class AlbumsListFragment extends BaseFragment implements IAlbumsListView 
 		setHasOptionsMenu(true);
 	}
 
+	/**
+	 * Menu getter so that when player overlays toolbar, we can reinflate it
+	 *
+	 * @return menu resource
+	 */
+	public int getMenuResource() {
+		return R.menu.albums_list_menu;
+	}
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.albums_list_menu, menu);
+		inflater.inflate(getMenuResource(), menu);
 		mPresenter.onCreateOptionsMenu(menu, inflater);
 		super.onCreateOptionsMenu(menu, inflater);
 	}

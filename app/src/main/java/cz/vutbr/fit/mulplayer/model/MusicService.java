@@ -87,6 +87,7 @@ public class MusicService extends Service implements Playback.IPlaybackCallback 
 				@MusicCommand String command = intent.getStringExtra(ACTION_CMD_NAME);
 				if (CMD_REBUILD.equals(command)) {
 					// TODO rebuild saved queue from list of ids
+					rebuildQueue();
 				}
 				long value = intent.getLongExtra(ACTION_CMD_VALUE, -1);
 
@@ -114,6 +115,13 @@ public class MusicService extends Service implements Playback.IPlaybackCallback 
 		}
 
 		return START_STICKY;
+	}
+
+	/**
+	 * TODO should rebuild queue from saved or build all songs
+	 */
+	private void rebuildQueue() {
+
 	}
 
 
