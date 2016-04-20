@@ -11,7 +11,7 @@
     app:layout_scrollFlags="scroll|enterAlways"
     app:popupTheme="@style/Theme.AppCompat.Light"
     app:titleMarginStart="16dp"
-    tools:text="@string/app.name"
+    tools:text="@string/application.name"
     app:titleTextAppearance="@style/TextAppearance.AppCompat.Title"
     >
 </android.support.v7.widget.Toolbar>

@@ -68,7 +68,7 @@ public class PlayerPresenter extends BaseFragmentPresenter {
 	 */
 	@Subscribe
 	public void onEvent(SongEvent event) {
-		mFragment.setPlayPauseButton(!event.isPlaying);
+		mFragment.setPlayerButtonPlayPause(!event.isPlaying);
 		mActualSong = event.song;
 		if (mActualSong == null) return;
 		mFragment.setPlaybackArtistTitle(mActualSong.artist, mActualSong.title);

@@ -1,61 +1,73 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.player.PlayerFragment"
-    android:background="@color/background"
     >
 
     <!-- mini player -->
     <RelativeLayout
         android:id="@+id/mini_player"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:paddingEnd="8dp"
-        android:paddingRight="8dp"
+        android:layout_height="@dimen/player.mini.height"
         android:background="@color/primary"
         >
 
         <ImageView
-            android:id="@+id/mini_player_icon"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
+            android:id="@+id/mini_player_album_art"
+            android:layout_width="@dimen/player.mini.height"
+            android:layout_height="@dimen/player.mini.height"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:background="@color/primary_light"
-            android:minHeight="200dp"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_audio_placeholder"
             />
 
         <TextView
-            android:id="@+id/mini_playback_artist_title"
+            android:id="@+id/mini_player_artist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:layout_toEndOf="@+id/mini_player_icon"
-            android:layout_toLeftOf="@+id/mini_button_play_pause"
-            android:layout_toRightOf="@+id/mini_player_icon"
-            android:layout_toStartOf="@+id/mini_button_play_pause"
+            android:layout_toEndOf="@+id/mini_player_album_art"
+            android:layout_toLeftOf="@+id/mini_player_button_play_pause"
+            android:layout_toRightOf="@+id/mini_player_album_art"
+            android:layout_toStartOf="@+id/mini_player_button_play_pause"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            tools:text="Chet Faker - Gold"
+            tools:text="Chet Faker"
+            />
+
+        <TextView
+            android:id="@+id/mini_player_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mini_player_artist"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/mini_player_album_art"
+            android:layout_toLeftOf="@+id/mini_player_button_play_pause"
+            android:layout_toRightOf="@+id/mini_player_album_art"
+            android:layout_toStartOf="@+id/mini_player_button_play_pause"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            tools:text="Gold"
             />
 
 
-        <ImageButton
-            android:id="@+id/mini_button_play_pause"
-            style="@style/Widget.AppCompat.ImageButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/mini_player_button_play_pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/oval_primary"
-            android:padding="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:src="@drawable/ic_play_arrow_black_24dp"
+            app:fabSize="mini"
             />
 
     </RelativeLayout>
@@ -64,104 +76,104 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_below="@+id/mini_player"
         android:background="@color/background"
-        android:paddingTop="16dp"
+        android:paddingTop="30dp"
         >
 
         <ImageView
-            android:id="@+id/playback_album_art"
+            android:id="@+id/player_album_art"
             android:layout_width="200dp"
             android:layout_height="200dp"
+            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:background="@drawable/oval_primary"
             android:src="@drawable/ic_audio_placeholder"
             />
 
 
         <TextView
-            android:id="@+id/playback_time"
+            android:id="@+id/player_playback_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/playback_seekbar"
+            android:layout_below="@id/player_album_art"
             android:layout_centerHorizontal="true"
             tools:text="00:34/03:35"
             />
 
         <SeekBar
-            android:id="@+id/playback_seekbar"
+            android:id="@+id/player_seekbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/playback_wrapper"
             android:layout_alignLeft="@+id/playback_wrapper"
             android:layout_alignRight="@+id/playback_wrapper"
             android:layout_alignStart="@+id/playback_wrapper"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:layout_below="@id/player_playback_time"
             />
 
         <TextView
-            android:id="@+id/playback_artist_title"
+            android:id="@+id/player_artist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_toEndOf="@+id/mini_player_icon"
-            android:layout_toLeftOf="@+id/mini_button_play_pause"
-            android:layout_toRightOf="@+id/mini_player_icon"
-            android:layout_toStartOf="@+id/mini_button_play_pause"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            tools:text="Chet Faker - Gold"
+            android:layout_below="@+id/player_seekbar"
+            android:layout_centerHorizontal="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            tools:text="Chet Faker"
             />
 
+        <TextView
+            android:id="@+id/player_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/player_artist"
+            android:layout_centerHorizontal="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            tools:text="Gold"
+            />
 
         <LinearLayout
             android:id="@+id/playback_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/playback_seekbar"
-            android:layout_centerVertical="true"
             android:layout_marginEnd="32dp"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
             android:layout_marginStart="32dp"
             android:gravity="center"
             android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
             >
 
-            <ImageButton
-                android:id="@+id/button_prev"
-                style="@style/Widget.AppCompat.ImageButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/oval_accent"
-                android:padding="4dp"
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/player_button_previous"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="@drawable/ic_skip_previous_black_24dp"
+                app:backgroundTint="@color/accent"
+                app:fabSize="mini"
                 />
 
-            <ImageButton
-                android:id="@+id/button_play_pause"
-                style="@style/Widget.AppCompat.ImageButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/oval_primary"
-                android:padding="8dp"
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/player_button_play_pause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
                 android:src="@drawable/ic_play_arrow_black_24dp"
+                app:backgroundTint="@color/primary"
                 />
 
-            <ImageButton
-                android:id="@+id/button_next"
-                style="@style/Widget.AppCompat.ImageButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp"
-                android:background="@drawable/oval_accent"
-                android:padding="4dp"
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/player_button_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="@drawable/ic_skip_next_black_24dp"
+                app:backgroundTint="@color/accent"
+                app:fabSize="mini"
                 />
+
         </LinearLayout>
+
 
     </RelativeLayout>
 </RelativeLayout>

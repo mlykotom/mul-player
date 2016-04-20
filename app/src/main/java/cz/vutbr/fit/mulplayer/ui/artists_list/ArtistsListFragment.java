@@ -76,6 +76,7 @@ public class ArtistsListFragment extends BaseFragment implements IArtistsListVie
 	}
 
 	public void updateList(Cursor data) {
+		if(mArtistsListAdapter == null) return; // TODO should be always here, weird
 		mArtistsListAdapter.changeCursor(data);
 	}
 

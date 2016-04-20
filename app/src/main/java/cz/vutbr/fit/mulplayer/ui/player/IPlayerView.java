@@ -15,7 +15,7 @@ public interface IPlayerView extends IBaseView{
 
     void setAlbumArtwork(Uri albumArtwork);
 
-    void setPlayPauseButton(boolean isPlaying);
+    void setPlayerButtonPlayPause(boolean isPlaying);
     void setPlaybackArtistTitle(String artist, String title);
     void setPlaybackTime(int actualTime, int endTime);
 
