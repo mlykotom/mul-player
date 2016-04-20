@@ -142,7 +142,7 @@
             android:layout_marginStart="32dp"
             android:gravity="center"
             android:orientation="horizontal"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/player_title"
             >
 
             <android.support.design.widget.FloatingActionButton

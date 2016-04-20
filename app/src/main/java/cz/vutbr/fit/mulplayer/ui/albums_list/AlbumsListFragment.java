@@ -75,7 +75,6 @@ public class AlbumsListFragment extends BaseFragment implements IBaseListView<Al
 		return mPresenter.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
 	}
 
-	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_albums_list, container, false);
