@@ -13,6 +13,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -28,6 +29,7 @@ import cz.vutbr.fit.mulplayer.utils.Utils;
  */
 public class PlayerFragment extends BaseFragment implements IPlayerView {
 	PlayerPresenter mPresenter;
+	private static Transformation sCircleTransformation = new CircleTransform();
 
 	@Bind(R.id.button_play_pause)
 	ImageButton mPlayPauseButton;
@@ -113,7 +115,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 
 	@Override
 	public void setAlbumArtwork(Uri albumArtwork) {
-		Picasso.with(getActivity()).load(albumArtwork).into(mPlaybackAlbumArt); //.transform(new CircleTransform())
+		Picasso.with(getActivity()).load(albumArtwork).transform(sCircleTransformation).into(mPlaybackAlbumArt);
 	}
 
 	@Override

@@ -15,13 +15,14 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.model.adapter.ClickableRecyclerAdapter;
+import cz.vutbr.fit.mulplayer.ui.IMenuGetter;
 import cz.vutbr.fit.mulplayer.utils.SimpleDividerItemDecoration;
 
 /**
  * @author mlyko
  * @since 11.04.2016
  */
-public class SongsListFragment extends Fragment implements ISongsListView {
+public class SongsListFragment extends Fragment implements ISongsListView,IMenuGetter {
 	SongsListPresenter mPresenter;
 	@Bind(R.id.songs_list) RecyclerView mSongsRecyclerView;
 	public SongsListAdapter mSongsListAdapter;
@@ -82,5 +83,10 @@ public class SongsListFragment extends Fragment implements ISongsListView {
 	@Override
 	public SongsListAdapter getSongsListAdapter() {
 		return mSongsListAdapter;
+	}
+
+	@Override
+	public int getMenuResource() {
+		return R.menu.songs_list_menu;
 	}
 }

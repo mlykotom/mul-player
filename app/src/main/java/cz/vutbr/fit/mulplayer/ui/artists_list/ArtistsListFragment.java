@@ -7,8 +7,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -17,13 +15,14 @@ import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.model.adapter.ClickableRecyclerAdapter;
 import cz.vutbr.fit.mulplayer.ui.BaseFragment;
+import cz.vutbr.fit.mulplayer.ui.IMenuGetter;
 import cz.vutbr.fit.mulplayer.utils.SimpleDividerItemDecoration;
 
 /**
  * @author mlyko
  * @since 16.04.2016
  */
-public class ArtistsListFragment extends BaseFragment implements IArtistsListView {
+public class ArtistsListFragment extends BaseFragment implements IArtistsListView,IMenuGetter {
 	public ArtistsListPresenter mPresenter;
 	@Bind(R.id.artists_list) RecyclerView mAlbumsList;
 	public ArtistsListAdapter mArtistsListAdapter;
@@ -78,5 +77,10 @@ public class ArtistsListFragment extends BaseFragment implements IArtistsListVie
 
 	public void updateList(Cursor data) {
 		mArtistsListAdapter.changeCursor(data);
+	}
+
+	@Override
+	public int getMenuResource() {
+		return R.menu.albums_list_menu; // TODO artists
 	}
 }

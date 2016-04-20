@@ -30,7 +30,6 @@
     </plurals>
 
     <!-- songs -->
-    <string name="menu.sort">Sort</string>
     <string name="songs.title">Songs</string>
 
     <!-- playback -->

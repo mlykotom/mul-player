@@ -8,6 +8,7 @@ import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import cz.vutbr.fit.mulplayer.R;
 
@@ -26,7 +27,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
 
 	public static final int INDICATOR_NONE = 0;
 	public static final int INDICATOR_BACK = 1;
-	public static final int INDICATOR_DISCARD = R.drawable.ic_action_cancel;
+	public static final int INDICATOR_DISCARD = R.drawable.ic_close_white_24dp;
 	public static final int INDICATOR_ACCEPT = R.drawable.ic_done_black_24dp;
 
 	@Override
@@ -93,6 +94,15 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
 			mActionBar.setHomeButtonEnabled(false);
 			mActionBar.setDisplayHomeAsUpEnabled(false);
 		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if(item.getItemId() == android.R.id.home){
+			finish();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	public Toolbar setupToolbar(String title) {

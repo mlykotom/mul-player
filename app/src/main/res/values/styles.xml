@@ -29,30 +29,39 @@
     </style>
 
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <!--<item name="colorControlNormal">@color/primary_text</item>-->
+        <!--<item name="colorControlActivated">@color/primary</item>-->
+        <!--<item name="colorControlHighlight">@color/primary_light</item>-->
+    </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <!--<item name="colorControlNormal">@color/primary_text</item>-->
+        <!--<item name="colorControlActivated">@color/primary</item>-->
+        <!--<item name="colorControlHighlight">@color/primary_light</item>-->
+    </style>
 
 
     <!-- Dividers -->
 
     <!--<style name="Divider">-->
-        <!--<item name="android:layout_width">match_parent</item>-->
-        <!--<item name="android:layout_height">@dimen/divider_size</item>-->
-        <!--<item name="android:background">@drawable/line_divider</item> &lt;!&ndash; TODO inset &ndash;&gt;-->
+    <!--<item name="android:layout_width">match_parent</item>-->
+    <!--<item name="android:layout_height">@dimen/divider_size</item>-->
+    <!--<item name="android:background">@drawable/line_divider</item> &lt;!&ndash; TODO inset &ndash;&gt;-->
     <!--</style>-->
 
     <!--<style name="Divider.Full">-->
-        <!--<item name="android:background">@color/line_divider</item>-->
+    <!--<item name="android:background">@color/line_divider</item>-->
     <!--</style>-->
 
     <!--<style name="DividerListView">-->
-        <!--<item name="android:divider">@drawable/beeeon_divider_inset</item>-->
-        <!--<item name="android:dividerHeight">@dimen/divider_size</item>-->
+    <!--<item name="android:divider">@drawable/beeeon_divider_inset</item>-->
+    <!--<item name="android:dividerHeight">@dimen/divider_size</item>-->
     <!--</style>-->
 
     <!--<style name="DividerListView.Full">-->
-        <!--<item name="android:divider">@color/beeeon_divider</item>-->
+    <!--<item name="android:divider">@color/beeeon_divider</item>-->
     <!--</style>-->
     <!---->
 </resources>

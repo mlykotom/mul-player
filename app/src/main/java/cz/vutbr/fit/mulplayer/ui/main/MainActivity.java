@@ -5,19 +5,19 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.view.MotionEvent;
 import android.view.Menu;
-import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.model.adapter.BaseFragmentPagerAdapter;
 import cz.vutbr.fit.mulplayer.ui.BaseActivity;
+import cz.vutbr.fit.mulplayer.ui.IMenuGetter;
 import cz.vutbr.fit.mulplayer.ui.albums_list.AlbumsListFragment;
 import cz.vutbr.fit.mulplayer.ui.artists_list.ArtistsListFragment;
 import cz.vutbr.fit.mulplayer.ui.player.PlayerFragment;
@@ -32,25 +32,30 @@ public class MainActivity extends BaseActivity {
 	TabLayout mTabLayout;
 	@Bind(R.id.bottom_player)
 	View mBottomSheet;
-
 	ArtistsListFragment mArtistsListFragment;
 	PlayerFragment mPlayerFragment;
 	SongsListFragment mSongsListFragment;
 	AlbumsListFragment mAlbumsListFragment;
 
-
 	Menu mMenu;
-
-
 	private BottomSheetBehavior mBottomSheetBehavior;
 
-	private BottomSheetBehavior mBottomSheetBehavior;
+	private void showPlayer() {
+		setIndicator(INDICATOR_DISCARD);
+		mMenu.clear();
+		getMenuInflater().inflate(R.menu.player_menu, mMenu);
+	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		mMenu = menu;
-		return true;
+	private void hidePlayer() {
+		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.container + ":" + mViewPager.getCurrentItem());
+		mMenu.clear();
+		setIndicator(INDICATOR_NONE);
+		if (page instanceof IMenuGetter) {
+			IMenuGetter menuGetter = ((IMenuGetter) page);
+			if (menuGetter.getMenuResource() > 0) {
+				getMenuInflater().inflate(menuGetter.getMenuResource(), mMenu);
+			}
+		}
 	}
 
 	@Override
@@ -58,7 +63,8 @@ public class MainActivity extends BaseActivity {
 		mBasePresenter = mPresenter = new MainPresenter(this);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		Toolbar toolbar = setupToolbar(R.string.app_name);
+		Toolbar toolbar = setupToolbar(""); //R.string.app_name
+//		toolbar.setLogo(R.mipmap.ic_launcher);
 		// TODO do this in XML ?
 		AppBarLayout.LayoutParams p = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
 		p.setScrollFlags(0);
@@ -67,8 +73,6 @@ public class MainActivity extends BaseActivity {
 		ButterKnife.bind(this);
 
 		mPlayerFragment = (PlayerFragment) getSupportFragmentManager().findFragmentById(R.id.player_fragment);
-		final MenuInflater inflater = getMenuInflater();
-
 
 		mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
 		mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -76,15 +80,11 @@ public class MainActivity extends BaseActivity {
 			public void onStateChanged(@NonNull View bottomSheet, int newState) {
 				switch (newState) {
 					case BottomSheetBehavior.STATE_COLLAPSED:
-						setIndicator(INDICATOR_NONE);
-						mMenu.clear();
-						inflater.inflate(R.menu.songs_list_menu, mMenu);
+						hidePlayer();
 						break;
 
 					case BottomSheetBehavior.STATE_EXPANDED:
-						setIndicator(INDICATOR_DISCARD);
-						mMenu.clear();
-						inflater.inflate(R.menu.player_menu, mMenu);
+						showPlayer();
 						break;
 				}
 			}
@@ -114,7 +114,18 @@ public class MainActivity extends BaseActivity {
 	}
 
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+				return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		return false;
+		mMenu = menu;
+		return true;
 	}
 }
