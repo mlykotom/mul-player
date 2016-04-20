@@ -14,7 +14,8 @@ import android.view.ViewGroup;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.R;
-import cz.vutbr.fit.mulplayer.model.adapter.ClickableRecyclerAdapter;
+import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
+import cz.vutbr.fit.mulplayer.adapter.SongsListAdapter;
 import cz.vutbr.fit.mulplayer.ui.IMenuGetter;
 import cz.vutbr.fit.mulplayer.utils.SimpleDividerItemDecoration;
 

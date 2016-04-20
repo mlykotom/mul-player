@@ -1,4 +1,4 @@
-package cz.vutbr.fit.mulplayer.model.adapter;
+package cz.vutbr.fit.mulplayer.adapter.base;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.HapticFeedbackConstants;

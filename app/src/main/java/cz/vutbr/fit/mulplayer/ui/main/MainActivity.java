@@ -15,7 +15,7 @@ import android.view.View;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.R;
-import cz.vutbr.fit.mulplayer.model.adapter.BaseFragmentPagerAdapter;
+import cz.vutbr.fit.mulplayer.adapter.base.BaseFragmentPagerAdapter;
 import cz.vutbr.fit.mulplayer.ui.BaseActivity;
 import cz.vutbr.fit.mulplayer.ui.IMenuGetter;
 import cz.vutbr.fit.mulplayer.ui.albums_list.AlbumsListFragment;

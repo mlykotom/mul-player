@@ -1,4 +1,4 @@
-package cz.vutbr.fit.mulplayer.ui.albums_list;
+package cz.vutbr.fit.mulplayer.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -17,8 +17,8 @@ import java.io.File;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.R;
-import cz.vutbr.fit.mulplayer.model.adapter.ClickableRecyclerAdapter;
-import cz.vutbr.fit.mulplayer.ui.songs_list.SongsListAdapter;
+import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
+import cz.vutbr.fit.mulplayer.application.App;
 import cz.vutbr.fit.mulplayer.utils.CircleTransform;
 
 /**
@@ -28,13 +28,11 @@ import cz.vutbr.fit.mulplayer.utils.CircleTransform;
 public class AlbumsListAdapter extends SongsListAdapter {
 	private Picasso mPicasso;
 	private Transformation mCircleTransform = new CircleTransform();
-
-	static int sPaddingInPixels;
+	private static int sPaddingInPixels = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, App.getContext().getResources().getDisplayMetrics());
 
 	public AlbumsListAdapter(Context context, Cursor c, String[] from, ClickableRecyclerAdapter.OnItemClickListener itemClickListener) {
 		super(context, c, from, itemClickListener);
 		mPicasso = Picasso.with(mContext);
-		sPaddingInPixels = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, context.getResources().getDisplayMetrics());
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package cz.vutbr.fit.mulplayer.model.adapter;/*
+package cz.vutbr.fit.mulplayer.adapter.base;/*
  * The MIT License (MIT)
  *
  * Copyright (c) 2015 ARNAUD FRUGIER

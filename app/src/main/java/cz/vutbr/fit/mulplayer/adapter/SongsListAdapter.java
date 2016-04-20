@@ -1,4 +1,4 @@
-package cz.vutbr.fit.mulplayer.ui.songs_list;
+package cz.vutbr.fit.mulplayer.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -10,8 +10,8 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.R;
-import cz.vutbr.fit.mulplayer.model.adapter.ClickableRecyclerAdapter;
-import cz.vutbr.fit.mulplayer.model.adapter.CursorRecyclerAdapter;
+import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
+import cz.vutbr.fit.mulplayer.adapter.base.CursorRecyclerAdapter;
 import cz.vutbr.fit.mulplayer.utils.Utils;
 
 /**

@@ -1,4 +1,4 @@
-package cz.vutbr.fit.mulplayer.model.adapter;
+package cz.vutbr.fit.mulplayer.adapter.base;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

@@ -2,6 +2,7 @@ package cz.vutbr.fit.mulplayer.ui.songs_list;
 
 import android.database.Cursor;
 
+import cz.vutbr.fit.mulplayer.adapter.SongsListAdapter;
 import cz.vutbr.fit.mulplayer.ui.IBaseView;
 
 /**
