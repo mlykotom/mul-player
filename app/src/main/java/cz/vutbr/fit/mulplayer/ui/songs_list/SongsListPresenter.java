@@ -79,7 +79,7 @@ public class SongsListPresenter extends BaseFragmentPresenter implements Loader.
 	public void setOnRecyclerItemClick(int position, int viewType) {
 		SongsListAdapter adapter = mFragment.getSongsListAdapter();
 		Cursor cursor = adapter.getCursor();
-		mData.queueAllSongs(cursor);
+		mData.queueSongs(cursor);
 		MusicService.fireAction(mFragment.getActivity(), MusicService.CMD_PLAY_PAUSE, position - 1); // TODO why position - 1?
 	}
 }

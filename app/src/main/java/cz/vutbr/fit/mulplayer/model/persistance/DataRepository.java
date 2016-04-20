@@ -1,11 +1,18 @@
 package cz.vutbr.fit.mulplayer.model.persistance;
 
+import android.content.Context;
+import android.content.CursorLoader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.provider.MediaStore;
 import android.util.LongSparseArray;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import cz.vutbr.fit.mulplayer.Constants;
+import cz.vutbr.fit.mulplayer.application.App;
 import cz.vutbr.fit.mulplayer.model.entity.Song;
 
 /**
@@ -13,6 +20,9 @@ import cz.vutbr.fit.mulplayer.model.entity.Song;
  * @since 11.04.2016
  */
 public class DataRepository {
+	private static final String PERSISTENCE_QUEUE_IDS = "persistence_queue_ids";
+	private static final String PERSISTENCE_ACTUAL_ID = "persistence_actual_id";
+
 	private static DataRepository ourInstance = new DataRepository();
 
 	public static DataRepository getInstance() {
@@ -22,12 +32,14 @@ public class DataRepository {
 	public LongSparseArray<Song> mQueueSongs = new LongSparseArray<>();
 	public List<Long> mQueueOrderList = new ArrayList<>();
 
+	private SharedPreferences mSharedPreferences = App.getContext().getSharedPreferences(Constants.QUEUE_PERSISTENCE_NAME, Context.MODE_PRIVATE);
+
 	/**
 	 * TODO somehow compare if the old list is not the same as new one, than skip populating
 	 *
-	 * @param cursor data
+	 * @param cursor which will be queued
 	 */
-	public void queueAllSongs(Cursor cursor) {
+	public void queueSongs(Cursor cursor) {
 		mQueueSongs.clear();
 		mQueueOrderList.clear();
 		cursor.moveToFirst();
@@ -36,6 +48,36 @@ public class DataRepository {
 			mQueueSongs.put(song.getId(), song);
 			mQueueOrderList.add(song.getId());
 		}
+	}
+
+	public void rebuildQueue() {
+		// TODO complete!
+//		long actualSongId = mSharedPreferences.getLong(PERSISTENCE_ACTUAL_ID, 0);
+//		Set<String> queuedIds = mSharedPreferences.getStringSet(PERSISTENCE_QUEUE_IDS, null);
+//		if (queuedIds == null) return;			// TODO should we do something?
+//
+//		CursorLoader cursorLoader = new CursorLoader(App.getContext());
+//		cursorLoader.setUri(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+//		cursorLoader.setProjection(Constants.SONG_PROJECTOR);
+////		cursorLoader.registerListener(1, this);
+//		cursorLoader.setSelection();
+//		cursorLoader.startLoading();
+//		for (String idParsed : queuedIds) {
+//
+//		}
+	}
+
+	public void setQueue(long queueId, Set<String> queueIds) {
+		mSharedPreferences.edit()
+				.putStringSet(PERSISTENCE_QUEUE_IDS, queueIds)
+				.putLong(PERSISTENCE_ACTUAL_ID, queueId)
+				.apply();
+	}
+
+	public void saveActualSongId(long queueId) {
+		mSharedPreferences.edit()
+				.putLong(PERSISTENCE_ACTUAL_ID, queueId)
+				.apply();
 	}
 
 }

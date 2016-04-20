@@ -54,15 +54,7 @@ public class MainActivity extends BaseActivity {
 		mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
 			@Override
 			public void onStateChanged(@NonNull View bottomSheet, int newState) {
-				switch (newState) {
-					case BottomSheetBehavior.STATE_COLLAPSED:
-						hidePlayer();
-						break;
-
-					case BottomSheetBehavior.STATE_EXPANDED:
-						showPlayer();
-						break;
-				}
+				mPresenter.bottomSheetStateChanged(bottomSheet, newState);
 			}
 
 			@Override
@@ -128,13 +120,13 @@ public class MainActivity extends BaseActivity {
 		mToolbar.setLayoutParams(p);
 	}
 
-	private void showPlayer() {
+	void showPlayer() {
 		setIndicator(INDICATOR_DISCARD);
 		mMenu.clear();
 		getMenuInflater().inflate(R.menu.player_menu, mMenu);
 	}
 
-	private void hidePlayer() {
+	void hidePlayer() {
 		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.container + ":" + mViewPager.getCurrentItem());
 		mMenu.clear();
 		setIndicator(INDICATOR_NONE);

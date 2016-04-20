@@ -103,7 +103,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	public Toolbar setupToolbar(String title) {
 		return setupToolbar(title, INDICATOR_NONE);
 	}
