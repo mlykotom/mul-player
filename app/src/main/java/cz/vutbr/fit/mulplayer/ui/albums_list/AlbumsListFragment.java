@@ -51,6 +51,11 @@ public class AlbumsListFragment extends BaseFragment implements IAlbumsListView,
 		setHasOptionsMenu(true);
 	}
 
+	/**
+	 * Menu getter so that when player overlays toolbar, we can reinflate it
+	 *
+	 * @return menu resource
+	 */
 	public int getMenuResource() {
 		return R.menu.albums_list_menu;
 	}

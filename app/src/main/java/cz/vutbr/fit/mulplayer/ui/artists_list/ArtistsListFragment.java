@@ -23,7 +23,7 @@ import cz.vutbr.fit.mulplayer.utils.SimpleDividerItemDecoration;
  * @author mlyko
  * @since 16.04.2016
  */
-public class ArtistsListFragment extends BaseFragment implements IArtistsListView,IMenuGetter {
+public class ArtistsListFragment extends BaseFragment implements IArtistsListView, IMenuGetter {
 	public ArtistsListPresenter mPresenter;
 	@Bind(R.id.artists_list) RecyclerView mAlbumsList;
 	public ArtistsListAdapter mArtistsListAdapter;
@@ -77,10 +77,15 @@ public class ArtistsListFragment extends BaseFragment implements IArtistsListVie
 	}
 
 	public void updateList(Cursor data) {
-		if(mArtistsListAdapter == null) return; // TODO should be always here, weird
+		if (mArtistsListAdapter == null) return; // TODO should be always here, weird
 		mArtistsListAdapter.changeCursor(data);
 	}
 
+	/**
+	 * Menu getter so that when player overlays toolbar, we can reinflate it
+	 *
+	 * @return menu resource
+	 */
 	@Override
 	public int getMenuResource() {
 		return R.menu.albums_list_menu; // TODO artists
