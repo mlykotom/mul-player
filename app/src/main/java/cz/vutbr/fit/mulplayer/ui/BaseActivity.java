@@ -89,7 +89,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
 			if (indicatorType > INDICATOR_BACK) {
 				mActionBar.setHomeAsUpIndicator(indicatorType);
 			}
-		} else {
+		}
+		else{
 			mActionBar.setHomeButtonEnabled(false);
 			mActionBar.setDisplayHomeAsUpEnabled(false);
 		}

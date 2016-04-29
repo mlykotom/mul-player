@@ -16,6 +16,7 @@ import java.io.File;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cz.vutbr.fit.mulplayer.application.App;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
 import cz.vutbr.fit.mulplayer.application.App;

@@ -1,5 +1,7 @@
 package cz.vutbr.fit.mulplayer.ui.albums_list;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,8 +18,9 @@ import android.view.ViewGroup;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.R;
-import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
 import cz.vutbr.fit.mulplayer.adapter.AlbumsListAdapter;
+import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
+import cz.vutbr.fit.mulplayer.ui.IBaseListView;
 import cz.vutbr.fit.mulplayer.ui.BaseFragment;
 import cz.vutbr.fit.mulplayer.ui.IMenuGetter;
 import cz.vutbr.fit.mulplayer.utils.SimpleDividerItemDecoration;
@@ -26,7 +29,7 @@ import cz.vutbr.fit.mulplayer.utils.SimpleDividerItemDecoration;
  * @author mlyko
  * @since 12.04.2016
  */
-public class AlbumsListFragment extends BaseFragment implements IAlbumsListView, IMenuGetter {
+public class AlbumsListFragment extends BaseFragment implements IBaseListView<AlbumsListAdapter>, IMenuGetter {
 
 	public AlbumsListPresenter mPresenter;
 	@Bind(R.id.albums_list) RecyclerView mAlbumsList;
@@ -72,7 +75,6 @@ public class AlbumsListFragment extends BaseFragment implements IAlbumsListView,
 		return mPresenter.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
 	}
 
-	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_albums_list, container, false);
@@ -104,5 +106,10 @@ public class AlbumsListFragment extends BaseFragment implements IAlbumsListView,
 
 	public void updateList(Cursor data) {
 		mAlbumsListAdapter.changeCursor(data);
+	}
+
+	@Override
+	public AlbumsListAdapter getSongsListAdapter() {
+		return mAlbumsListAdapter;
 	}
 }
