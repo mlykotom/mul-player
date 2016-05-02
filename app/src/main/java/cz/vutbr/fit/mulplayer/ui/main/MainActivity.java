@@ -1,20 +1,30 @@
 package cz.vutbr.fit.mulplayer.ui.main;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cz.vutbr.fit.mulplayer.Constants;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.adapter.base.BaseFragmentPagerAdapter;
+import cz.vutbr.fit.mulplayer.model.event.PermissionEvent;
 import cz.vutbr.fit.mulplayer.ui.BaseActivity;
 import cz.vutbr.fit.mulplayer.ui.IMenuGetter;
 import cz.vutbr.fit.mulplayer.ui.albums_list.AlbumsListFragment;
@@ -23,6 +33,7 @@ import cz.vutbr.fit.mulplayer.ui.player.PlayerFragment;
 import cz.vutbr.fit.mulplayer.ui.songs_list.SongsListFragment;
 
 public class MainActivity extends BaseActivity {
+	private static final String TAG = MainActivity.class.getSimpleName();
 	private MainPresenter mPresenter;
 	@Bind(R.id.container)
 	ViewPager mViewPager;

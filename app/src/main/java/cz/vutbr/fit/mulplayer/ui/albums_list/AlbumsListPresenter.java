@@ -53,6 +53,11 @@ public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader
 		mCursorLoader.setProjection(Constants.ALBUMS_PROJECTOR);
 		mCursorLoader.setSortOrder(mOrderKey + mOrderAscDesc);
 		mCursorLoader.registerListener(LOADER_ALBUMS_MUSIC, this);
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
 		mCursorLoader.startLoading();
 	}
 
@@ -63,16 +68,11 @@ public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader
 	}
 
 	@Override
-	public void onPause() {
-		super.onPause();
+	public void onStop() {
+		super.onStop();
 		mCursorLoader.reset();
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		mCursorLoader.startLoading();
-	}
 
 	@Override
 	public void onLoadComplete(Loader<Cursor> loader, Cursor data) {

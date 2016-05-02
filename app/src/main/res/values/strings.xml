@@ -4,6 +4,9 @@
 
     <string name="main.title">MULplayer</string>
 
+    <!-- permissions-->
+    <string name="permission.warning.read_storage">If you want to listen to the music, kindly allow us to scan your music files.</string>
+
     <!-- Menu -->
     <string name="menu.sort">Sort</string>
     <string name="menu.sort.asc_desc">Ascending</string>
@@ -39,5 +42,6 @@
     <string name="playback.title">Now playing</string>
     <string name="playback.play">Play</string>
     <string name="playback.album_art.content_description">Album\'s art</string>
+    <string name="application.welcome">Welcome to MULplayer!</string>
 
 </resources>

@@ -10,15 +10,18 @@ public class BasePresenter {
 	public void onCreate(Bundle savedInstanceState) {
 	}
 
+	public void onStart() {
+	}
+
 	public void onResume() {
 	}
 
 	public void onPause() {
 	}
 
-	public void onDestroy() {
+	public void onStop() {
 	}
 
-	public void onStop() {
+	public void onDestroy() {
 	}
 }

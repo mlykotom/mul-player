@@ -38,7 +38,6 @@ public class ArtistsListPresenter extends BaseFragmentPresenter implements Loade
 		);
 
 		mCursorLoader.registerListener(LOADER_ARTISTS_MUSIC, this);
-		mCursorLoader.startLoading();
 	}
 
 	@Override
@@ -48,16 +47,17 @@ public class ArtistsListPresenter extends BaseFragmentPresenter implements Loade
 	}
 
 	@Override
-	public void onPause() {
-		super.onPause();
-		mCursorLoader.reset();
+	public void onStart() {
+		super.onStart();
+		mCursorLoader.startLoading();
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
-		mCursorLoader.startLoading();
+	public void onStop() {
+		super.onStop();
+		mCursorLoader.reset();
 	}
+
 
 	@Override
 	public void onLoadComplete(Loader<Cursor> loader, Cursor data) {

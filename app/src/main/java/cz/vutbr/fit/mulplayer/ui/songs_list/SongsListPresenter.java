@@ -40,6 +40,11 @@ public class SongsListPresenter extends BaseFragmentPresenter implements Loader.
 		);
 
 		mCursorLoader.registerListener(LOADER_SONGS_MUSIC, this);
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
 		mCursorLoader.startLoading();
 	}
 
@@ -49,20 +54,11 @@ public class SongsListPresenter extends BaseFragmentPresenter implements Loader.
 		mFragment.initList(Constants.SONG_PROJECTOR);
 	}
 
-	@Override
-	public void onPause() {
-		super.onPause();
-
-		mCursorLoader.reset(); // TODO how to reset it?
-//		mCursorLoader.unregisterListener(this);
-//		mCursorLoader.cancelLoad();
-//		mCursorLoader.stopLoading();
-	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
-		mCursorLoader.startLoading();
+	public void onStop() {
+		super.onStop();
+		mCursorLoader.reset();
 	}
 
 	@Override

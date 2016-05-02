@@ -2,6 +2,7 @@ package cz.vutbr.fit.mulplayer.application;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.v4.app.ActivityCompat;
 
 import com.squareup.picasso.Picasso;
 

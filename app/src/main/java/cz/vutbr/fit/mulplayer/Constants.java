@@ -1,6 +1,7 @@
 package cz.vutbr.fit.mulplayer;
 
 import android.provider.MediaStore;
+import android.support.annotation.IntDef;
 
 /**
  * @author mlyko
@@ -40,4 +41,12 @@ public class Constants {
 			MediaStore.Audio.Albums.ARTIST,
 			MediaStore.Audio.Albums.NUMBER_OF_SONGS
 	};
+
+
+	@IntDef({PERMISSION_CODE_READ_STORAGE})
+	public @interface PermissionCode {
+	}
+
+	public static final int PERMISSION_CODE_READ_STORAGE = 1;
+
 }
