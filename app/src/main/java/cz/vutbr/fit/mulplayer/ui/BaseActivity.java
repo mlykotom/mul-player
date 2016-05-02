@@ -37,6 +37,12 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
 	}
 
 	@Override
+	protected void onStart() {
+		super.onStart();
+		if (mBasePresenter != null) mBasePresenter.onStart();
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 		if (mBasePresenter != null) mBasePresenter.onResume();
@@ -46,6 +52,12 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
 	protected void onPause() {
 		if (mBasePresenter != null) mBasePresenter.onPause();
 		super.onPause();
+	}
+
+	@Override
+	protected void onStop() {
+		if (mBasePresenter != null) mBasePresenter.onStop();
+		super.onStop();
 	}
 
 	@Override
@@ -89,8 +101,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
 			if (indicatorType > INDICATOR_BACK) {
 				mActionBar.setHomeAsUpIndicator(indicatorType);
 			}
-		}
-		else{
+		} else {
 			mActionBar.setHomeButtonEnabled(false);
 			mActionBar.setDisplayHomeAsUpEnabled(false);
 		}

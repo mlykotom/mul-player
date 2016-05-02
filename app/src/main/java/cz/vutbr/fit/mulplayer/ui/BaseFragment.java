@@ -25,6 +25,12 @@ public abstract class BaseFragment extends Fragment {
 	}
 
 	@Override
+	public void onStart() {
+		super.onStart();
+		if (mBasePresenter != null) mBasePresenter.onStart();
+	}
+
+	@Override
 	public void onPause() {
 		if (mBasePresenter != null) mBasePresenter.onPause();
 		super.onPause();
@@ -42,7 +48,7 @@ public abstract class BaseFragment extends Fragment {
 		super.onDestroy();
 	}
 
-	public SharedPreferences getPreferences(int mode){
+	public SharedPreferences getPreferences(int mode) {
 		return getActivity().getPreferences(mode);
 	}
 }
