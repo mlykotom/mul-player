@@ -44,6 +44,7 @@ public class ArtistsListFragment extends BaseFragment implements IArtistsListVie
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		mBasePresenter = mPresenter = new ArtistsListPresenter(this);
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 	}
 
 	@Nullable

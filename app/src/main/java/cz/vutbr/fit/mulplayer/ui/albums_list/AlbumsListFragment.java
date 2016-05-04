@@ -109,7 +109,7 @@ public class AlbumsListFragment extends BaseFragment implements IBaseListView<Al
 	}
 
 	@Override
-	public AlbumsListAdapter getSongsListAdapter() {
+	public AlbumsListAdapter getListAdapter() {
 		return mAlbumsListAdapter;
 	}
 }

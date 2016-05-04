@@ -1,30 +1,20 @@
 package cz.vutbr.fit.mulplayer.ui.main;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
-
-import org.greenrobot.eventbus.EventBus;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import cz.vutbr.fit.mulplayer.Constants;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.adapter.base.BaseFragmentPagerAdapter;
-import cz.vutbr.fit.mulplayer.model.event.PermissionEvent;
 import cz.vutbr.fit.mulplayer.ui.BaseActivity;
 import cz.vutbr.fit.mulplayer.ui.IMenuGetter;
 import cz.vutbr.fit.mulplayer.ui.albums_list.AlbumsListFragment;
@@ -131,12 +121,18 @@ public class MainActivity extends BaseActivity {
 		mToolbar.setLayoutParams(p);
 	}
 
+	/**
+	 * Shows player fragment and set's its menu
+	 */
 	void showPlayer() {
 		setIndicator(INDICATOR_DISCARD);
 		mMenu.clear();
 		getMenuInflater().inflate(R.menu.player_menu, mMenu);
 	}
 
+	/**
+	 * Hides shown player and setups actual visible fragment's menu back
+	 */
 	void hidePlayer() {
 		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.container + ":" + mViewPager.getCurrentItem());
 		mMenu.clear();

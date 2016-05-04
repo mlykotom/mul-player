@@ -30,15 +30,12 @@ public class SongsListPresenter extends BaseFragmentPresenter implements Loader.
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mCursorLoader = new CursorLoader(
-				mFragment.getActivity(),
-				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-				Constants.SONG_PROJECTOR,
-				Constants.MUSIC_SELECTOR,
-				null,
-				MediaStore.Audio.Media.TITLE_KEY
-		);
 
+		mCursorLoader = new CursorLoader(mFragment.getActivity());
+		mCursorLoader.setUri(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+		mCursorLoader.setProjection(Constants.SONG_PROJECTOR);
+//		mCursorLoader.setSortOrder(mOrderKey + mOrderAscDesc);
+		mCursorLoader.setSortOrder(MediaStore.Audio.Media.TITLE_KEY);
 		mCursorLoader.registerListener(LOADER_SONGS_MUSIC, this);
 	}
 

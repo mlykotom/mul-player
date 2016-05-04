@@ -24,5 +24,5 @@ public interface IBaseListView<AdapterType extends RecyclerView.Adapter> extends
 	 * Returns adapter for getting data
 	 * @return recyclerview adapter with specific type
 	 */
-	AdapterType getSongsListAdapter();
+	AdapterType getListAdapter();
 }

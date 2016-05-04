@@ -3,7 +3,6 @@ package cz.vutbr.fit.mulplayer.ui.songs_list;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +15,7 @@ import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.adapter.SongsListAdapter;
 import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
+import cz.vutbr.fit.mulplayer.ui.BaseFragment;
 import cz.vutbr.fit.mulplayer.ui.IMenuGetter;
 import cz.vutbr.fit.mulplayer.utils.SimpleDividerItemDecoration;
 
@@ -23,7 +23,7 @@ import cz.vutbr.fit.mulplayer.utils.SimpleDividerItemDecoration;
  * @author mlyko
  * @since 11.04.2016
  */
-public class SongsListFragment extends Fragment implements ISongsListView, IMenuGetter {
+public class SongsListFragment extends BaseFragment implements ISongsListView, IMenuGetter {
 	SongsListPresenter mPresenter;
 	@Bind(R.id.songs_list) RecyclerView mSongsRecyclerView;
 	public SongsListAdapter mSongsListAdapter;
@@ -42,9 +42,9 @@ public class SongsListFragment extends Fragment implements ISongsListView, IMenu
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
-		mPresenter = new SongsListPresenter(this);
+		mBasePresenter = mPresenter = new SongsListPresenter(this);
 		super.onCreate(savedInstanceState);
-		mPresenter.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 	}
 
 	@Override

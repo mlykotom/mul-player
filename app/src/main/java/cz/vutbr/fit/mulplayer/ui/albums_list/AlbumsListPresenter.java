@@ -88,7 +88,7 @@ public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader
 	public void setOnRecyclerItemClick(int position, int viewType) {
 		Intent intent = new Intent(mFragment.getActivity(), AlbumActivity.class);
 
-		AlbumsListAdapter adapter = mFragment.getSongsListAdapter();
+		AlbumsListAdapter adapter = mFragment.getListAdapter();
 //		Cursor cursor = adapter.getCursor();
 		long albumId = adapter.getItemId(position);
 
