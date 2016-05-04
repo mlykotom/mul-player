@@ -20,10 +20,13 @@
     <!-- artists -->
     <string name="artists.title">Artists</string>
 
+    <string name="artists.detail.title">Artist</string>
+    <string name="artists.detail.no_id">Must be specified artist id to show it\'s detailed information</string>
+
     <!-- albums -->
     <string name="albums.title">Albums</string>
 
-    <string name="album.title">Album</string>
+    <string name="albums.detail.title">Album</string>
 
     <plurals name="songs_count">
         <item quantity="one">1 song</item>

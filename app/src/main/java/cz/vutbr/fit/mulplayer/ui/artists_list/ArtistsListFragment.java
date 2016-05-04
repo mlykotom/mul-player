@@ -14,8 +14,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.adapter.ArtistsListAdapter;
-import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
 import cz.vutbr.fit.mulplayer.ui.BaseFragment;
+import cz.vutbr.fit.mulplayer.ui.IBaseListView;
 import cz.vutbr.fit.mulplayer.ui.IMenuGetter;
 import cz.vutbr.fit.mulplayer.utils.SimpleDividerItemDecoration;
 
@@ -23,7 +23,7 @@ import cz.vutbr.fit.mulplayer.utils.SimpleDividerItemDecoration;
  * @author mlyko
  * @since 16.04.2016
  */
-public class ArtistsListFragment extends BaseFragment implements IArtistsListView, IMenuGetter {
+public class ArtistsListFragment extends BaseFragment implements IBaseListView<ArtistsListAdapter>, IMenuGetter {
 	public ArtistsListPresenter mPresenter;
 	@Bind(R.id.artists_list) RecyclerView mAlbumsList;
 	public ArtistsListAdapter mArtistsListAdapter;
@@ -64,22 +64,37 @@ public class ArtistsListFragment extends BaseFragment implements IArtistsListVie
 
 	// ------ UI setters (presenter -> ui) ------ //
 
+	/**
+	 * Initializes adapter and RecyclerView for showing data
+	 * @param projection
+	 */
 	public void initList(String[] projection) {
-		mArtistsListAdapter = new ArtistsListAdapter(getActivity(), null, projection, new ClickableRecyclerAdapter.OnItemClickListener() {
-			@Override
-			public void onRecyclerViewItemClick(int position, int viewType) {
-				mPresenter.setOnRecyclerItemClick(position, viewType);
-			}
-		});
+		mArtistsListAdapter = new ArtistsListAdapter(getActivity(), projection);
+		mArtistsListAdapter.setOnItemClickListener(mPresenter);
+
 		mAlbumsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 		mAlbumsList.setItemAnimator(new DefaultItemAnimator());
 		mAlbumsList.setAdapter(mArtistsListAdapter);
 		mAlbumsList.addItemDecoration(new SimpleDividerItemDecoration(getActivity(), SimpleDividerItemDecoration.LINE_WHOLE));
 	}
 
+	/**
+	 * Updates list with refreshed data (swaps the cursor)
+	 * @param data
+	 */
 	public void updateList(Cursor data) {
 		if (mArtistsListAdapter == null) return; // TODO should be always here, weird
 		mArtistsListAdapter.changeCursor(data);
+	}
+
+	/**
+	 * Returns adapter for getting data
+	 *
+	 * @return recyclerview adapter with specific type
+	 */
+	@Override
+	public ArtistsListAdapter getListAdapter() {
+		return mArtistsListAdapter;
 	}
 
 	/**

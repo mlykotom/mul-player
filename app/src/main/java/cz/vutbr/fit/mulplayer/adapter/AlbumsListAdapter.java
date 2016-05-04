@@ -3,7 +3,6 @@ package cz.vutbr.fit.mulplayer.adapter;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,7 +18,6 @@ import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.application.App;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
-import cz.vutbr.fit.mulplayer.application.App;
 import cz.vutbr.fit.mulplayer.utils.CircleTransform;
 
 /**
@@ -31,9 +29,9 @@ public class AlbumsListAdapter extends SongsListAdapter {
 	private Transformation mCircleTransform = new CircleTransform();
 	private static int sPaddingInPixels = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, App.getContext().getResources().getDisplayMetrics());
 
-	public AlbumsListAdapter(Context context, Cursor c, String[] from, ClickableRecyclerAdapter.OnItemClickListener itemClickListener) {
-		super(context, c, from, itemClickListener);
-		mPicasso = Picasso.with(mContext);
+	public AlbumsListAdapter(Context context, String[] from) {
+		super(context, from);
+		mPicasso = Picasso.with(context);
 	}
 
 	@Override
@@ -67,15 +65,16 @@ public class AlbumsListAdapter extends SongsListAdapter {
 
 		// song count
 		int songCount = cursor.getInt(from[4]);
-		String quantityString = mContext.getResources().getQuantityString(R.plurals.songs_count, songCount, songCount);
+		String quantityString = App.getContext().getResources().getQuantityString(R.plurals.songs_count, songCount, songCount);
 		holder.mSongCount.setText(quantityString);
 	}
 
 	@Override
 	public ClickableRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_album, parent, false);
+		View v = mInflater.inflate(R.layout.item_list_album, parent, false);
 		AlbumViewHolder vh = new AlbumViewHolder(v);
 		vh.setOnItemClickListener(mOnItemClickListener);
+		vh.setOnLongItemClickListener(mOnLongItemClickListener);
 		return vh;
 	}
 

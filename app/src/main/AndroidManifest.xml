@@ -27,6 +27,7 @@
 
         <activity android:name=".ui.main.MainActivity"/>
         <activity android:name=".ui.album.AlbumActivity"/>
+        <activity android:name=".ui.artist_detail.ArtistDetailActivity"/>
 
         <service
             android:name=".model.MusicService"

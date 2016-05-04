@@ -6,7 +6,7 @@ import android.os.Bundle;
  * @author mlyko
  * @since 12.04.2016
  */
-public class BasePresenter {
+public abstract class BasePresenter {
 	public void onCreate(Bundle savedInstanceState) {
 	}
 
@@ -24,4 +24,6 @@ public class BasePresenter {
 
 	public void onDestroy() {
 	}
+
+	public abstract BaseActivity getBaseActivity();
 }

@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import cz.vutbr.fit.mulplayer.Constants;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.adapter.AlbumsListAdapter;
+import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
 import cz.vutbr.fit.mulplayer.ui.BaseFragmentPresenter;
 import cz.vutbr.fit.mulplayer.ui.IBaseListView;
 import cz.vutbr.fit.mulplayer.ui.album.AlbumActivity;
@@ -23,7 +24,7 @@ import cz.vutbr.fit.mulplayer.ui.album.AlbumActivity;
  * @author mlyko
  * @since 12.04.2016
  */
-public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader.OnLoadCompleteListener<Cursor> {
+public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader.OnLoadCompleteListener<Cursor>, ClickableRecyclerAdapter.OnItemClickListener {
 	private static final int LOADER_ALBUMS_MUSIC = 0;
 
 	public static final String PREF_ORDER_KEY = "albums_order";
@@ -37,6 +38,7 @@ public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader
 	private String mOrderAscDesc;
 
 	public AlbumsListPresenter(AlbumsListFragment fragment) {
+		super(fragment);
 		mFragment = fragment;
 	}
 
@@ -77,23 +79,6 @@ public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader
 	@Override
 	public void onLoadComplete(Loader<Cursor> loader, Cursor data) {
 		mFragment.updateList(data);
-	}
-
-	/**
-	 * When user clicked on item in list
-	 *
-	 * @param position
-	 * @param viewType
-	 */
-	public void setOnRecyclerItemClick(int position, int viewType) {
-		Intent intent = new Intent(mFragment.getActivity(), AlbumActivity.class);
-
-		AlbumsListAdapter adapter = mFragment.getListAdapter();
-//		Cursor cursor = adapter.getCursor();
-		long albumId = adapter.getItemId(position);
-
-		intent.putExtra(AlbumActivity.EXTRA_ALBUM_ID, albumId);
-		mFragment.getActivity().startActivity(intent);
 	}
 
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -148,5 +133,23 @@ public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader
 		mCursorLoader.startLoading();
 
 		return true;
+	}
+
+	/**
+	 * When user clicked on item in list
+	 *
+	 * @param holder
+	 * @param position
+	 * @param viewType
+	 */
+	@Override
+	public void onRecyclerViewItemClick(ClickableRecyclerAdapter.ViewHolder holder, int position, int viewType) {
+		Intent intent = new Intent(mFragment.getActivity(), AlbumActivity.class);
+
+		AlbumsListAdapter adapter = mFragment.getListAdapter();
+		long albumId = adapter.getItemId(position);
+
+		intent.putExtra(AlbumActivity.EXTRA_ALBUM_ID, albumId);
+		mFragment.getActivity().startActivity(intent);
 	}
 }

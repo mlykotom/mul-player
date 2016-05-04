@@ -2,7 +2,6 @@ package cz.vutbr.fit.mulplayer.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -18,8 +17,11 @@ import cz.vutbr.fit.mulplayer.utils.Utils;
  * @since 12.04.2016
  */
 public class ArtistsListAdapter extends SongsListAdapter {
-	public ArtistsListAdapter(Context context, Cursor c, String[] from, ClickableRecyclerAdapter.OnItemClickListener itemClickListener) {
-		super(context, c, from, itemClickListener);
+	private Context mContext;
+
+	public ArtistsListAdapter(Context context, String[] from) {
+		super(context, from);
+		mContext = context;
 	}
 
 	@Override
@@ -46,16 +48,17 @@ public class ArtistsListAdapter extends SongsListAdapter {
 
 	@Override
 	public ClickableRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_artist, parent, false);
+		View v = mInflater.inflate(R.layout.item_list_artist, parent, false);
 		ArtistViewHolder vh = new ArtistViewHolder(v);
 		vh.setOnItemClickListener(mOnItemClickListener);
+		vh.setOnLongItemClickListener(mOnLongItemClickListener);
 		return vh;
 	}
 
 	/**
 	 * Album viewholder
 	 */
-	class ArtistViewHolder extends ClickableRecyclerAdapter.ViewHolder {
+	public static class ArtistViewHolder extends ClickableRecyclerAdapter.ViewHolder {
 		@Bind(R.id.item_icon)
 		public TextView mIcon;
 		@Bind(R.id.item_title)

@@ -11,7 +11,6 @@ import cz.vutbr.fit.mulplayer.model.entity.Song;
 import cz.vutbr.fit.mulplayer.model.event.PlaybackEvent;
 import cz.vutbr.fit.mulplayer.model.event.SongEvent;
 import cz.vutbr.fit.mulplayer.ui.BaseFragmentPresenter;
-import cz.vutbr.fit.mulplayer.ui.IBaseView;
 
 /**
  * @author mlyko
@@ -26,8 +25,9 @@ public class PlayerPresenter extends BaseFragmentPresenter {
 	int mEndTime;
 	int mActualTime;
 
-	public PlayerPresenter(IBaseView fragment) {
-		mFragment = (IPlayerView) fragment;
+	public PlayerPresenter(PlayerFragment fragment) {
+		super(fragment);
+		mFragment = fragment;
 	}
 
 	@Override

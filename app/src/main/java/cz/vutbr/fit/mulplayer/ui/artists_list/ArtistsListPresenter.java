@@ -1,27 +1,33 @@
 package cz.vutbr.fit.mulplayer.ui.artists_list;
 
 import android.content.CursorLoader;
+import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
 
 import cz.vutbr.fit.mulplayer.Constants;
+import cz.vutbr.fit.mulplayer.adapter.ArtistsListAdapter;
+import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
 import cz.vutbr.fit.mulplayer.ui.BaseFragmentPresenter;
+import cz.vutbr.fit.mulplayer.ui.album.AlbumActivity;
+import cz.vutbr.fit.mulplayer.ui.artist_detail.ArtistDetailActivity;
 
 /**
  * @author mlyko
  * @since 16.04.2016
  */
-public class ArtistsListPresenter extends BaseFragmentPresenter implements Loader.OnLoadCompleteListener<Cursor> {
+public class ArtistsListPresenter extends BaseFragmentPresenter implements Loader.OnLoadCompleteListener<Cursor>, ClickableRecyclerAdapter.OnItemClickListener {
 	private static final int LOADER_ARTISTS_MUSIC = 0;
 
-	IArtistsListView mFragment;
+	ArtistsListFragment mFragment;
 	CursorLoader mCursorLoader;
 
 	String mOrderKey = MediaStore.Audio.Artists.ARTIST_KEY;
 
-	public ArtistsListPresenter(IArtistsListView fragment) {
+	public ArtistsListPresenter(ArtistsListFragment fragment) {
+		super(fragment);
 		mFragment = fragment;
 	}
 
@@ -64,13 +70,22 @@ public class ArtistsListPresenter extends BaseFragmentPresenter implements Loade
 		mFragment.updateList(data);
 	}
 
+
 	/**
 	 * When user clicked on item in list
 	 *
+	 * @param holder
 	 * @param position
 	 * @param viewType
 	 */
-	public void setOnRecyclerItemClick(int position, int viewType) {
+	@Override
+	public void onRecyclerViewItemClick(ClickableRecyclerAdapter.ViewHolder holder, int position, int viewType) {
+		Intent intent = new Intent(getBaseActivity(), ArtistDetailActivity.class);
 
+		ArtistsListAdapter adapter = mFragment.getListAdapter();
+		long artistId = adapter.getItemId(position);
+
+		intent.putExtra(ArtistDetailActivity.EXTRA_ARTIST_ID, artistId);
+		mFragment.getActivity().startActivity(intent);
 	}
 }
