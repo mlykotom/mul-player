@@ -46,7 +46,6 @@ public class MainActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		setupToolbar("");
-		disableAppBarScrollFlags();
 		ButterKnife.bind(this);
 
 		mPlayerFragment = (PlayerFragment) getSupportFragmentManager().findFragmentById(R.id.player_fragment);
@@ -108,18 +107,6 @@ public class MainActivity extends BaseActivity {
 	}
 
 	// -- ui actions -- //
-
-	/**
-	 * TODO if possible, do it in XML
-	 * Disables scroll flags on appbar, so that it stays always on top
-	 * MUST BE CALLED AFTER {@link BaseActivity#setupToolbar(int, int)}
-	 */
-	private void disableAppBarScrollFlags() {
-		if (mToolbar == null) return;
-		AppBarLayout.LayoutParams p = (AppBarLayout.LayoutParams) mToolbar.getLayoutParams();
-		p.setScrollFlags(0);
-		mToolbar.setLayoutParams(p);
-	}
 
 	/**
 	 * Shows player fragment and set's its menu

@@ -147,7 +147,6 @@ public class AlbumsListPresenter extends BaseFragmentPresenter implements Loader
 		Intent intent = new Intent(mFragment.getActivity(), AlbumActivity.class);
 
 		AlbumsListAdapter adapter = mFragment.getListAdapter();
-//		Cursor cursor = adapter.getCursor();
 		long albumId = adapter.getItemId(position);
 
 		intent.putExtra(AlbumActivity.EXTRA_ALBUM_ID, albumId);

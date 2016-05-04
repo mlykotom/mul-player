@@ -36,6 +36,7 @@ public class SongsListPresenter extends BaseFragmentPresenter implements Loader.
 		mCursorLoader = new CursorLoader(mFragment.getActivity());
 		mCursorLoader.setUri(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
 		mCursorLoader.setProjection(Constants.SONG_PROJECTOR);
+		mCursorLoader.setSelection(Constants.MUSIC_SELECTOR);
 //		mCursorLoader.setSortOrder(mOrderKey + mOrderAscDesc);
 		mCursorLoader.setSortOrder(MediaStore.Audio.Media.TITLE_KEY);
 		mCursorLoader.registerListener(LOADER_SONGS_MUSIC, this);

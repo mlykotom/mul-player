@@ -19,11 +19,12 @@
 
     <!-- artists -->
     <string name="artists.title">Artists</string>
+    <string name="artists.detail.title">Artist</string>
 
     <!-- albums -->
     <string name="albums.title">Albums</string>
 
-    <string name="album.title">Album</string>
+    <string name="albums.detail.title">Album</string>
 
     <plurals name="songs_count">
         <item quantity="one">1 song</item>

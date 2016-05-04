@@ -2,7 +2,6 @@ package cz.vutbr.fit.mulplayer.ui.album;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.widget.TextView;
 
@@ -32,7 +31,7 @@ public class AlbumActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_album);
 		ButterKnife.bind(this);
-		setupToolbar(R.string.album_title, INDICATOR_BACK);
+		setupToolbar(R.string.albums_detail_title, INDICATOR_BACK);
 		Icepick.restoreInstanceState(this, savedInstanceState);
 
 		Intent intent = getIntent();
