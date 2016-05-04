@@ -2,6 +2,7 @@ package cz.vutbr.fit.mulplayer.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.LayoutRes;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +16,9 @@ import java.io.File;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import cz.vutbr.fit.mulplayer.application.App;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
+import cz.vutbr.fit.mulplayer.application.App;
 import cz.vutbr.fit.mulplayer.utils.CircleTransform;
 
 /**
@@ -29,9 +30,16 @@ public class AlbumsListAdapter extends SongsListAdapter {
 	private Transformation mCircleTransform = new CircleTransform();
 	private static int sPaddingInPixels = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, App.getContext().getResources().getDisplayMetrics());
 
+	private @LayoutRes int mLayout = R.layout.item_list_album;
+
 	public AlbumsListAdapter(Context context, String[] from) {
 		super(context, from);
 		mPicasso = Picasso.with(context);
+	}
+
+	public AlbumsListAdapter(Context context, @LayoutRes int layout, String[] from) {
+		this(context, from);
+		mLayout = layout;
 	}
 
 	@Override
@@ -71,7 +79,7 @@ public class AlbumsListAdapter extends SongsListAdapter {
 
 	@Override
 	public ClickableRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View v = mInflater.inflate(R.layout.item_list_album, parent, false);
+		View v = mInflater.inflate(mLayout, parent, false);
 		AlbumViewHolder vh = new AlbumViewHolder(v);
 		vh.setOnItemClickListener(mOnItemClickListener);
 		vh.setOnLongItemClickListener(mOnLongItemClickListener);
