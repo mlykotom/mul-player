@@ -7,13 +7,15 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.Constants;
 import cz.vutbr.fit.mulplayer.R;
+import cz.vutbr.fit.mulplayer.adapter.AlbumsListAdapter;
 import cz.vutbr.fit.mulplayer.ui.BaseActivity;
 import icepick.Icepick;
 import icepick.State;
@@ -29,7 +31,11 @@ public class ArtistDetailActivity extends BaseActivity implements Loader.OnLoadC
 	private static final String TAG = ArtistDetailActivity.class.getSimpleName();
 
 	@State long mArtistId;
-	@butterknife.Bind(R.id.artist_name) TextView mArtistName;
+	@Bind(R.id.artist_name) TextView mArtistName;
+	@Bind(R.id.artist_albums_list) RecyclerView mArtistAlbumsList;
+
+	AlbumsListAdapter mAlbumsListAdapter;
+
 	private CursorLoader mArtistInfoLoader;
 	private CursorLoader mAlbumsLoader;
 
@@ -46,7 +52,6 @@ public class ArtistDetailActivity extends BaseActivity implements Loader.OnLoadC
 			mArtistId = intent.getLongExtra(EXTRA_ARTIST_ID, 0);
 		}
 
-
 		mArtistInfoLoader = new CursorLoader(
 				this,
 				MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
@@ -56,6 +61,8 @@ public class ArtistDetailActivity extends BaseActivity implements Loader.OnLoadC
 				null
 		);
 		mArtistInfoLoader.registerListener(ARTIST_LOADER_ID, this);
+
+		mAlbumsListAdapter = new AlbumsListAdapter(this, null, )
 
 
 		mAlbumsLoader = new CursorLoader(this);
@@ -114,7 +121,6 @@ public class ArtistDetailActivity extends BaseActivity implements Loader.OnLoadC
 	}
 
 	private void fillAlbums(Cursor data) {
-		Toast.makeText(this, "number of albums: " + data.getCount(), Toast.LENGTH_SHORT).show();
 	}
 
 }
