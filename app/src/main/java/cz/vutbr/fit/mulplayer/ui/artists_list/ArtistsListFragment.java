@@ -69,7 +69,7 @@ public class ArtistsListFragment extends BaseFragment implements IBaseListView<A
 	 * @param projection
 	 */
 	public void initList(String[] projection) {
-		mArtistsListAdapter = new ArtistsListAdapter(getActivity(), null, projection);
+		mArtistsListAdapter = new ArtistsListAdapter(getActivity(), projection);
 		mArtistsListAdapter.setOnItemClickListener(mPresenter);
 
 		mAlbumsList.setLayoutManager(new LinearLayoutManager(getActivity()));

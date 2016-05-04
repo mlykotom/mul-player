@@ -14,7 +14,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.adapter.SongsListAdapter;
-import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
 import cz.vutbr.fit.mulplayer.ui.BaseFragment;
 import cz.vutbr.fit.mulplayer.ui.IMenuGetter;
 import cz.vutbr.fit.mulplayer.utils.SimpleDividerItemDecoration;
@@ -65,7 +64,7 @@ public class SongsListFragment extends BaseFragment implements ISongsListView, I
 	// ------ UI setters (presenter -> ui) ------ //
 
 	public void initList(String[] projection) {
-		mSongsListAdapter = new SongsListAdapter(getActivity(), null, projection);
+		mSongsListAdapter = new SongsListAdapter(getActivity(), projection);
 		mSongsListAdapter.setOnItemClickListener(mPresenter);
 		mSongsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 		mSongsRecyclerView.setItemAnimator(new DefaultItemAnimator());

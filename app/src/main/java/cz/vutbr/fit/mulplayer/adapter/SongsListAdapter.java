@@ -2,7 +2,6 @@ package cz.vutbr.fit.mulplayer.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -22,10 +21,9 @@ public class SongsListAdapter extends CursorRecyclerAdapter<ClickableRecyclerAda
 	protected int[] mFrom;
 	protected String[] mOriginalFrom;
 
-	public SongsListAdapter(Context context, Cursor c, String[] from) {
-		super(context, c);
+	public SongsListAdapter(Context context, String[] from) {
+		super(context);
 		mOriginalFrom = from;
-		findColumns(c, from);
 	}
 
 	@Override
@@ -57,7 +55,6 @@ public class SongsListAdapter extends CursorRecyclerAdapter<ClickableRecyclerAda
 		vh.setOnLongItemClickListener(mOnLongItemClickListener);
 		return vh;
 	}
-
 
 	/**
 	 * Create a map from an array of strings to an array of column-id integers in cursor c.

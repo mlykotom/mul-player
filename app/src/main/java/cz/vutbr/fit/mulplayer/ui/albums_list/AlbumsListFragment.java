@@ -1,7 +1,5 @@
 package cz.vutbr.fit.mulplayer.ui.albums_list;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,7 +17,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.adapter.AlbumsListAdapter;
-import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
 import cz.vutbr.fit.mulplayer.ui.IBaseListView;
 import cz.vutbr.fit.mulplayer.ui.BaseFragment;
 import cz.vutbr.fit.mulplayer.ui.IMenuGetter;
@@ -92,7 +89,7 @@ public class AlbumsListFragment extends BaseFragment implements IBaseListView<Al
 	// ------ UI setters (presenter -> ui) ------ //
 
 	public void initList(String[] projection) {
-		mAlbumsListAdapter = new AlbumsListAdapter(getActivity(), null, projection);
+		mAlbumsListAdapter = new AlbumsListAdapter(getActivity(), projection);
 		mAlbumsListAdapter.setOnItemClickListener(mPresenter);
 		mAlbumsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 		mAlbumsList.setItemAnimator(new DefaultItemAnimator());

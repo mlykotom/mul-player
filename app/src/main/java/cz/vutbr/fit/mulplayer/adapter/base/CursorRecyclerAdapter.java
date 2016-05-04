@@ -32,9 +32,9 @@ public abstract class CursorRecyclerAdapter<VH extends ClickableRecyclerAdapter.
 	protected Cursor mCursor;
 	protected int mRowIDColumn;
 
-	public CursorRecyclerAdapter(Context context, Cursor c) {
+	public CursorRecyclerAdapter(Context context) {
 		super(context);
-		init(c);
+		init(null);
 	}
 
 	void init(Cursor c) {

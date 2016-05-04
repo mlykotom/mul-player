@@ -2,7 +2,6 @@ package cz.vutbr.fit.mulplayer.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -20,8 +19,8 @@ import cz.vutbr.fit.mulplayer.utils.Utils;
 public class ArtistsListAdapter extends SongsListAdapter {
 	private Context mContext;
 
-	public ArtistsListAdapter(Context context, Cursor c, String[] from) {
-		super(context, c, from);
+	public ArtistsListAdapter(Context context, String[] from) {
+		super(context, from);
 		mContext = context;
 	}
 

@@ -62,7 +62,7 @@ public class ArtistDetailActivity extends BaseActivity implements Loader.OnLoadC
 		);
 		mArtistInfoLoader.registerListener(ARTIST_LOADER_ID, this);
 
-		mAlbumsListAdapter = new AlbumsListAdapter(this, null, )
+//		mAlbumsListAdapter = new AlbumsListAdapter(this, )
 
 
 		mAlbumsLoader = new CursorLoader(this);
