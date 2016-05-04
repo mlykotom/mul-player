@@ -15,6 +15,7 @@ public class MainPresenter extends BaseActivityPresenter {
 	MainActivity mActivity;
 
 	public MainPresenter(MainActivity activity) {
+		super(activity);
 		mActivity = activity;
 	}
 

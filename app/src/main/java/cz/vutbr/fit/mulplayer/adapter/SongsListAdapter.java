@@ -21,14 +21,10 @@ import cz.vutbr.fit.mulplayer.utils.Utils;
 public class SongsListAdapter extends CursorRecyclerAdapter<ClickableRecyclerAdapter.ViewHolder> {
 	protected int[] mFrom;
 	protected String[] mOriginalFrom;
-	protected Context mContext;
-	protected ClickableRecyclerAdapter.OnItemClickListener mOnItemClickListener;
 
-	public SongsListAdapter(Context context, Cursor c, String[] from, ClickableRecyclerAdapter.OnItemClickListener itemClickListener) {
-		super(c);
-		mContext = context;
+	public SongsListAdapter(Context context, Cursor c, String[] from) {
+		super(context, c);
 		mOriginalFrom = from;
-		mOnItemClickListener = itemClickListener;
 		findColumns(c, from);
 	}
 
@@ -55,9 +51,10 @@ public class SongsListAdapter extends CursorRecyclerAdapter<ClickableRecyclerAda
 
 	@Override
 	public ClickableRecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_song, parent, false);
+		View v = mInflater.inflate(R.layout.item_list_song, parent, false);
 		SongViewHolder vh = new SongViewHolder(v);
 		vh.setOnItemClickListener(mOnItemClickListener);
+		vh.setOnLongItemClickListener(mOnLongItemClickListener);
 		return vh;
 	}
 

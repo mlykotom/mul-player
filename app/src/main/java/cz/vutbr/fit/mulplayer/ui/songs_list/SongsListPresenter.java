@@ -8,6 +8,7 @@ import android.provider.MediaStore;
 
 import cz.vutbr.fit.mulplayer.Constants;
 import cz.vutbr.fit.mulplayer.adapter.SongsListAdapter;
+import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
 import cz.vutbr.fit.mulplayer.model.MusicService;
 import cz.vutbr.fit.mulplayer.model.persistance.DataRepository;
 import cz.vutbr.fit.mulplayer.ui.BaseFragmentPresenter;
@@ -16,14 +17,15 @@ import cz.vutbr.fit.mulplayer.ui.BaseFragmentPresenter;
  * @author mlyko
  * @since 11.04.2016
  */
-public class SongsListPresenter extends BaseFragmentPresenter implements Loader.OnLoadCompleteListener<Cursor> {
+public class SongsListPresenter extends BaseFragmentPresenter implements Loader.OnLoadCompleteListener<Cursor>, ClickableRecyclerAdapter.OnItemClickListener {
 	private static final int LOADER_SONGS_MUSIC = 0;
 
 	ISongsListView mFragment;
 	CursorLoader mCursorLoader;
 	DataRepository mData = DataRepository.getInstance();
 
-	public SongsListPresenter(ISongsListView songsListFragment) {
+	public SongsListPresenter(SongsListFragment songsListFragment) {
+		super(songsListFragment);
 		mFragment = songsListFragment;
 	}
 
@@ -66,10 +68,12 @@ public class SongsListPresenter extends BaseFragmentPresenter implements Loader.
 	/**
 	 * When user clicked on item in list
 	 *
+	 * @param holder
 	 * @param position
 	 * @param viewType
 	 */
-	public void setOnRecyclerItemClick(int position, int viewType) {
+	@Override
+	public void onRecyclerViewItemClick(ClickableRecyclerAdapter.ViewHolder holder, int position, int viewType) {
 		SongsListAdapter adapter = mFragment.getSongsListAdapter();
 		Cursor cursor = adapter.getCursor();
 		mData.queueSongs(cursor);

@@ -92,12 +92,8 @@ public class AlbumsListFragment extends BaseFragment implements IBaseListView<Al
 	// ------ UI setters (presenter -> ui) ------ //
 
 	public void initList(String[] projection) {
-		mAlbumsListAdapter = new AlbumsListAdapter(getActivity(), null, projection, new ClickableRecyclerAdapter.OnItemClickListener() {
-			@Override
-			public void onRecyclerViewItemClick(int position, int viewType) {
-				mPresenter.setOnRecyclerItemClick(position, viewType);
-			}
-		});
+		mAlbumsListAdapter = new AlbumsListAdapter(getActivity(), null, projection);
+		mAlbumsListAdapter.setOnItemClickListener(mPresenter);
 		mAlbumsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 		mAlbumsList.setItemAnimator(new DefaultItemAnimator());
 		mAlbumsList.setAdapter(mAlbumsListAdapter);

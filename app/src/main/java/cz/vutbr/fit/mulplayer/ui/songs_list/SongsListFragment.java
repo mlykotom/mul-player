@@ -65,12 +65,8 @@ public class SongsListFragment extends BaseFragment implements ISongsListView, I
 	// ------ UI setters (presenter -> ui) ------ //
 
 	public void initList(String[] projection) {
-		mSongsListAdapter = new SongsListAdapter(getActivity(), null, projection, new ClickableRecyclerAdapter.OnItemClickListener() {
-			@Override
-			public void onRecyclerViewItemClick(int position, int viewType) {
-				mPresenter.setOnRecyclerItemClick(position, viewType);
-			}
-		});
+		mSongsListAdapter = new SongsListAdapter(getActivity(), null, projection);
+		mSongsListAdapter.setOnItemClickListener(mPresenter);
 		mSongsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 		mSongsRecyclerView.setItemAnimator(new DefaultItemAnimator());
 		mSongsRecyclerView.setAdapter(mSongsListAdapter);

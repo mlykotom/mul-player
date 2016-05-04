@@ -5,15 +5,17 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.widget.Toast;
 
 import cz.vutbr.fit.mulplayer.Constants;
+import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
 import cz.vutbr.fit.mulplayer.ui.BaseFragmentPresenter;
 
 /**
  * @author mlyko
  * @since 16.04.2016
  */
-public class ArtistsListPresenter extends BaseFragmentPresenter implements Loader.OnLoadCompleteListener<Cursor> {
+public class ArtistsListPresenter extends BaseFragmentPresenter implements Loader.OnLoadCompleteListener<Cursor>, ClickableRecyclerAdapter.OnItemClickListener {
 	private static final int LOADER_ARTISTS_MUSIC = 0;
 
 	IArtistsListView mFragment;
@@ -21,7 +23,8 @@ public class ArtistsListPresenter extends BaseFragmentPresenter implements Loade
 
 	String mOrderKey = MediaStore.Audio.Artists.ARTIST_KEY;
 
-	public ArtistsListPresenter(IArtistsListView fragment) {
+	public ArtistsListPresenter(ArtistsListFragment fragment) {
+		super(fragment);
 		mFragment = fragment;
 	}
 
@@ -64,13 +67,16 @@ public class ArtistsListPresenter extends BaseFragmentPresenter implements Loade
 		mFragment.updateList(data);
 	}
 
+
 	/**
 	 * When user clicked on item in list
 	 *
+	 * @param holder
 	 * @param position
 	 * @param viewType
 	 */
-	public void setOnRecyclerItemClick(int position, int viewType) {
-
+	@Override
+	public void onRecyclerViewItemClick(ClickableRecyclerAdapter.ViewHolder holder, int position, int viewType) {
+		Toast.makeText(getBaseActivity(), "TODO", Toast.LENGTH_LONG).show();
 	}
 }

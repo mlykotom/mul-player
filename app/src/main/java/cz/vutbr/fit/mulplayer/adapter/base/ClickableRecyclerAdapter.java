@@ -1,7 +1,9 @@
 package cz.vutbr.fit.mulplayer.adapter.base;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.HapticFeedbackConstants;
+import android.view.LayoutInflater;
 import android.view.View;
 
 /**
@@ -9,12 +11,28 @@ import android.view.View;
  * @since 12.04.2016
  */
 public abstract class ClickableRecyclerAdapter<VH extends ClickableRecyclerAdapter.ViewHolder> extends RecyclerView.Adapter<VH> {
+	protected LayoutInflater mInflater;
+	protected OnItemClickListener mOnItemClickListener;
+	protected OnLongItemClickListener mOnLongItemClickListener;
+
+	public ClickableRecyclerAdapter(Context context) {
+		mInflater = LayoutInflater.from(context);
+	}
+
 	public interface OnItemClickListener {
-		void onRecyclerViewItemClick(int position, int viewType);
+		void onRecyclerViewItemClick(ViewHolder holder, int position, int viewType);
 	}
 
 	public interface OnLongItemClickListener {
-		boolean onRecyclerViewItemLongClick(int position, int viewType);
+		boolean onRecyclerViewItemLongClick(ViewHolder holder, int position, int viewType);
+	}
+
+	public void setOnItemClickListener(OnItemClickListener listener) {
+		mOnItemClickListener = listener;
+	}
+
+	public void setOnLongItemClickListener(OnLongItemClickListener listener) {
+		mOnLongItemClickListener = listener;
 	}
 
 	/**
@@ -52,13 +70,13 @@ public abstract class ClickableRecyclerAdapter<VH extends ClickableRecyclerAdapt
 		@Override
 		public void onClick(View v) {
 			if (mOnItemClickListener != null) {
-				mOnItemClickListener.onRecyclerViewItemClick(getAdapterPosition(), getItemViewType());
+				mOnItemClickListener.onRecyclerViewItemClick(this, getAdapterPosition(), getItemViewType());
 			}
 		}
 
 		@Override
 		public boolean onLongClick(View v) {
-			if (mOnLongItemClickListener != null && mOnLongItemClickListener.onRecyclerViewItemLongClick(getAdapterPosition(), getItemViewType())) {
+			if (mOnLongItemClickListener != null && mOnLongItemClickListener.onRecyclerViewItemLongClick(this, getAdapterPosition(), getItemViewType())) {
 				v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
 				return true;
 			}

@@ -22,16 +22,18 @@ package cz.vutbr.fit.mulplayer.adapter.base;/*
  * SOFTWARE.
  */
 
+import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 
-public abstract class CursorRecyclerAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
+public abstract class CursorRecyclerAdapter<VH extends ClickableRecyclerAdapter.ViewHolder> extends ClickableRecyclerAdapter<VH> {
 
 	protected boolean mDataValid;
 	protected Cursor mCursor;
 	protected int mRowIDColumn;
 
-	public CursorRecyclerAdapter(Cursor c) {
+	public CursorRecyclerAdapter(Context context, Cursor c) {
+		super(context);
 		init(c);
 	}
 

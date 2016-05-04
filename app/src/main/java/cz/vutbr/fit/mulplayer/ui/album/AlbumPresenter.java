@@ -10,6 +10,7 @@ import cz.vutbr.fit.mulplayer.ui.BaseActivityPresenter;
 public class AlbumPresenter extends BaseActivityPresenter{
 	AlbumActivity mActivity;
 	public AlbumPresenter(BaseActivity activity) {
+		super(activity);
 		mActivity = (AlbumActivity) activity;
 	}
 }

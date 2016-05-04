@@ -65,12 +65,9 @@ public class ArtistsListFragment extends BaseFragment implements IArtistsListVie
 	// ------ UI setters (presenter -> ui) ------ //
 
 	public void initList(String[] projection) {
-		mArtistsListAdapter = new ArtistsListAdapter(getActivity(), null, projection, new ClickableRecyclerAdapter.OnItemClickListener() {
-			@Override
-			public void onRecyclerViewItemClick(int position, int viewType) {
-				mPresenter.setOnRecyclerItemClick(position, viewType);
-			}
-		});
+		mArtistsListAdapter = new ArtistsListAdapter(getActivity(), null, projection);
+		mArtistsListAdapter.setOnItemClickListener(mPresenter);
+
 		mAlbumsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 		mAlbumsList.setItemAnimator(new DefaultItemAnimator());
 		mAlbumsList.setAdapter(mArtistsListAdapter);
