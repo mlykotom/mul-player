@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cz.vutbr.fit.mulplayer.Constants;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.adapter.AlbumsListAdapter;
@@ -36,10 +37,10 @@ public class ArtistDetailActivity extends BaseActivity implements Loader.OnLoadC
 	private static final String TAG = ArtistDetailActivity.class.getSimpleName();
 
 	@State long mArtistId;
-	@Bind(R.id.artist_name) TextView mArtistName;
 	@Bind(R.id.artist_albums_list) RecyclerView mArtistAlbumsList;
 
 	AlbumsListAdapter mAlbumsListAdapter;
+	@Bind(R.id.artist_albums_songs) TextView mArtistAlbumsSongs;
 
 	private CursorLoader mArtistInfoLoader;
 	private CursorLoader mAlbumsLoader;
@@ -49,7 +50,6 @@ public class ArtistDetailActivity extends BaseActivity implements Loader.OnLoadC
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_artist_detail);
 		ButterKnife.bind(this);
-		setupToolbar(R.string.artists_detail_title, INDICATOR_BACK);
 		Icepick.restoreInstanceState(this, savedInstanceState);
 
 		Intent intent = getIntent();
@@ -139,10 +139,20 @@ public class ArtistDetailActivity extends BaseActivity implements Loader.OnLoadC
 		}
 	}
 
+	/**
+	 * Asynchronously loads artist information
+	 *
+	 * @param data cursor with artist data
+	 */
 	private void fillArtistInfo(Cursor data) {
 		String artist = data.getString(1);
+		setupToolbar(artist, INDICATOR_BACK);
 
-		mArtistName.setText(artist);
+		int albumCount = data.getInt(2);
+		int songCount = data.getInt(3);
+		String albumQuantityString = getResources().getQuantityString(R.plurals.albums_count, albumCount, albumCount);
+		String songQuantityString = getResources().getQuantityString(R.plurals.songs_count, songCount, songCount);
+		mArtistAlbumsSongs.setText(String.format("%s | %s", albumQuantityString, songQuantityString));
 	}
 
 	private void fillAlbums(Cursor data) {
@@ -152,5 +162,9 @@ public class ArtistDetailActivity extends BaseActivity implements Loader.OnLoadC
 	@Override
 	public void onRecyclerViewItemClick(ClickableRecyclerAdapter.ViewHolder holder, int position, int viewType) {
 		Toast.makeText(this, "Roman je krásný", Toast.LENGTH_LONG).show();
+	}
+
+	@OnClick(R.id.artist_random_all)
+	public void onClick() {
 	}
 }

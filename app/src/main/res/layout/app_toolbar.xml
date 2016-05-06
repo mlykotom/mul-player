@@ -10,7 +10,6 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     app:popupTheme="@style/Theme.AppCompat.Light"
     app:titleMarginStart="16dp"
-    tools:text="@string/application.name"
     app:titleTextAppearance="@style/TextAppearance.AppCompat.Title"
-    >
-</android.support.v7.widget.Toolbar>
+    tools:text="@string/application.name"
+    />
