@@ -35,28 +35,39 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	private static final int UI_REFRESH_INTERVAL_MS = 250;
 	private static final int LOADER_SONGS_MUSIC = 0;
 
-	@StringDef({CMD_REBUILD, CMD_PLAY_FORCE, CMD_PLAY_PAUSE, CMD_SEEK_TO, CMD_PREVIOUS, CMD_NEXT, CMD_PLAY_ARTIST})
+	@StringDef({
+			// -- queue
+			CMD_PLAY_ARTIST, CMD_PLAY_ALL_SONGS,
+			// -- playback
+			CMD_PLAY_FORCE, CMD_PLAY_PAUSE, CMD_SEEK_TO, CMD_PREVIOUS, CMD_NEXT
+	})
 	@interface MusicCommand {
 	}
 
-	public static final String CMD_REBUILD = "CMD_REBUILD";
+	// ----- queue controls
+	public static final String CMD_PLAY_ARTIST = "CMD_PLAY_ARTIST";
+	public static final String CMD_PLAY_ALL_SONGS = "CMD_PLAY_ALL_SONGS";
+
+	// ----- playback controls
 	public static final String CMD_PLAY_FORCE = "CMD_PLAY_FORCE";
 	public static final String CMD_PLAY_PAUSE = "CMD_PLAY_PAUSE";
 	public static final String CMD_SEEK_TO = "CMD_SEEK_TO";
 	public static final String CMD_NEXT = "CMD_NEXT";
 	public static final String CMD_PREVIOUS = "CMD_PREVIOUS";
 
-	public static final String CMD_PLAY_ARTIST = "CMD_PLAY_ARTIST";
-
 	Playback mPlayback;
 	CursorLoader mSongLoader;
 	private int mActiveQueuePosition = 0;
+	private long mPlaySongId = Constants.NO_ID;
 
 	DataRepository mData = DataRepository.getInstance();
 	EventBus mEventBus = EventBus.getDefault();
 
 	private Handler mHandler = new Handler();
 
+	/**
+	 * Runnable for updating UI when time is changing
+	 */
 	private Runnable mUpdateSongTime = new Runnable() {
 		public void run() {
 			boolean isSubscriber = mEventBus.hasSubscriberForEvent(PlaybackEvent.class);
@@ -69,6 +80,10 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 		}
 	};
 
+	/**
+	 * Called only once when service not existing (first time or after service got killed)
+	 * Prepares cursor loader for queuing songs + playback object
+	 */
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -96,36 +111,42 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	}
 
 	public static void fireAction(Context context, @MusicCommand String command) {
-		fireAction(context, command, -1);
+		fireAction(context, command, Constants.NO_POSITION);
 	}
 
+	/**
+	 * Called every time any action was fired to this service.
+	 *
+	 * @param intent  holding information about action
+	 * @param flags
+	 * @param startId
+	 * @return how should android handle this service -> START_STICKY = restart it if killed
+	 */
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (intent != null) {
 			String action = intent.getAction();
 			if (ACTION_CMD.equals(action)) {
 				@MusicCommand String command = intent.getStringExtra(ACTION_CMD_NAME);
-				long value = intent.getLongExtra(ACTION_CMD_VALUE, -1);
-
-				if (CMD_PLAY_ARTIST.equals(command)) {
-					mSongLoader.reset();
-					buildArtistQueue(value);
-					return START_STICKY;
-				}
-//
-//				if (CMD_REBUILD.equals(command)) {
-//					// TODO rebuild saved queue from list of ids
-//					rebuildQueue();
-//				}
+				long value = intent.getLongExtra(ACTION_CMD_VALUE, Constants.NO_POSITION);
 
 				switch (command) {
+					// -------- queue commands -------- //
+					case CMD_PLAY_ARTIST:
+						buildArtistQueue(value);
+						return START_STICKY;
+
+					case CMD_PLAY_ALL_SONGS:
+						buildAllSongsQueue(value);
+						return START_STICKY;
+
+
+					// -------- playback commands -------- //
 					case CMD_PLAY_PAUSE:
-						// TODO check if player in allowed state
-						if (mPlayback.isPlaying()) {
+						if (mPlayback.isPlaying()) {                        // TODO check if player in allowed state
 							mPlayback.pause();
 							return START_STICKY;
 						}
-
 					case CMD_PLAY_FORCE:
 						playFromQueue((int) value);
 						break;
@@ -137,6 +158,7 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 					case CMD_NEXT:
 						playFromQueue(mActiveQueuePosition + 1);
 						break;
+
 					case CMD_PREVIOUS:
 						playFromQueue(mActiveQueuePosition - 1);
 						break;
@@ -147,13 +169,29 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 		return START_STICKY;
 	}
 
+	private void buildAllSongsQueue(long playSongId) {
+		mSongLoader.reset();
+		mSongLoader.setSelection(Constants.MUSIC_SELECTOR);
+		mSongLoader.setSelectionArgs(null);
+		mPlaySongId = playSongId;
+		mSongLoader.startLoading();
+	}
+
+	/**
+	 * Builds queue based on selected artist
+	 * Must be used asynchronously - this only set loading of songs
+	 *
+	 * @param artistId id from mediaStore
+	 */
 	private void buildArtistQueue(long artistId) {
+		mSongLoader.reset();
 		mSongLoader.setSelection(Constants.MUSIC_SELECTOR + " AND " + MediaStore.Audio.Media.ARTIST_ID + " = ?");
 		mSongLoader.setSelectionArgs(new String[]{String.valueOf(artistId)});
 		mSongLoader.startLoading();
 	}
 
 	/**
+	 * Starts playing built queue of songs
 	 * Called on the thread that created the Loader when the load is complete.
 	 *
 	 * @param loader the loader that completed the load
@@ -161,8 +199,9 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	 */
 	@Override
 	public void onLoadComplete(Loader<Cursor> loader, Cursor data) {
-		mData.queueSongs(data);
-		fireAction(this, CMD_PLAY_FORCE);
+		int pos = mData.queueSongsAndFindPosition(data, mPlaySongId);
+		fireAction(this, CMD_PLAY_FORCE, pos);
+		mPlaySongId = Constants.NO_ID;
 	}
 
 	/**
@@ -171,7 +210,6 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	private void rebuildQueue() {
 
 	}
-
 
 	/**
 	 * Tries to play song from queue list.
@@ -182,9 +220,10 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	 */
 	private void playFromQueue(int index) {
 		if (mData.mQueueOrderList.isEmpty()) {
+			// TODO try to rebuild queue first
+			rebuildQueue();
 			// this should never happen
 			Toast.makeText(this, "No queued songs to play!", Toast.LENGTH_LONG).show();
-			// TODO try to rebuild queue first
 			return;
 		}
 

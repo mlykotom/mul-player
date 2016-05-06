@@ -76,8 +76,6 @@ public class SongsListPresenter extends BaseFragmentPresenter implements Loader.
 	@Override
 	public void onRecyclerViewItemClick(ClickableRecyclerAdapter.ViewHolder holder, int position, int viewType) {
 		SongsListAdapter adapter = mFragment.getSongsListAdapter();
-		Cursor cursor = adapter.getCursor();
-		mData.queueSongs(cursor);
-		MusicService.fireAction(mFragment.getActivity(), MusicService.CMD_PLAY_PAUSE, position - 1); // TODO why position - 1?
+		MusicService.fireAction(mFragment.getActivity(), MusicService.CMD_PLAY_ALL_SONGS, adapter.getItemId(position));
 	}
 }
