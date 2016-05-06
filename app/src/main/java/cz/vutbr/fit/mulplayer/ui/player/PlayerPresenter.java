@@ -2,6 +2,7 @@ package cz.vutbr.fit.mulplayer.ui.player;
 
 import android.content.ContentUris;
 import android.net.Uri;
+import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -9,7 +10,6 @@ import org.greenrobot.eventbus.Subscribe;
 import cz.vutbr.fit.mulplayer.model.MusicService;
 import cz.vutbr.fit.mulplayer.model.entity.Song;
 import cz.vutbr.fit.mulplayer.model.event.PlaybackEvent;
-import cz.vutbr.fit.mulplayer.model.event.SongEvent;
 import cz.vutbr.fit.mulplayer.ui.BaseFragmentPresenter;
 
 /**
@@ -62,32 +62,35 @@ public class PlayerPresenter extends BaseFragmentPresenter {
 	final public static Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 
 	/**
-	 * When new song should start/pause playing.
+	 * When song is playing and time changed (called every 100ms) so that UI can be refreshed
+	 * If the same song was sent only updates time
 	 *
 	 * @param event containing information about song and playback info
 	 */
 	@Subscribe
-	public void onEvent(SongEvent event) {
-		mFragment.setPlayerButtonPlayPause(!event.isPlaying);
-		mActualSong = event.song;
-		if (mActualSong == null) return;
-		mFragment.setPlaybackArtistTitle(mActualSong.artist, mActualSong.title);
-		mFragment.setPlaybackSeekbarMax(mActualSong.duration);
-//		mActualTime = !event.isPlaying ? 0 : mActualTime; // TODO so that time stays the same when pause but from 0 when new song
-		mEndTime = mActualSong.duration;
-		// getting URI for album artwork
-		Uri uri = ContentUris.withAppendedId(sArtworkUri, mActualSong.albumId);
-		mFragment.setAlbumArtwork(uri);
-	}
-
-	/**
-	 * When song is playing and time changed (called every 100ms) so that UI can be refreshed
-	 *
-	 * @param event
-	 */
-	@Subscribe
 	public void onEvent(PlaybackEvent event) {
-		mActualTime = event.time;
-		mFragment.setPlaybackTime(mActualTime, mEndTime);
+		if (event.song == null) {
+			Log.w(TAG, "Song is null");
+			return;
+		}
+
+		if (!event.song.equals(mActualSong)) {
+			mActualSong = event.song;
+			mFragment.setPlaybackArtistTitle(mActualSong.artist, mActualSong.title);
+			mFragment.setPlaybackSeekbarMax(mActualSong.duration);
+			mEndTime = mActualSong.duration;
+			// getting URI for album artwork
+			Uri uri = ContentUris.withAppendedId(sArtworkUri, mActualSong.albumId);
+			mFragment.setAlbumArtwork(uri);
+		}
+
+		// if time is -1 -> we paused the song
+		if (event.time >= 0) {
+			mActualTime = event.time;
+			mFragment.setPlaybackTime(mActualTime, mEndTime);
+		}
+
+		// setup if its playing or stopped
+		mFragment.setPlayerButtonPlayPause(event.isPlaying);
 	}
 }

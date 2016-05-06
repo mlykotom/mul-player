@@ -1,10 +1,8 @@
 package cz.vutbr.fit.mulplayer.model.persistance;
 
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.provider.MediaStore;
 import android.util.LongSparseArray;
 
 import java.util.ArrayList;
@@ -39,15 +37,28 @@ public class DataRepository {
 	 *
 	 * @param cursor which will be queued
 	 */
-	public void queueSongs(Cursor cursor) {
+	public int queueSongsAndFindPosition(Cursor cursor, long findSongId) {
 		mQueueSongs.clear();
 		mQueueOrderList.clear();
+		int foundSongPos = Constants.NO_POSITION;
 		cursor.moveToFirst();
-		while (cursor.moveToNext()) {
+		do {
 			Song song = Song.from(cursor);
 			mQueueSongs.put(song.getId(), song);
+
+			if (findSongId > 0 && findSongId == song.getId()) {
+				foundSongPos = mQueueOrderList.size();
+			}
+
 			mQueueOrderList.add(song.getId());
 		}
+		while (cursor.moveToNext());
+
+		return foundSongPos;
+	}
+
+	public void queueSongs(Cursor cursor) {
+		queueSongsAndFindPosition(cursor, 0);
 	}
 
 	public void rebuildQueue() {

@@ -9,6 +9,9 @@ import android.support.annotation.IntDef;
  */
 public class Constants {
 
+	public static final int NO_POSITION = -1;
+	public static final int NO_ID = -1;
+
 	public static final String QUEUE_PERSISTENCE_NAME = "queue_persistence";
 
 	public static final String MUSIC_SELECTOR = MediaStore.Audio.Media.IS_MUSIC + " != 0";
