@@ -23,7 +23,7 @@ public class MainPresenter extends BaseActivityPresenter {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		MusicService.fireAction(mActivity, MusicService.CMD_REBUILD); // TODO necessary?
+//		MusicService.fireAction(mActivity, MusicService.CMD_REBUILD); // TODO necessary?
 	}
 
 	public void bottomSheetStateChanged(View bottomSheet, int newState) {

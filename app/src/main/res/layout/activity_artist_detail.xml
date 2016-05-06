@@ -26,6 +26,7 @@
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:popupTheme="@style/Theme.AppCompat.Light"
+            app:elevation="16dp"
             >
 
             <android.support.v7.widget.Toolbar
@@ -47,10 +48,10 @@
                 android:layout_marginLeft="48dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginStart="48dp"
-                tools:text="1 album | 33 songs"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 android:textColor="@color/accent"
                 app:layout_collapseMode="parallax"
+                tools:text="1 album | 33 songs"
                 />
 
         </android.support.design.widget.CollapsingToolbarLayout>

@@ -122,7 +122,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 	}
 
 	public void setPlayerButtonPlayPause(boolean isPlaying) {
-		if (isPlaying) {
+		if (!isPlaying) {
 			mPlayerButtonPlayPause.setImageResource(R.drawable.ic_play_arrow_black_24dp);
 			mMiniPlayerButtonPlayPause.setImageResource(R.drawable.ic_play_arrow_black_24dp);
 		} else {
