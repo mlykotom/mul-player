@@ -52,21 +52,33 @@
         android:id="@+id/bottom_player"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="@dimen/player.mini.height"
+        app:behavior_peekHeight="@dimen/player.mini.height.with_shadow"
         app:layout_behavior="@string/bottom_sheet_behavior"
-        android:background="@color/background"
         >
 
-        <fragment
-            android:id="@+id/player_fragment"
-            android:name="cz.vutbr.fit.mulplayer.ui.player.PlayerFragment"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:tag="player_fragment"
-            tools:layout="@layout/fragment_player"
-            />
+            android:orientation="vertical"
+            >
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/shadow_height"
+                android:background="@drawable/header_shadow"
+                />
+
+            <fragment
+                android:id="@+id/player_fragment"
+                android:name="cz.vutbr.fit.mulplayer.ui.player.PlayerFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:tag="player_fragment"
+                tools:layout="@layout/fragment_player"
+                />
+        </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>
