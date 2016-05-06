@@ -37,7 +37,7 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 
 	@StringDef({
 			// -- queue
-			CMD_PLAY_ARTIST, CMD_PLAY_ALL_SONGS,
+			CMD_PLAY_ARTIST, CMD_PLAY_ALBUM, CMD_PLAY_ALL_SONGS,
 			// -- playback
 			CMD_PLAY_FORCE, CMD_PLAY_PAUSE, CMD_SEEK_TO, CMD_PREVIOUS, CMD_NEXT
 	})
@@ -46,6 +46,7 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 
 	// ----- queue controls
 	public static final String CMD_PLAY_ARTIST = "CMD_PLAY_ARTIST";
+	public static final String CMD_PLAY_ALBUM = "CMD_PLAY_ALBUM";
 	public static final String CMD_PLAY_ALL_SONGS = "CMD_PLAY_ALL_SONGS";
 
 	// ----- playback controls
@@ -135,6 +136,9 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 					case CMD_PLAY_ARTIST:
 						buildArtistQueue(value);
 						return START_STICKY;
+					case CMD_PLAY_ALBUM:
+						buildAlbumQueue(value);
+						return START_STICKY;
 
 					case CMD_PLAY_ALL_SONGS:
 						buildAllSongsQueue(value);
@@ -169,11 +173,29 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 		return START_STICKY;
 	}
 
+	/**
+	 * Builds queue based on selected album
+	 *
+	 * @param albumId id from mediastore
+	 */
+	private void buildAlbumQueue(long albumId) {
+		mPlaySongId = Constants.NO_ID;
+		mSongLoader.reset();
+		mSongLoader.setSelection(Constants.MUSIC_SELECTOR + " AND " + MediaStore.Audio.Media.ALBUM_ID + " = ?");
+		mSongLoader.setSelectionArgs(new String[]{String.valueOf(albumId)});
+		mSongLoader.startLoading();
+	}
+
+	/**
+	 * Builds all songs and tries to playit from selected song
+	 *
+	 * @param playSongId this song will be playing after build
+	 */
 	private void buildAllSongsQueue(long playSongId) {
+		mPlaySongId = playSongId;     // sets song id which wants to be played
 		mSongLoader.reset();
 		mSongLoader.setSelection(Constants.MUSIC_SELECTOR);
 		mSongLoader.setSelectionArgs(null);
-		mPlaySongId = playSongId;
 		mSongLoader.startLoading();
 	}
 
@@ -184,6 +206,7 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	 * @param artistId id from mediaStore
 	 */
 	private void buildArtistQueue(long artistId) {
+		mPlaySongId = Constants.NO_ID;
 		mSongLoader.reset();
 		mSongLoader.setSelection(Constants.MUSIC_SELECTOR + " AND " + MediaStore.Audio.Media.ARTIST_ID + " = ?");
 		mSongLoader.setSelectionArgs(new String[]{String.valueOf(artistId)});
