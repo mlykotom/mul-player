@@ -32,8 +32,10 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	private static final String ACTION_CMD_NAME = "CMD_NAME";
 	private static final String ACTION_CMD_VALUE = "CMD_VALUE";
 
+	public static final long STOP_FOREGROUND_SERVICE_IN_MS = 60 * 1000; // turn off foreground service after minute
 	private static final int UI_REFRESH_INTERVAL_MS = 250;
 	private static final int LOADER_SONGS_MUSIC = 0;
+	private MusicNotificationController mNotificationController;
 
 	@StringDef({
 			// -- queue
@@ -93,6 +95,7 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 		mSongLoader.setProjection(Constants.SONG_PROJECTOR);
 		mSongLoader.registerListener(LOADER_SONGS_MUSIC, this);
 
+		mNotificationController = new MusicNotificationController(this);
 		mPlayback = new Playback(this, this);
 	}
 
@@ -276,12 +279,15 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 				break;
 
 			case PlaybackStateCompat.STATE_PLAYING:
+				mNotificationController.startNotification();
 				mHandler.postDelayed(mUpdateSongTime, UI_REFRESH_INTERVAL_MS);
 				break;
 
 			case PlaybackStateCompat.STATE_STOPPED:
 				// TODO?
 			case PlaybackStateCompat.STATE_PAUSED:
+				mNotificationController.stopNotification();
+
 				mHandler.removeCallbacks(mUpdateSongTime);
 				mEventBus.post(new PlaybackEvent(mPlayback.getActiveSong(), false));
 				break;
@@ -297,21 +303,6 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	public void onError(String error) {
 		Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
 	}
-
-
-	// TODO implement as foreground service !!!
-//	String songName;
-//	// assign the song name to songName
-//	PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 0,
-//			new Intent(getApplicationContext(), MainActivity.class),
-//			PendingIntent.FLAG_UPDATE_CURRENT);
-//	Notification notification = new Notification();
-//	notification.tickerText = text;
-//	notification.icon = R.drawable.play0;
-//	notification.flags |= Notification.FLAG_ONGOING_EVENT;
-//	notification.setLatestEventInfo(getApplicationContext(), "MusicPlayerSample",
-//			"Playing: " + songName, pi);
-//	startForeground(NOTIFICATION_ID, notification);
 
 	/**
 	 * Just has to be here
