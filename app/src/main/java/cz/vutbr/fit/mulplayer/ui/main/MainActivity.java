@@ -2,7 +2,6 @@ package cz.vutbr.fit.mulplayer.ui.main;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -114,7 +113,7 @@ public class MainActivity extends BaseActivity {
 	void showPlayer() {
 		setIndicator(INDICATOR_DISCARD);
 		mMenu.clear();
-		getMenuInflater().inflate(R.menu.player_menu, mMenu);
+		getMenuInflater().inflate(R.menu.menu_player, mMenu);
 	}
 
 	/**

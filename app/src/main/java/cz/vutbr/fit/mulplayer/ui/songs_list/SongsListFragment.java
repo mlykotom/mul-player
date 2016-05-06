@@ -7,6 +7,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -61,6 +64,28 @@ public class SongsListFragment extends BaseFragment implements ISongsListView, I
 		ButterKnife.unbind(this);
 	}
 
+	/**
+	 * Menu getter so that when player overlays toolbar, we can reinflate it
+	 *
+	 * @return menu resource
+	 */
+	@Override
+	public int getMenuResource() {
+		return R.menu.menu_list_songs;
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(getMenuResource(), menu);
+		mPresenter.onCreateOptionsMenu(menu, inflater);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return mPresenter.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+	}
+
 	// ------ UI setters (presenter -> ui) ------ //
 
 	public void initList(String[] projection) {
@@ -79,15 +104,5 @@ public class SongsListFragment extends BaseFragment implements ISongsListView, I
 	@Override
 	public SongsListAdapter getSongsListAdapter() {
 		return mSongsListAdapter;
-	}
-
-	/**
-	 * Menu getter so that when player overlays toolbar, we can reinflate it
-	 *
-	 * @return menu resource
-	 */
-	@Override
-	public int getMenuResource() {
-		return R.menu.songs_list_menu;
 	}
 }

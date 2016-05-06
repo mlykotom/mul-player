@@ -104,6 +104,6 @@ public class ArtistsListFragment extends BaseFragment implements IBaseListView<A
 	 */
 	@Override
 	public int getMenuResource() {
-		return R.menu.albums_list_menu; // TODO artists
+		return R.menu.menu_list_albums; // TODO artists
 	}
 }

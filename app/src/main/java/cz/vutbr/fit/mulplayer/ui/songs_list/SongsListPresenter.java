@@ -10,19 +10,17 @@ import cz.vutbr.fit.mulplayer.Constants;
 import cz.vutbr.fit.mulplayer.adapter.SongsListAdapter;
 import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
 import cz.vutbr.fit.mulplayer.model.MusicService;
-import cz.vutbr.fit.mulplayer.model.persistance.DataRepository;
-import cz.vutbr.fit.mulplayer.ui.BaseFragmentPresenter;
+import cz.vutbr.fit.mulplayer.ui.SortableListPresenter;
 
 /**
  * @author mlyko
  * @since 11.04.2016
  */
-public class SongsListPresenter extends BaseFragmentPresenter implements Loader.OnLoadCompleteListener<Cursor>, ClickableRecyclerAdapter.OnItemClickListener {
+public class SongsListPresenter extends SortableListPresenter implements Loader.OnLoadCompleteListener<Cursor>, ClickableRecyclerAdapter.OnItemClickListener {
 	private static final int LOADER_SONGS_MUSIC = 0;
 
 	ISongsListView mFragment;
 	CursorLoader mCursorLoader;
-	DataRepository mData = DataRepository.getInstance();
 
 	public SongsListPresenter(SongsListFragment songsListFragment) {
 		super(songsListFragment);
@@ -35,11 +33,20 @@ public class SongsListPresenter extends BaseFragmentPresenter implements Loader.
 
 		mCursorLoader = new CursorLoader(mFragment.getActivity());
 		mCursorLoader.setUri(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+		mCursorLoader.registerListener(LOADER_SONGS_MUSIC, this);
 		mCursorLoader.setProjection(Constants.SONG_PROJECTOR);
 		mCursorLoader.setSelection(Constants.MUSIC_SELECTOR);
-//		mCursorLoader.setSortOrder(mOrderKey + mOrderAscDesc);
-		mCursorLoader.setSortOrder(MediaStore.Audio.Media.TITLE_KEY);
-		mCursorLoader.registerListener(LOADER_SONGS_MUSIC, this);
+		mCursorLoader.setSortOrder(mOrderKey + mOrderAscDesc);
+	}
+
+	@Override
+	public String getDefaultOrderKey() {
+		return MediaStore.Audio.Media.TITLE_KEY;
+	}
+
+	@Override
+	public String getKeyPrefix() {
+		return "songs";
 	}
 
 	@Override
@@ -77,5 +84,12 @@ public class SongsListPresenter extends BaseFragmentPresenter implements Loader.
 	public void onRecyclerViewItemClick(ClickableRecyclerAdapter.ViewHolder holder, int position, int viewType) {
 		SongsListAdapter adapter = mFragment.getSongsListAdapter();
 		MusicService.fireAction(mFragment.getActivity(), MusicService.CMD_PLAY_ALL_SONGS, adapter.getItemId(position));
+	}
+
+	@Override
+	public void onSortChanged() {
+		mCursorLoader.reset();
+		mCursorLoader.setSortOrder(mOrderKey + mOrderAscDesc);
+		mCursorLoader.startLoading();
 	}
 }
