@@ -1,5 +1,6 @@
 package cz.vutbr.fit.mulplayer.model;
 
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.CursorLoader;
@@ -32,6 +33,7 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	private static final String ACTION_CMD_NAME = "CMD_NAME";
 	private static final String ACTION_CMD_VALUE = "CMD_VALUE";
 
+	private static final int PENDING_INTENT_REQUEST_CODE = 100;
 	public static final long STOP_FOREGROUND_SERVICE_IN_MS = 60 * 1000; // turn off foreground service after minute
 	private static final int UI_REFRESH_INTERVAL_MS = 250;
 	private static final int LOADER_SONGS_MUSIC = 0;
@@ -116,6 +118,14 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 
 	public static void fireAction(Context context, @MusicCommand String command) {
 		fireAction(context, command, Constants.NO_POSITION);
+	}
+
+	public static PendingIntent getFireActionPending(Context context, @MusicCommand String command) {
+		Intent intent = new Intent(context, MusicService.class);
+		intent.setAction(ACTION_CMD);
+		intent.putExtra(ACTION_CMD_NAME, command);
+
+		return PendingIntent.getService(context, PENDING_INTENT_REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 	}
 
 	/**
