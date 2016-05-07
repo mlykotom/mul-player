@@ -13,9 +13,12 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.Set;
 
 import cz.vutbr.fit.mulplayer.Constants;
 import cz.vutbr.fit.mulplayer.model.entity.Song;
@@ -41,7 +44,7 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 
 	@StringDef({
 			// -- queue
-			CMD_PLAY_ARTIST, CMD_PLAY_ALBUM, CMD_PLAY_ALL_SONGS, CMD_PLAY_SONG_FROM_ALBUM,
+			CMD_PLAY_ARTIST, CMD_PLAY_ALBUM, CMD_PLAY_ALL_SONGS, CMD_PLAY_SONG_FROM_ALBUM, CMD_REBUILD_QUEUE,
 			// -- playback
 			CMD_PLAY_FORCE, CMD_PLAY_PAUSE, CMD_SEEK_TO, CMD_PREVIOUS, CMD_NEXT
 	})
@@ -53,6 +56,7 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	public static final String CMD_PLAY_ALBUM = "CMD_PLAY_ALBUM";
 	public static final String CMD_PLAY_ALL_SONGS = "CMD_PLAY_ALL_SONGS";
 	public static final String CMD_PLAY_SONG_FROM_ALBUM = "CMD_PLAY_SONG_FROM_ALBUM";
+	public static final String CMD_REBUILD_QUEUE = "CMD_REBUILD_QUEUE";
 
 	// ----- playback controls
 	public static final String CMD_PLAY_FORCE = "CMD_PLAY_FORCE";
@@ -160,6 +164,11 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 				long value2 = intent.getLongExtra(ACTION_CMD_VALUE2, Constants.NO_ID);
 
 				switch (command) {
+					// -------- rebuil queue -------- //
+					case CMD_REBUILD_QUEUE:
+						buildQueueFromDisk();
+						return START_STICKY;
+
 					// -------- queue commands -------- //
 					case CMD_PLAY_ARTIST:
 						mPlaySongId = Constants.NO_POSITION;
@@ -207,6 +216,16 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 		}
 
 		return START_STICKY;
+	}
+
+	/**
+	 * TODO should rebuild queue from saved or build all songs
+	 */
+	private void buildQueueFromDisk() {
+		DataRepository dataRepository = DataRepository.getInstance();
+		Set<String> queueIds = dataRepository.getSavedQueue();
+		if(queueIds == null) return;
+		Log.d(TAG, queueIds.toString());
 	}
 
 	/**
@@ -259,13 +278,6 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	}
 
 	/**
-	 * TODO should rebuild queue from saved or build all songs
-	 */
-	private void rebuildQueue() {
-
-	}
-
-	/**
 	 * Tries to play song from queue list.
 	 * If index < 0, plays actual song (unpause).
 	 * If index > queue size, plays from the beginning
@@ -275,7 +287,7 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	private void playFromQueue(int index) {
 		if (mData.mQueueOrderList.isEmpty()) {
 			// TODO try to rebuild queue first
-			rebuildQueue();
+//			rebuildQueue();
 			// this should never happen
 			Toast.makeText(this, "No queued songs to play!", Toast.LENGTH_LONG).show();
 			return;

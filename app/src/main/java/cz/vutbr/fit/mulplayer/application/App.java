@@ -2,9 +2,12 @@ package cz.vutbr.fit.mulplayer.application;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import com.squareup.picasso.Picasso;
+
+import cz.vutbr.fit.mulplayer.model.MusicService;
+import cz.vutbr.fit.mulplayer.model.persistance.DataRepository;
 
 /**
  * @author mlyko
@@ -25,6 +28,10 @@ public class App extends Application {
 		built.setLoggingEnabled(false);
 		Picasso.setSingletonInstance(built);
 
+		if (DataRepository.getInstance().mQueueSongs.size() == 0) {
+			Log.i(this.getPackageName(), "No queue in App, trying to rebuild it.");
+			MusicService.fireAction(this, MusicService.CMD_REBUILD_QUEUE);
+		}
 	}
 
 	public static Context getContext() {

@@ -152,13 +152,10 @@ public class SongsListPresenter extends SortableListPresenter implements Loader.
 	 * @param songName new song name
 	 */
 	public void onSongMetadataChanged(long songId, String songName, String songArtist, String songAlbum) {
-		ContentValues values = new ContentValues(6);
+		ContentValues values = new ContentValues(3);
 		values.put(MediaStore.Audio.Media.TITLE, songName);
-		values.put(MediaStore.Audio.Media.TITLE_KEY, MediaStore.Audio.keyFor(songName));
 		values.put(MediaStore.Audio.Media.ARTIST, songArtist);
-		values.put(MediaStore.Audio.Media.ARTIST_KEY, MediaStore.Audio.keyFor(songArtist));
 		values.put(MediaStore.Audio.Media.ALBUM, songAlbum);
-		values.put(MediaStore.Audio.Media.ALBUM_KEY, MediaStore.Audio.keyFor(songAlbum));
 
 		int rowsUpdated = getBaseActivity().getContentResolver().update(
 				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,

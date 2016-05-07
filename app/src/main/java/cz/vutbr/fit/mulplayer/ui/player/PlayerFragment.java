@@ -52,7 +52,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 
 	@Bind(R.id.Visualizer)	public VisualizerView mVisualizerView;
 
-	Playback mPlayback;
+	Playback mPlayback = Playback.getInstance();
 	/**
 	 * Constructor for fragment which can't be constructed classical way because android manages its lifecycle
 	 *
