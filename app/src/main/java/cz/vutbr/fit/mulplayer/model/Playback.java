@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import butterknife.Bind;
 import cz.vutbr.fit.mulplayer.R;
+import cz.vutbr.fit.mulplayer.application.App;
 import cz.vutbr.fit.mulplayer.model.entity.Song;
 import cz.vutbr.fit.mulplayer.ui.Visualizer.VisualizerView;
 
@@ -24,18 +25,27 @@ import cz.vutbr.fit.mulplayer.ui.Visualizer.VisualizerView;
 public class Playback implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener, AudioManager.OnAudioFocusChangeListener {
 	private static final String TAG = Playback.class.getSimpleName();
 	protected @PlaybackStateCompat.State int mState = PlaybackStateCompat.STATE_NONE;
-	protected MusicService mService;
+
 	protected @Nullable MediaPlayer mMediaPlayer;
 	protected IPlaybackCallback mCallback;
 
 	private @Nullable Song mActiveSong;
 	private volatile int mCurrentPosition;
 
+	private static Playback playbackInstance;
+
 	//@Bind(R.id.Visualizer)	VisualizerView mVisualizerView;
 
-	Playback(MusicService service, IPlaybackCallback callback) {
-		mService = service;
+	private Playback(IPlaybackCallback callback) {
+
 		mCallback = callback;
+	}
+
+	public static Playback getInstance (IPlaybackCallback callback){
+		if (playbackInstance == null)
+			playbackInstance = new Playback ( callback);
+
+		return playbackInstance;
 	}
 
 	/**
@@ -49,7 +59,7 @@ public class Playback implements MediaPlayer.OnPreparedListener, MediaPlayer.OnE
 			mMediaPlayer.setOnErrorListener(this);
 			mMediaPlayer.setOnSeekCompleteListener(this);
 			mMediaPlayer.setOnCompletionListener(this);
-			mMediaPlayer.setWakeMode(mService.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+			mMediaPlayer.setWakeMode(App.getContext(), PowerManager.PARTIAL_WAKE_LOCK);
 		} else {
 			mMediaPlayer.reset();
 		}
@@ -218,6 +228,10 @@ public class Playback implements MediaPlayer.OnPreparedListener, MediaPlayer.OnE
 	public void onAudioFocusChange(int focusChange) {
 		Log.d(TAG, "onAudioFocusChange. focusChange = " + focusChange);
 
+	}
+
+	public MediaPlayer getMediaPlayer() {
+		return mMediaPlayer;
 	}
 
 	public interface IPlaybackCallback {

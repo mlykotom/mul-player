@@ -21,6 +21,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.vutbr.fit.mulplayer.R;
+import cz.vutbr.fit.mulplayer.model.Playback;
 import cz.vutbr.fit.mulplayer.ui.BaseFragment;
 import cz.vutbr.fit.mulplayer.ui.Visualizer.LineRenderer;
 import cz.vutbr.fit.mulplayer.ui.Visualizer.VisualizerView;
@@ -49,8 +50,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 	@Bind(R.id.player_playback_time) TextView mPlayerPlaybackTime;
 	@Bind(R.id.player_album_art) ImageView mPlayerAlbumArt;
 
-	@Bind(R.id.Visualizer)	VisualizerView mVisualizer;
+	@Bind(R.id.Visualizer)	public VisualizerView mVisualizerView;
 
+	Playback mPlayback;
 	/**
 	 * Constructor for fragment which can't be constructed classical way because android manages its lifecycle
 	 *
@@ -173,6 +175,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 		lineFlashPaint.setAntiAlias(true);
 		lineFlashPaint.setColor(Color.argb(188, 255, 255, 255));
 		LineRenderer lineRenderer = new LineRenderer(linePaint, lineFlashPaint, true);
-		mVisualizer.addRenderer(lineRenderer);
+		mVisualizerView.addRenderer(lineRenderer);
+		//mVisualizer.link(Playback.getInstance(null).getMediaPlayer());
 	}
+
+
 }

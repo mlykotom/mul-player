@@ -100,6 +100,13 @@
 
     </LinearLayout>
 
+    <cz.vutbr.fit.mulplayer.ui.Visualizer.VisualizerView
+        android:id="@+id/Visualizer"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@+id/playback_wrapper"
+        />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/player_queue_button"
         android:layout_width="wrap_content"

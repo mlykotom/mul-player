@@ -34,6 +34,7 @@ public class VisualizerView extends View {
     private Paint mFadePaint = new Paint();
 
     private Set<Renderer> mRenderers;
+    private MediaPlayer mPlayer;
 
     public VisualizerView(Context context) {
         super(context);
@@ -78,8 +79,11 @@ public class VisualizerView extends View {
         }
     }
 
+    public MediaPlayer getPlayer(){ return mPlayer; }
+
     public void link(MediaPlayer player)
     {
+        mPlayer = player;
         if(player == null)
         {
             throw new NullPointerException("Cannot link to null MediaPlayer");
@@ -152,8 +156,7 @@ public class VisualizerView extends View {
 
         // Create canvas once we're ready to draw
         mRect.set(0, 0, getWidth(), getHeight());
-        Log.d("kokot",Integer.toString(canvas.getWidth()));
-        Log.d("kokot",Integer.toString(canvas.getHeight()));
+
         if(mCanvasBitmap == null )
         {
             mCanvasBitmap = Bitmap.createBitmap(canvas.getWidth(), canvas.getHeight(), Bitmap.Config.ARGB_8888);

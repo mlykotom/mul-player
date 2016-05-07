@@ -99,7 +99,7 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 		mSongLoader.registerListener(LOADER_SONGS_MUSIC, this);
 
 		mNotificationController = new MusicNotificationController(this);
-		mPlayback = new Playback(this, this);
+		mPlayback = Playback.getInstance(this);
 	}
 
 	/**

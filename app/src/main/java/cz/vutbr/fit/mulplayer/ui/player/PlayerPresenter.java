@@ -8,6 +8,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import cz.vutbr.fit.mulplayer.model.MusicService;
+import cz.vutbr.fit.mulplayer.model.Playback;
 import cz.vutbr.fit.mulplayer.model.entity.Song;
 import cz.vutbr.fit.mulplayer.model.event.PlaybackEvent;
 import cz.vutbr.fit.mulplayer.ui.BaseFragmentPresenter;
@@ -19,7 +20,7 @@ import cz.vutbr.fit.mulplayer.ui.BaseFragmentPresenter;
 public class PlayerPresenter extends BaseFragmentPresenter {
 	private static final String TAG = PlayerPresenter.class.getSimpleName();
 
-	public IPlayerView mFragment;
+	public PlayerFragment mFragment;
 	public Song mActualSong;
 
 	int mEndTime;
@@ -92,5 +93,8 @@ public class PlayerPresenter extends BaseFragmentPresenter {
 
 		// setup if its playing or stopped
 		mFragment.setPlayerButtonPlayPause(event.isPlaying);
+
+		if(mFragment.mVisualizerView.getPlayer() == null)
+			mFragment.mVisualizerView.link(Playback.getInstance(null).getMediaPlayer());
 	}
 }
