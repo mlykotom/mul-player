@@ -34,8 +34,7 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	private static final String ACTION_CMD_VALUE = "CMD_VALUE";
 	private static final String ACTION_CMD_VALUE2 = "CMD_VALUE2";
 
-	private static final int PENDING_INTENT_REQUEST_CODE = 100;
-	public static final long STOP_FOREGROUND_SERVICE_IN_MS = 60 * 1000; // turn off foreground service after minute
+	public static final long STOP_FOREGROUND_SERVICE_IN_MS = 2 * 60 * 1000; // turn off foreground service after this time
 	private static final int UI_REFRESH_INTERVAL_MS = 250;
 	private static final int LOADER_SONGS_MUSIC = 0;
 	private MusicNotificationController mNotificationController;
@@ -135,12 +134,12 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	 * @param command music command (next/prev/play/pause)
 	 * @return pending intent to set in widget / notification
 	 */
-	public static PendingIntent getFireActionPending(Context context, @MusicCommand String command) {
+	public static PendingIntent getFireActionPending(Context context, int requestCode, @MusicCommand String command) {
 		Intent intent = new Intent(context, MusicService.class);
 		intent.setAction(ACTION_CMD);
 		intent.putExtra(ACTION_CMD_NAME, command);
 
-		return PendingIntent.getService(context, PENDING_INTENT_REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		return PendingIntent.getService(context, requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 	}
 
 	/**
@@ -316,7 +315,6 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 				// TODO?
 			case PlaybackStateCompat.STATE_PAUSED:
 				mNotificationController.stopNotification();
-
 				mHandler.removeCallbacks(mUpdateSongTime);
 				mEventBus.post(new PlaybackEvent(mPlayback.getActiveSong(), false));
 				break;

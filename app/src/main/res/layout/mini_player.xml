@@ -24,28 +24,25 @@
         android:id="@+id/mini_player_artist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
         android:layout_toEndOf="@+id/mini_player_album_art"
-        android:layout_toLeftOf="@+id/mini_player_button_play_pause"
-        android:layout_toRightOf="@+id/mini_player_album_art"
         android:layout_toStartOf="@+id/mini_player_button_play_pause"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textColor="@color/overlay_text"
         tools:text="Chet Faker"
         />
 
     <TextView
         android:id="@+id/mini_player_title"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/mini_player_artist"
-        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_toEndOf="@+id/mini_player_album_art"
-        android:layout_toLeftOf="@+id/mini_player_button_play_pause"
-        android:layout_toRightOf="@+id/mini_player_album_art"
         android:layout_toStartOf="@+id/mini_player_button_play_pause"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="@color/overlay_text"
         tools:text="Gold"
         />
 
