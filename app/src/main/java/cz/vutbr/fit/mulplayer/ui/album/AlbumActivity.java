@@ -4,26 +4,28 @@ import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cz.vutbr.fit.mulplayer.Constants;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.adapter.SongsListAdapter;
+import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
+import cz.vutbr.fit.mulplayer.model.MusicService;
 import cz.vutbr.fit.mulplayer.ui.BaseActivity;
 import cz.vutbr.fit.mulplayer.utils.SimpleDividerItemDecoration;
 import icepick.Icepick;
@@ -33,17 +35,18 @@ import icepick.State;
  * @author mlyko
  * @since 18.04.2016
  */
-public class AlbumActivity extends BaseActivity implements Loader.OnLoadCompleteListener<Cursor> {
+public class AlbumActivity extends BaseActivity implements Loader.OnLoadCompleteListener<Cursor>, ClickableRecyclerAdapter.OnItemClickListener {
 	public static final String EXTRA_ALBUM_ID = "album_id";
 	private static final int ALBUM_LOADER_ID = 0;
 	private static final int SONGS_LOADER_ID = 1;
 
 	AlbumPresenter mPresenter;
 
-	@Bind(R.id.album_cover)	ImageView mAlbumCover;
-	@Bind(R.id.album_songs_list)	RecyclerView mAlbumSongsList;
+	@Bind(R.id.album_cover) ImageView mAlbumCover;
+	@Bind(R.id.album_songs_list) RecyclerView mAlbumSongsList;
 
 	@State long mAlbumId;
+	@Bind(R.id.album_artist_songs) TextView mAlbumArtistSongs;
 
 	private CursorLoader mAlbumInfoLoader;
 	private CursorLoader mSongsLoader;
@@ -56,11 +59,11 @@ public class AlbumActivity extends BaseActivity implements Loader.OnLoadComplete
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_album);
 		ButterKnife.bind(this);
-		setupToolbar(R.string.albums_detail_title, INDICATOR_BACK);
+		setupToolbar("", INDICATOR_BACK);
 		Icepick.restoreInstanceState(this, savedInstanceState);
 
 		Intent intent = getIntent();
-		if(intent != null){
+		if (intent != null) {
 			mAlbumId = intent.getLongExtra(EXTRA_ALBUM_ID, 0);
 		}
 
@@ -69,18 +72,18 @@ public class AlbumActivity extends BaseActivity implements Loader.OnLoadComplete
 				this,
 				MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
 				Constants.ALBUMS_PROJECTOR,
-				"_id = ?",
+				BaseColumns._ID + " = ?",
 				new String[]{String.valueOf(mAlbumId)},
 				null
 		);
-		mAlbumInfoLoader.registerListener(ALBUM_LOADER_ID,this);
+		mAlbumInfoLoader.registerListener(ALBUM_LOADER_ID, this);
 
 		//loading songs from this album
 		mSongsLoader = new CursorLoader(
 				this,
 				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
 				Constants.SONG_PROJECTOR,
-				"album_id = ?",
+				Constants.MUSIC_SELECTOR + " AND " + MediaStore.Audio.Media.ALBUM_ID + " = ?",
 				new String[]{String.valueOf(mAlbumId)},
 				null
 		);
@@ -89,6 +92,7 @@ public class AlbumActivity extends BaseActivity implements Loader.OnLoadComplete
 
 		// showing songs from this album
 		mSongsListAdapter = new SongsListAdapter(this, Constants.SONG_PROJECTOR);
+		mSongsListAdapter.setOnItemClickListener(this);
 
 		//wtf je toto
 		mAlbumSongsList.setLayoutManager(new LinearLayoutManager(this));
@@ -119,26 +123,55 @@ public class AlbumActivity extends BaseActivity implements Loader.OnLoadComplete
 
 	@Override
 	public void onLoadComplete(Loader<Cursor> loader, Cursor data) {
-		if (loader.getId() == ALBUM_LOADER_ID){
-			if (data != null) {
-				int i = data.getCount();
-				if (data.moveToFirst()){
-
-					String path = data.getString(data.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
-					Drawable img = Drawable.createFromPath(path);
-
-					ColorMatrix matrix = new ColorMatrix();
-					matrix.setSaturation(0);
-
-					ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
-					mAlbumCover.setColorFilter(filter);
-					mAlbumCover.setImageDrawable(img);
+		switch (loader.getId()) {
+			case ALBUM_LOADER_ID:
+				if (!data.moveToFirst()) {
+					Toast.makeText(getApplicationContext(), "Album data could not be loaded", Toast.LENGTH_LONG).show();
+					finish();
+					return;
 				}
-			}
-		}
+				fillAlbumDetail(data);
+				break;
 
-		if (loader.getId() == SONGS_LOADER_ID){
-			mSongsListAdapter.swapCursor(data);
+			case SONGS_LOADER_ID:
+				mSongsListAdapter.swapCursor(data);
+				break;
 		}
+	}
+
+	private void fillAlbumDetail(Cursor data) {
+		// album name
+		String albumName = data.getString(data.getColumnIndex(MediaStore.Audio.Albums.ALBUM));
+		setupToolbar(albumName, INDICATOR_BACK);
+
+		// artist
+		String artistName = data.getString(data.getColumnIndex(MediaStore.Audio.Albums.ARTIST));
+
+		int songCount = data.getInt(data.getColumnIndex(MediaStore.Audio.Albums.NUMBER_OF_SONGS));
+		String songQuantityString = getResources().getQuantityString(R.plurals.songs_count, songCount, songCount);
+		mAlbumArtistSongs.setText(String.format("%s | %s", artistName, songQuantityString));
+
+
+		// album art
+		String path = data.getString(data.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
+		Drawable img = Drawable.createFromPath(path);
+
+		ColorMatrix matrix = new ColorMatrix();
+		matrix.setSaturation(0);
+
+		ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+		mAlbumCover.setColorFilter(filter);
+		mAlbumCover.setImageDrawable(img);
+	}
+
+	@OnClick(R.id.album_random_all)
+	public void onClick() {
+		MusicService.fireAction(this, MusicService.CMD_PLAY_ALBUM, mAlbumId);
+	}
+
+	@Override
+	public void onRecyclerViewItemClick(ClickableRecyclerAdapter.ViewHolder holder, int position, int viewType) {
+		long songId = mSongsListAdapter.getItemId(position);
+		MusicService.fireAction(this, MusicService.CMD_PLAY_SONG_FROM_ALBUM, mAlbumId, songId);
 	}
 }

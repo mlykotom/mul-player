@@ -32,6 +32,7 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	private static final String ACTION_CMD = "cz.vutbr.fit.mulplayer.PLAYER_ACTION";
 	private static final String ACTION_CMD_NAME = "CMD_NAME";
 	private static final String ACTION_CMD_VALUE = "CMD_VALUE";
+	private static final String ACTION_CMD_VALUE2 = "CMD_VALUE2";
 
 	private static final int PENDING_INTENT_REQUEST_CODE = 100;
 	public static final long STOP_FOREGROUND_SERVICE_IN_MS = 60 * 1000; // turn off foreground service after minute
@@ -41,7 +42,7 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 
 	@StringDef({
 			// -- queue
-			CMD_PLAY_ARTIST, CMD_PLAY_ALBUM, CMD_PLAY_ALL_SONGS,
+			CMD_PLAY_ARTIST, CMD_PLAY_ALBUM, CMD_PLAY_ALL_SONGS, CMD_PLAY_SONG_FROM_ALBUM,
 			// -- playback
 			CMD_PLAY_FORCE, CMD_PLAY_PAUSE, CMD_SEEK_TO, CMD_PREVIOUS, CMD_NEXT
 	})
@@ -52,6 +53,7 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	public static final String CMD_PLAY_ARTIST = "CMD_PLAY_ARTIST";
 	public static final String CMD_PLAY_ALBUM = "CMD_PLAY_ALBUM";
 	public static final String CMD_PLAY_ALL_SONGS = "CMD_PLAY_ALL_SONGS";
+	public static final String CMD_PLAY_SONG_FROM_ALBUM = "CMD_PLAY_SONG_FROM_ALBUM";
 
 	// ----- playback controls
 	public static final String CMD_PLAY_FORCE = "CMD_PLAY_FORCE";
@@ -106,20 +108,33 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	 *
 	 * @param context application's context
 	 * @param command {@link MusicCommand}
-	 * @param value
+	 * @param value   any long value which can be set (albumId,songId,..)
+	 * @param value2  any long value (same as #value)
 	 */
-	public static void fireAction(Context context, @MusicCommand String command, long value) {
+	public static void fireAction(Context context, @MusicCommand String command, long value, long value2) {
 		Intent intent = new Intent(context, MusicService.class);
 		intent.setAction(ACTION_CMD);
 		intent.putExtra(ACTION_CMD_NAME, command);
 		intent.putExtra(ACTION_CMD_VALUE, value);
+		intent.putExtra(ACTION_CMD_VALUE2, value2);
 		context.startService(intent);
+	}
+
+	public static void fireAction(Context context, @MusicCommand String command, long value) {
+		fireAction(context, command, value, Constants.NO_POSITION);
 	}
 
 	public static void fireAction(Context context, @MusicCommand String command) {
 		fireAction(context, command, Constants.NO_POSITION);
 	}
 
+	/**
+	 * Pending intent to run from widget / notification
+	 *
+	 * @param context where will be intent fired
+	 * @param command music command (next/prev/play/pause)
+	 * @return pending intent to set in widget / notification
+	 */
 	public static PendingIntent getFireActionPending(Context context, @MusicCommand String command) {
 		Intent intent = new Intent(context, MusicService.class);
 		intent.setAction(ACTION_CMD);
@@ -143,20 +158,29 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 			if (ACTION_CMD.equals(action)) {
 				@MusicCommand String command = intent.getStringExtra(ACTION_CMD_NAME);
 				long value = intent.getLongExtra(ACTION_CMD_VALUE, Constants.NO_POSITION);
+				long value2 = intent.getLongExtra(ACTION_CMD_VALUE2, Constants.NO_ID);
 
 				switch (command) {
 					// -------- queue commands -------- //
 					case CMD_PLAY_ARTIST:
+						mPlaySongId = Constants.NO_POSITION;
 						buildArtistQueue(value);
 						return START_STICKY;
+
+					case CMD_PLAY_SONG_FROM_ALBUM:
+						mPlaySongId = value2;
+						buildAlbumQueue(value);
+						return START_STICKY;
+
 					case CMD_PLAY_ALBUM:
+						mPlaySongId = Constants.NO_POSITION;
 						buildAlbumQueue(value);
 						return START_STICKY;
 
 					case CMD_PLAY_ALL_SONGS:
-						buildAllSongsQueue(value);
+						mPlaySongId = value;     // sets song id which wants to be played
+						buildAllSongsQueue();
 						return START_STICKY;
-
 
 					// -------- playback commands -------- //
 					case CMD_PLAY_PAUSE:
@@ -192,7 +216,6 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	 * @param albumId id from mediastore
 	 */
 	private void buildAlbumQueue(long albumId) {
-		mPlaySongId = Constants.NO_ID;
 		mSongLoader.reset();
 		mSongLoader.setSelection(Constants.MUSIC_SELECTOR + " AND " + MediaStore.Audio.Media.ALBUM_ID + " = ?");
 		mSongLoader.setSelectionArgs(new String[]{String.valueOf(albumId)});
@@ -201,11 +224,8 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 
 	/**
 	 * Builds all songs and tries to playit from selected song
-	 *
-	 * @param playSongId this song will be playing after build
 	 */
-	private void buildAllSongsQueue(long playSongId) {
-		mPlaySongId = playSongId;     // sets song id which wants to be played
+	private void buildAllSongsQueue() {
 		mSongLoader.reset();
 		mSongLoader.setSelection(Constants.MUSIC_SELECTOR);
 		mSongLoader.setSelectionArgs(null);
@@ -219,7 +239,6 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	 * @param artistId id from mediaStore
 	 */
 	private void buildArtistQueue(long artistId) {
-		mPlaySongId = Constants.NO_ID;
 		mSongLoader.reset();
 		mSongLoader.setSelection(Constants.MUSIC_SELECTOR + " AND " + MediaStore.Audio.Media.ARTIST_ID + " = ?");
 		mSongLoader.setSelectionArgs(new String[]{String.valueOf(artistId)});
@@ -236,8 +255,8 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	@Override
 	public void onLoadComplete(Loader<Cursor> loader, Cursor data) {
 		int pos = mData.queueSongsAndFindPosition(data, mPlaySongId);
-		fireAction(this, CMD_PLAY_FORCE, pos);
 		mPlaySongId = Constants.NO_ID;
+		fireAction(this, CMD_PLAY_FORCE, pos);
 	}
 
 	/**

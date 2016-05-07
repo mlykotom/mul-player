@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -22,7 +23,6 @@ import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.adapter.AlbumsListAdapter;
 import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
 import cz.vutbr.fit.mulplayer.model.MusicService;
-import cz.vutbr.fit.mulplayer.model.persistance.DataRepository;
 import cz.vutbr.fit.mulplayer.ui.BaseActivity;
 import cz.vutbr.fit.mulplayer.ui.album.AlbumActivity;
 import cz.vutbr.fit.mulplayer.utils.SimpleDividerItemDecoration;
@@ -65,7 +65,6 @@ public class ArtistDetailActivity extends BaseActivity implements Loader.OnLoadC
 			finish();
 		}
 
-
 		initLoaders();
 		initAlbumsList();
 	}
@@ -76,7 +75,7 @@ public class ArtistDetailActivity extends BaseActivity implements Loader.OnLoadC
 				this,
 				MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
 				Constants.ARTISTS_PROJECTOR,
-				"_id = ?",
+				BaseColumns._ID + " = ?",
 				new String[]{String.valueOf(mArtistId)},
 				null
 		);
@@ -148,11 +147,11 @@ public class ArtistDetailActivity extends BaseActivity implements Loader.OnLoadC
 	 * @param data cursor with artist data
 	 */
 	private void fillArtistInfo(Cursor data) {
-		String artist = data.getString(1);
+		String artist = data.getString(data.getColumnIndex(MediaStore.Audio.Artists.ARTIST));
 		setupToolbar(artist, INDICATOR_BACK);
 
-		int albumCount = data.getInt(2);
-		int songCount = data.getInt(3);
+		int albumCount = data.getInt(data.getColumnIndex(MediaStore.Audio.Artists.NUMBER_OF_ALBUMS));
+		int songCount = data.getInt(data.getColumnIndex(MediaStore.Audio.Artists.NUMBER_OF_TRACKS));
 		String albumQuantityString = getResources().getQuantityString(R.plurals.albums_count, albumCount, albumCount);
 		String songQuantityString = getResources().getQuantityString(R.plurals.songs_count, songCount, songCount);
 		mArtistAlbumsSongs.setText(String.format("%s | %s", albumQuantityString, songQuantityString));
