@@ -101,7 +101,7 @@
     </LinearLayout>
 
     <cz.vutbr.fit.mulplayer.ui.Visualizer.VisualizerView
-        android:id="@+id/Visualizer"
+        android:id="@+id/player_visualizer"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_below="@+id/playback_wrapper"

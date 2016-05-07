@@ -7,15 +7,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.io.IOException;
 
-import butterknife.Bind;
-import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.application.App;
 import cz.vutbr.fit.mulplayer.model.entity.Song;
-import cz.vutbr.fit.mulplayer.ui.Visualizer.VisualizerView;
 
 /**
  * Class for handling one song (playing, pausing, seeking, ...).
@@ -29,42 +24,37 @@ public class Playback implements MediaPlayer.OnPreparedListener, MediaPlayer.OnE
 	protected @PlaybackStateCompat.State int mState = PlaybackStateCompat.STATE_NONE;
 
 	protected @Nullable MediaPlayer mMediaPlayer;
-	protected IPlaybackCallback mCallback;
+	protected @Nullable IPlaybackCallback mCallback;
 
 	private @Nullable Song mActiveSong;
 	private volatile int mCurrentPosition;
 
-	private static Playback playbackInstance;
+	private static Playback sPlaybackInstance;
 
-	//@Bind(R.id.Visualizer)	VisualizerView mVisualizerView;
-
-	private Playback(IPlaybackCallback callback) {
-
+	public void setCallback(@Nullable IPlaybackCallback callback) {
 		mCallback = callback;
 	}
 
-	public static Playback getInstance (IPlaybackCallback callback){
-		if (playbackInstance == null)
-			playbackInstance = new Playback ( callback);
+	public static Playback getInstance() {
+		if (sPlaybackInstance == null)
+			sPlaybackInstance = new Playback();
 
-		return playbackInstance;
+		return sPlaybackInstance;
 	}
 
 	/**
 	 * Safely creates media player or reset its state so that any next music can be played;
 	 */
-	private void onSaveCreate() {
-		if (mMediaPlayer == null) {
-			mMediaPlayer = new MediaPlayer();
-			mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-			mMediaPlayer.setOnPreparedListener(this);
-			mMediaPlayer.setOnErrorListener(this);
-			mMediaPlayer.setOnSeekCompleteListener(this);
-			mMediaPlayer.setOnCompletionListener(this);
-			mMediaPlayer.setWakeMode(App.getContext(), PowerManager.PARTIAL_WAKE_LOCK);
-		} else {
-			mMediaPlayer.reset();
-		}
+	public void onSaveCreate() {
+		if (mMediaPlayer != null) return;
+
+		mMediaPlayer = new MediaPlayer();
+		mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+		mMediaPlayer.setOnPreparedListener(this);
+		mMediaPlayer.setOnErrorListener(this);
+		mMediaPlayer.setOnSeekCompleteListener(this);
+		mMediaPlayer.setOnCompletionListener(this);
+		mMediaPlayer.setWakeMode(App.getContext(), PowerManager.PARTIAL_WAKE_LOCK);
 	}
 
 	/**
@@ -101,6 +91,7 @@ public class Playback implements MediaPlayer.OnPreparedListener, MediaPlayer.OnE
 			mState = PlaybackStateCompat.STATE_STOPPED;
 			onSaveCreate();
 			assert mMediaPlayer != null; // media player here  won't be null because onSaveCreate() always creates it
+			mMediaPlayer.reset();
 			try {
 				mMediaPlayer.setDataSource(song.filepath);
 				mMediaPlayer.prepareAsync();
@@ -110,13 +101,15 @@ public class Playback implements MediaPlayer.OnPreparedListener, MediaPlayer.OnE
 				//mVisualizerView.link(mMediaPlayer);
 
 			} catch (IOException e) {
-				mCallback.onError(e.getMessage());
+				if (mCallback != null) {
+					mCallback.onError(e.getMessage());
+				}
 			}
 		}
 
-		EventBus.getDefault().post(mMediaPlayer);
-
-		mCallback.onPlaybackStatusChanged(mState);
+		if (mCallback != null) {
+			mCallback.onPlaybackStatusChanged(mState);
+		}
 	}
 
 	/**
@@ -131,7 +124,9 @@ public class Playback implements MediaPlayer.OnPreparedListener, MediaPlayer.OnE
 		}
 
 		mState = PlaybackStateCompat.STATE_PAUSED;
-		mCallback.onPlaybackStatusChanged(mState);
+		if (mCallback != null) {
+			mCallback.onPlaybackStatusChanged(mState);
+		}
 	}
 
 	/**
@@ -186,7 +181,9 @@ public class Playback implements MediaPlayer.OnPreparedListener, MediaPlayer.OnE
 	public void onPrepared(MediaPlayer player) {
 		player.start();
 		mState = PlaybackStateCompat.STATE_PLAYING;
-		mCallback.onPlaybackStatusChanged(mState);
+		if (mCallback != null) {
+			mCallback.onPlaybackStatusChanged(mState);
+		}
 	}
 
 	/**
@@ -206,12 +203,16 @@ public class Playback implements MediaPlayer.OnPreparedListener, MediaPlayer.OnE
 	 */
 	@Override
 	public void onCompletion(MediaPlayer player) {
-		mCallback.onPlaybackCompleted();
+		if (mCallback != null) {
+			mCallback.onPlaybackCompleted();
+		}
 	}
 
 	@Override
 	public boolean onError(MediaPlayer player, int what, int extra) {
-		mCallback.onError("MediaPlayer error " + what + " (" + extra + ")");
+		if (mCallback != null) {
+			mCallback.onError("MediaPlayer error " + what + " (" + extra + ")");
+		}
 		return true;
 	}
 
@@ -235,6 +236,7 @@ public class Playback implements MediaPlayer.OnPreparedListener, MediaPlayer.OnE
 	}
 
 	public MediaPlayer getMediaPlayer() {
+		onSaveCreate();
 		return mMediaPlayer;
 	}
 

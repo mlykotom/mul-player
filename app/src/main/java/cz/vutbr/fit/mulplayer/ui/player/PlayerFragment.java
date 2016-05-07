@@ -1,8 +1,7 @@
 package cz.vutbr.fit.mulplayer.ui.player;
 
 
-import android.graphics.Color;
-import android.graphics.Paint;
+import android.media.audiofx.Visualizer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,9 +20,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.vutbr.fit.mulplayer.R;
-import cz.vutbr.fit.mulplayer.model.Playback;
 import cz.vutbr.fit.mulplayer.ui.BaseFragment;
-import cz.vutbr.fit.mulplayer.ui.Visualizer.LineRenderer;
 import cz.vutbr.fit.mulplayer.ui.Visualizer.VisualizerView;
 import cz.vutbr.fit.mulplayer.utils.CircleTransform;
 import cz.vutbr.fit.mulplayer.utils.Utils;
@@ -50,20 +47,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 	@Bind(R.id.player_playback_time) TextView mPlayerPlaybackTime;
 	@Bind(R.id.player_album_art) ImageView mPlayerAlbumArt;
 
-	@Bind(R.id.Visualizer)	public VisualizerView mVisualizerView;
-
-	Playback mPlayback;
-	/**
-	 * Constructor for fragment which can't be constructed classical way because android manages its lifecycle
-	 *
-	 * @return instance of this fragment
-	 */
-	public static PlayerFragment newInstance() {
-		Bundle args = new Bundle();
-		PlayerFragment fragment = new PlayerFragment();
-		fragment.setArguments(args);
-		return fragment;
-	}
+	@Bind(R.id.player_visualizer) public VisualizerView mVisualizerView;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -163,21 +147,19 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 		mPlayerSeekbar.setMax(duration);
 	}
 
-	private void addLineRenderer()
-	{
-		Paint linePaint = new Paint();
-		linePaint.setStrokeWidth(1f);
-		linePaint.setAntiAlias(true);
-		linePaint.setColor(Color.argb(88, 0, 128, 255));
-
-		Paint lineFlashPaint = new Paint();
-		lineFlashPaint.setStrokeWidth(5f);
-		lineFlashPaint.setAntiAlias(true);
-		lineFlashPaint.setColor(Color.argb(188, 255, 255, 255));
-		LineRenderer lineRenderer = new LineRenderer(linePaint, lineFlashPaint, true);
-		mVisualizerView.addRenderer(lineRenderer);
+	private void addLineRenderer() {
+//		Paint linePaint = new Paint();
+//		linePaint.setStrokeWidth(1f);
+//		linePaint.setAntiAlias(true);
+//		linePaint.setColor(Color.argb(88, 0, 128, 255));
+//
+//		Paint lineFlashPaint = new Paint();
+//		lineFlashPaint.setStrokeWidth(5f);
+//		lineFlashPaint.setAntiAlias(true);
+//		lineFlashPaint.setColor(Color.argb(188, 255, 255, 255));
+//		LineRenderer lineRenderer = new LineRenderer(linePaint, lineFlashPaint, true);
+//		mVisualizerView.addRenderer(lineRenderer);
 		//mVisualizer.link(Playback.getInstance(null).getMediaPlayer());
 	}
-
 
 }
