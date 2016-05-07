@@ -1,6 +1,8 @@
 package cz.vutbr.fit.mulplayer.ui.player;
 
 
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,6 +22,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.ui.BaseFragment;
+import cz.vutbr.fit.mulplayer.ui.Visualizer.LineRenderer;
+import cz.vutbr.fit.mulplayer.ui.Visualizer.VisualizerView;
 import cz.vutbr.fit.mulplayer.utils.CircleTransform;
 import cz.vutbr.fit.mulplayer.utils.Utils;
 
@@ -45,6 +49,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 	@Bind(R.id.player_playback_time) TextView mPlayerPlaybackTime;
 	@Bind(R.id.player_album_art) ImageView mPlayerAlbumArt;
 
+	@Bind(R.id.Visualizer)	VisualizerView mVisualizer;
+
 	/**
 	 * Constructor for fragment which can't be constructed classical way because android manages its lifecycle
 	 *
@@ -69,6 +75,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 		View view = inflater.inflate(R.layout.fragment_player, container, false);
 		ButterKnife.bind(this, view);
 		mPlayerSeekbar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
+
+		addLineRenderer();
+
 		return view;
 	}
 
@@ -150,5 +159,20 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 	@Override
 	public void setPlaybackSeekbarMax(int duration) {
 		mPlayerSeekbar.setMax(duration);
+	}
+
+	private void addLineRenderer()
+	{
+		Paint linePaint = new Paint();
+		linePaint.setStrokeWidth(1f);
+		linePaint.setAntiAlias(true);
+		linePaint.setColor(Color.argb(88, 0, 128, 255));
+
+		Paint lineFlashPaint = new Paint();
+		lineFlashPaint.setStrokeWidth(5f);
+		lineFlashPaint.setAntiAlias(true);
+		lineFlashPaint.setColor(Color.argb(188, 255, 255, 255));
+		LineRenderer lineRenderer = new LineRenderer(linePaint, lineFlashPaint, true);
+		mVisualizer.addRenderer(lineRenderer);
 	}
 }

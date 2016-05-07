@@ -9,7 +9,10 @@ import android.util.Log;
 
 import java.io.IOException;
 
+import butterknife.Bind;
+import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.model.entity.Song;
+import cz.vutbr.fit.mulplayer.ui.Visualizer.VisualizerView;
 
 /**
  * Class for handling one song (playing, pausing, seeking, ...).
@@ -27,6 +30,8 @@ public class Playback implements MediaPlayer.OnPreparedListener, MediaPlayer.OnE
 
 	private @Nullable Song mActiveSong;
 	private volatile int mCurrentPosition;
+
+	//@Bind(R.id.Visualizer)	VisualizerView mVisualizerView;
 
 	Playback(MusicService service, IPlaybackCallback callback) {
 		mService = service;
@@ -89,6 +94,9 @@ public class Playback implements MediaPlayer.OnPreparedListener, MediaPlayer.OnE
 				mMediaPlayer.prepareAsync();
 				mState = PlaybackStateCompat.STATE_BUFFERING;
 				mActiveSong = song;
+
+				//mVisualizerView.link(mMediaPlayer);
+
 			} catch (IOException e) {
 				mCallback.onError(e.getMessage());
 			}

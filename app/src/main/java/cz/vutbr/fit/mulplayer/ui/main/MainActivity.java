@@ -1,5 +1,7 @@
 package cz.vutbr.fit.mulplayer.ui.main;
 
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -16,6 +18,8 @@ import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.adapter.base.BaseFragmentPagerAdapter;
 import cz.vutbr.fit.mulplayer.ui.BaseActivity;
 import cz.vutbr.fit.mulplayer.ui.IMenuGetter;
+import cz.vutbr.fit.mulplayer.ui.Visualizer.LineRenderer;
+import cz.vutbr.fit.mulplayer.ui.Visualizer.VisualizerView;
 import cz.vutbr.fit.mulplayer.ui.albums_list.AlbumsListFragment;
 import cz.vutbr.fit.mulplayer.ui.artists_list.ArtistsListFragment;
 import cz.vutbr.fit.mulplayer.ui.player.PlayerFragment;
@@ -38,6 +42,7 @@ public class MainActivity extends BaseActivity implements BaseActivity.IPlayerVi
 
 	Menu mMenu;
 	private BottomSheetBehavior mBottomSheetBehavior;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +83,8 @@ public class MainActivity extends BaseActivity implements BaseActivity.IPlayerVi
 		// Set up the ViewPager with the sections adapter.
 		mViewPager.setAdapter(baseFragmentPagerAdapter);
 		mTabLayout.setupWithViewPager(mViewPager);
+
+
 	}
 
 	@Override
@@ -139,4 +146,6 @@ public class MainActivity extends BaseActivity implements BaseActivity.IPlayerVi
 		}
 //		mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 	}
+
+
 }
