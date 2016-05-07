@@ -21,7 +21,7 @@ import cz.vutbr.fit.mulplayer.ui.artists_list.ArtistsListFragment;
 import cz.vutbr.fit.mulplayer.ui.player.PlayerFragment;
 import cz.vutbr.fit.mulplayer.ui.songs_list.SongsListFragment;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements BaseActivity.IPlayerVisibilityControl {
 	private static final String TAG = MainActivity.class.getSimpleName();
 	private MainPresenter mPresenter;
 	@Bind(R.id.container)
@@ -116,16 +116,19 @@ public class MainActivity extends BaseActivity {
 	/**
 	 * Shows player fragment and set's its menu
 	 */
-	void showPlayer() {
+	@Override
+	public void showPlayer() {
 		setIndicator(INDICATOR_DISCARD);
 		mMenu.clear();
 		getMenuInflater().inflate(R.menu.menu_player, mMenu);
+//		mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 	}
 
 	/**
 	 * Hides shown player and setups actual visible fragment's menu back
 	 */
-	void hidePlayer() {
+	@Override
+	public void hidePlayer() {
 		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.container + ":" + mViewPager.getCurrentItem());
 		mMenu.clear();
 		setIndicator(INDICATOR_NONE);
@@ -134,5 +137,6 @@ public class MainActivity extends BaseActivity {
 			if (menuGetter.getMenuResource() <= 0) return;
 			getMenuInflater().inflate(menuGetter.getMenuResource(), mMenu);
 		}
+//		mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 	}
 }

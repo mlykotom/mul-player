@@ -136,4 +136,9 @@ public abstract class BaseActivity extends AppCompatActivity implements IBaseVie
 			actionBar.setTitle(title);
 		}
 	}
+
+	public interface IPlayerVisibilityControl {
+		void showPlayer();
+		void hidePlayer();
+	}
 }

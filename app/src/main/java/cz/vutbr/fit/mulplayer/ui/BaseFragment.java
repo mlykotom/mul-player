@@ -1,5 +1,7 @@
 package cz.vutbr.fit.mulplayer.ui;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +13,12 @@ import android.support.v4.app.Fragment;
  */
 public abstract class BaseFragment extends Fragment {
 	protected BaseFragmentPresenter mBasePresenter;
+
+	@Override
+	public void onAttach(Context context) {
+		super.onAttach(context);
+		if(mBasePresenter != null) mBasePresenter.onAttach();
+	}
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {

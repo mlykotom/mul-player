@@ -10,6 +10,7 @@ import cz.vutbr.fit.mulplayer.Constants;
 import cz.vutbr.fit.mulplayer.adapter.SongsListAdapter;
 import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
 import cz.vutbr.fit.mulplayer.model.MusicService;
+import cz.vutbr.fit.mulplayer.ui.BaseActivity;
 import cz.vutbr.fit.mulplayer.ui.SortableListPresenter;
 
 /**
@@ -21,10 +22,22 @@ public class SongsListPresenter extends SortableListPresenter implements Loader.
 
 	ISongsListView mFragment;
 	CursorLoader mCursorLoader;
+	BaseActivity.IPlayerVisibilityControl mPlayerVisibilityCallback;
 
 	public SongsListPresenter(SongsListFragment songsListFragment) {
 		super(songsListFragment);
 		mFragment = songsListFragment;
+	}
+
+	@Override
+	public void onAttach() {
+		super.onAttach();
+
+		try {
+			mPlayerVisibilityCallback = (BaseActivity.IPlayerVisibilityControl) mFragment.getActivity();
+		} catch (ClassCastException e) {
+			throw new ClassCastException(mFragment.getActivity().toString() + " must implement IPlayerVisibilityControll");
+		}
 	}
 
 	@Override
@@ -88,6 +101,7 @@ public class SongsListPresenter extends SortableListPresenter implements Loader.
 	public void onRecyclerViewItemClick(ClickableRecyclerAdapter.ViewHolder holder, int position, int viewType) {
 		SongsListAdapter adapter = mFragment.getSongsListAdapter();
 		MusicService.fireAction(mFragment.getActivity(), MusicService.CMD_PLAY_ALL_SONGS, adapter.getItemId(position));
+//		mPlayerVisibilityCallback.showPlayer();
 	}
 
 	@Override

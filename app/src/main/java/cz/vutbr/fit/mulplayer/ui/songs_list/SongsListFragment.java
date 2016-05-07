@@ -1,5 +1,6 @@
 package cz.vutbr.fit.mulplayer.ui.songs_list;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -43,8 +44,13 @@ public class SongsListFragment extends BaseFragment implements ISongsListView, I
 	}
 
 	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
+	public void onAttach(Context context) {
 		mBasePresenter = mPresenter = new SongsListPresenter(this);
+		super.onAttach(context);
+	}
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 	}

@@ -34,6 +34,7 @@ public class DataRepository {
 
 	/**
 	 * TODO somehow compare if the old list is not the same as new one, than skip populating
+	 * Queue specified songs from cursor and finds position of song id.
 	 *
 	 * @param cursor which will be queued
 	 */
@@ -57,6 +58,11 @@ public class DataRepository {
 		return foundSongPos;
 	}
 
+	/**
+	 * Queue specified songs from cursor
+	 *
+	 * @param cursor
+	 */
 	public void queueSongs(Cursor cursor) {
 		queueSongsAndFindPosition(cursor, 0);
 	}
