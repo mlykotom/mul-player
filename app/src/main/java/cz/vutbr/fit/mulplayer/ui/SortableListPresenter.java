@@ -27,6 +27,10 @@ public abstract class SortableListPresenter extends BaseFragmentPresenter {
 	protected SharedPreferences mPreferences;
 
 	static {
+		// artists list
+		mOrderMap.put(R.id.sort_artist_name, MediaStore.Audio.Artists.ARTIST_KEY);
+		mOrderMap.put(R.id.sort_artist_albums_number, MediaStore.Audio.Artists.NUMBER_OF_ALBUMS);
+		mOrderMap.put(R.id.sort_artist_tracks_number, MediaStore.Audio.Artists.NUMBER_OF_TRACKS);
 		// albums list
 		mOrderMap.put(R.id.sort_album_name, MediaStore.Audio.Albums.ALBUM_KEY);
 		mOrderMap.put(R.id.sort_album_year, MediaStore.Audio.Albums.FIRST_YEAR);

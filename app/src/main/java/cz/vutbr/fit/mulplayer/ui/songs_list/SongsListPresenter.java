@@ -31,12 +31,15 @@ public class SongsListPresenter extends SortableListPresenter implements Loader.
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mCursorLoader = new CursorLoader(mFragment.getActivity());
-		mCursorLoader.setUri(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+		mCursorLoader = new CursorLoader(
+				getBaseActivity(),
+				MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+				Constants.SONG_PROJECTOR,
+				Constants.MUSIC_SELECTOR,
+				null,
+				mOrderKey + mOrderAscDesc
+		);
 		mCursorLoader.registerListener(LOADER_SONGS_MUSIC, this);
-		mCursorLoader.setProjection(Constants.SONG_PROJECTOR);
-		mCursorLoader.setSelection(Constants.MUSIC_SELECTOR);
-		mCursorLoader.setSortOrder(mOrderKey + mOrderAscDesc);
 	}
 
 	@Override
@@ -66,6 +69,7 @@ public class SongsListPresenter extends SortableListPresenter implements Loader.
 	public void onStop() {
 		super.onStop();
 		mCursorLoader.reset();
+
 	}
 
 	@Override

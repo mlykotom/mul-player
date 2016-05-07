@@ -97,6 +97,12 @@ public class MainActivity extends BaseActivity {
 	}
 
 	@Override
+	protected void onStop() {
+		super.onStop();
+		// TODO somehow prevent leaking menu
+	}
+
+	@Override
 	public void onBackPressed() {
 		if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
 			mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
