@@ -43,4 +43,12 @@ public class Song extends BaseModel {
 	public boolean equals(Object o) {
 		return super.equals(o); // TODO only compare ids?
 	}
+
+	public String getArtist() {
+		return artist;
+	}
+
+	public String getTitle() {
+		return title;
+	}
 }

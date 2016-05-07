@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import java.io.IOException;
 
@@ -17,7 +18,8 @@ import cz.vutbr.fit.mulplayer.model.entity.Song;
  * @author mlyko
  * @since 12.04.2016
  */
-public class Playback implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener {
+public class Playback implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnSeekCompleteListener, AudioManager.OnAudioFocusChangeListener {
+	private static final String TAG = Playback.class.getSimpleName();
 	protected @PlaybackStateCompat.State int mState = PlaybackStateCompat.STATE_NONE;
 	protected MusicService mService;
 	protected @Nullable MediaPlayer mMediaPlayer;
@@ -189,6 +191,25 @@ public class Playback implements MediaPlayer.OnPreparedListener, MediaPlayer.OnE
 	public boolean onError(MediaPlayer player, int what, int extra) {
 		mCallback.onError("MediaPlayer error " + what + " (" + extra + ")");
 		return true;
+	}
+
+	/**
+	 * Called on the listener to notify it the audio focus for this listener has been changed.
+	 * The focusChange value indicates whether the focus was gained,
+	 * whether the focus was lost, and whether that loss is transient, or whether the new focus
+	 * holder will hold it for an unknown amount of time.
+	 * When losing focus, listeners can use the focus change information to decide what
+	 * behavior to adopt when losing focus. A music player could for instance elect to lower
+	 * the volume of its music stream (duck) for transient focus losses, and pause otherwise.
+	 *
+	 * @param focusChange the type of focus change, one of {@link AudioManager#AUDIOFOCUS_GAIN},
+	 *                    {@link AudioManager#AUDIOFOCUS_LOSS}, {@link AudioManager#AUDIOFOCUS_LOSS_TRANSIENT}
+	 *                    and {@link AudioManager#AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK}.
+	 */
+	@Override
+	public void onAudioFocusChange(int focusChange) {
+		Log.d(TAG, "onAudioFocusChange. focusChange = " + focusChange);
+
 	}
 
 	public interface IPlaybackCallback {

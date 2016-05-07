@@ -5,8 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,9 +114,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 
 	@Override
 	public void setAlbumArtwork(Uri albumArtwork) {
-		Picasso.with(getActivity()).load(albumArtwork).transform(sCircleTransformation).into(mPlayerAlbumArt);
+		Picasso.with(getActivity()).load(albumArtwork).transform(sCircleTransformation).placeholder(R.drawable.ic_audio_placeholder).into(mPlayerAlbumArt);
 		// TODO maybe optimize for loading only once
-		Picasso.with(getActivity()).load(albumArtwork).into(mMiniPlayerAlbumArt);
+		Picasso.with(getActivity()).load(albumArtwork).placeholder(R.drawable.ic_audio_placeholder).into(mMiniPlayerAlbumArt);
 	}
 
 	public void setPlayerButtonPlayPause(boolean isPlaying) {

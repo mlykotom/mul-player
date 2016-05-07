@@ -10,21 +10,18 @@ import android.provider.MediaStore;
 import cz.vutbr.fit.mulplayer.Constants;
 import cz.vutbr.fit.mulplayer.adapter.ArtistsListAdapter;
 import cz.vutbr.fit.mulplayer.adapter.base.ClickableRecyclerAdapter;
-import cz.vutbr.fit.mulplayer.ui.BaseFragmentPresenter;
-import cz.vutbr.fit.mulplayer.ui.album.AlbumActivity;
+import cz.vutbr.fit.mulplayer.ui.SortableListPresenter;
 import cz.vutbr.fit.mulplayer.ui.artist_detail.ArtistDetailActivity;
 
 /**
  * @author mlyko
  * @since 16.04.2016
  */
-public class ArtistsListPresenter extends BaseFragmentPresenter implements Loader.OnLoadCompleteListener<Cursor>, ClickableRecyclerAdapter.OnItemClickListener {
+public class ArtistsListPresenter extends SortableListPresenter implements Loader.OnLoadCompleteListener<Cursor>, ClickableRecyclerAdapter.OnItemClickListener {
 	private static final int LOADER_ARTISTS_MUSIC = 0;
 
 	ArtistsListFragment mFragment;
 	CursorLoader mCursorLoader;
-
-	String mOrderKey = MediaStore.Audio.Artists.ARTIST_KEY;
 
 	public ArtistsListPresenter(ArtistsListFragment fragment) {
 		super(fragment);
@@ -34,16 +31,44 @@ public class ArtistsListPresenter extends BaseFragmentPresenter implements Loade
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		mCursorLoader = new CursorLoader(
-				mFragment.getActivity(),
+				getBaseActivity(),
 				MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
 				Constants.ARTISTS_PROJECTOR,
 				null,
 				null,
-				mOrderKey
+				mOrderKey + mOrderAscDesc
 		);
-
 		mCursorLoader.registerListener(LOADER_ARTISTS_MUSIC, this);
+	}
+
+	/**
+	 * Setups which ordering will be default (must be one from mOrderMap!)
+	 *
+	 * @return string for CursorLoader ordering
+	 */
+	@Override
+	public String getDefaultOrderKey() {
+		return MediaStore.Audio.Artists.ARTIST_KEY;
+	}
+
+	/**
+	 * @return Prefix for actual fragment so that many ordering keys may be set in one preference file
+	 */
+	@Override
+	public String getKeyPrefix() {
+		return "artists";
+	}
+
+	/**
+	 * Called when selected item from menu (sort changed)
+	 */
+	@Override
+	public void onSortChanged() {
+		mCursorLoader.reset();
+		mCursorLoader.setSortOrder(mOrderKey + mOrderAscDesc);
+		mCursorLoader.startLoading();
 	}
 
 	@Override
@@ -64,7 +89,6 @@ public class ArtistsListPresenter extends BaseFragmentPresenter implements Loade
 		mCursorLoader.reset();
 	}
 
-
 	@Override
 	public void onLoadComplete(Loader<Cursor> loader, Cursor data) {
 		mFragment.updateList(data);
@@ -80,11 +104,10 @@ public class ArtistsListPresenter extends BaseFragmentPresenter implements Loade
 	 */
 	@Override
 	public void onRecyclerViewItemClick(ClickableRecyclerAdapter.ViewHolder holder, int position, int viewType) {
-		Intent intent = new Intent(getBaseActivity(), ArtistDetailActivity.class);
-
 		ArtistsListAdapter adapter = mFragment.getListAdapter();
 		long artistId = adapter.getItemId(position);
 
+		Intent intent = new Intent(getBaseActivity(), ArtistDetailActivity.class);
 		intent.putExtra(ArtistDetailActivity.EXTRA_ARTIST_ID, artistId);
 		mFragment.getActivity().startActivity(intent);
 	}

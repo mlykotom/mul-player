@@ -7,6 +7,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -62,10 +65,33 @@ public class ArtistsListFragment extends BaseFragment implements IBaseListView<A
 		ButterKnife.unbind(this);
 	}
 
+	/**
+	 * Menu getter so that when player overlays toolbar, we can reinflate it
+	 *
+	 * @return menu resource
+	 */
+	@Override
+	public int getMenuResource() {
+		return R.menu.menu_list_artists;
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(getMenuResource(), menu);
+		mPresenter.onCreateOptionsMenu(menu, inflater);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return mPresenter.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+	}
+
 	// ------ UI setters (presenter -> ui) ------ //
 
 	/**
 	 * Initializes adapter and RecyclerView for showing data
+	 *
 	 * @param projection
 	 */
 	public void initList(String[] projection) {
@@ -80,6 +106,7 @@ public class ArtistsListFragment extends BaseFragment implements IBaseListView<A
 
 	/**
 	 * Updates list with refreshed data (swaps the cursor)
+	 *
 	 * @param data
 	 */
 	public void updateList(Cursor data) {
@@ -95,15 +122,5 @@ public class ArtistsListFragment extends BaseFragment implements IBaseListView<A
 	@Override
 	public ArtistsListAdapter getListAdapter() {
 		return mArtistsListAdapter;
-	}
-
-	/**
-	 * Menu getter so that when player overlays toolbar, we can reinflate it
-	 *
-	 * @return menu resource
-	 */
-	@Override
-	public int getMenuResource() {
-		return R.menu.albums_list_menu; // TODO artists
 	}
 }

@@ -15,6 +15,9 @@ public abstract class BaseFragmentPresenter extends BasePresenter {
 		mBaseFragment = fragment;
 	}
 
+	public void onAttach(){
+	}
+
 	public void onCreateView() {
 	}
 

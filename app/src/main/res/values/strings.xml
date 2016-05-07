@@ -14,6 +14,7 @@
     <string name="menu.sort.album.songs_number">Album songs</string>
     <string name="menu.sort.album.name">Album name</string>
     <string name="menu.sort.album.year">Album year</string>
+    <string name="menu.sort.song.name">Song name</string>
 
     <string name="image.description.album_art">Album\'s art</string>
 
@@ -46,5 +47,7 @@
     <string name="playback.play">Play</string>
     <string name="playback.album_art.content_description">Album\'s art</string>
     <string name="application.welcome">Welcome to MULplayer!</string>
+    <string name="menu.sort.artist.albums_number">Albums number</string>
+    <string name="menu.sort.artist.tracks_number">Tracks number</string>
 
 </resources>

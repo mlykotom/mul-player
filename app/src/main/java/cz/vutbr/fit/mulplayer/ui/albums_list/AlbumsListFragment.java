@@ -57,7 +57,7 @@ public class AlbumsListFragment extends BaseFragment implements IBaseListView<Al
 	 * @return menu resource
 	 */
 	public int getMenuResource() {
-		return R.menu.albums_list_menu;
+		return R.menu.menu_list_albums;
 	}
 
 	@Override

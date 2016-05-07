@@ -1,0 +1,113 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="30dp"
+    >
+
+    <ImageView
+        android:id="@+id/player_album_art"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/oval_primary"
+        android:src="@drawable/ic_audio_placeholder"
+        />
+
+
+    <TextView
+        android:id="@+id/player_playback_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/player_album_art"
+        android:layout_centerHorizontal="true"
+        tools:text="00:34/03:35"
+        />
+
+    <SeekBar
+        android:id="@+id/player_seekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/playback_wrapper"
+        android:layout_alignLeft="@+id/playback_wrapper"
+        android:layout_alignRight="@+id/playback_wrapper"
+        android:layout_alignStart="@+id/playback_wrapper"
+        android:layout_below="@id/player_playback_time"
+        />
+
+    <TextView
+        android:id="@+id/player_artist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/player_seekbar"
+        android:layout_centerHorizontal="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        tools:text="Chet Faker"
+        />
+
+    <TextView
+        android:id="@+id/player_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/player_artist"
+        android:layout_centerHorizontal="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        tools:text="Gold"
+        />
+
+    <LinearLayout
+        android:id="@+id/playback_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/player_title"
+        android:layout_marginEnd="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginStart="32dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        >
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/player_button_previous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_skip_previous_black_24dp"
+            app:backgroundTint="@color/accent"
+            app:fabSize="mini"
+            />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/player_button_play_pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:src="@drawable/ic_play_arrow_black_24dp"
+            app:backgroundTint="@color/primary"
+            />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/player_button_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_skip_next_black_24dp"
+            app:backgroundTint="@color/accent"
+            app:fabSize="mini"
+            />
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/player_queue_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_queue_music_black_24dp"
+        />
+
+</RelativeLayout>
