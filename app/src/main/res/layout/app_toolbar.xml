@@ -8,7 +8,7 @@
     android:background="?attr/colorPrimary"
     android:minHeight="?attr/actionBarSize"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    app:popupTheme="@style/Theme.AppCompat.Light"
+    app:popupTheme="@style/AppTheme.PopupOverlay"
     app:titleMarginStart="16dp"
     app:titleTextAppearance="@style/TextAppearance.AppCompat.Title"
     tools:text="@string/application.name"
