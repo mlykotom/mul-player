@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
 
 import butterknife.Bind;
@@ -111,6 +113,8 @@ public class Playback implements MediaPlayer.OnPreparedListener, MediaPlayer.OnE
 				mCallback.onError(e.getMessage());
 			}
 		}
+
+		EventBus.getDefault().post(mMediaPlayer);
 
 		mCallback.onPlaybackStatusChanged(mState);
 	}

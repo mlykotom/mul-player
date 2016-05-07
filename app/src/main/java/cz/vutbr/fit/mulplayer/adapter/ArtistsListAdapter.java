@@ -2,6 +2,7 @@ package cz.vutbr.fit.mulplayer.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;

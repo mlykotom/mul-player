@@ -1,11 +1,13 @@
 package cz.vutbr.fit.mulplayer.ui.player;
 
 import android.content.ContentUris;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import cz.vutbr.fit.mulplayer.model.MusicService;
 import cz.vutbr.fit.mulplayer.model.Playback;

@@ -14,4 +14,6 @@
     <color name="gray">#c2c2c2</color>
     <color name="gray_dark">#a3000000</color>
     <color name="overlay_text">#FFFFFF</color>
+
+    <item name="red" type="color">#FFFF4444</item>
 </resources>

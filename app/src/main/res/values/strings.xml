@@ -4,6 +4,12 @@
 
     <string name="main.title">MULplayer</string>
 
+    <!-- validation -->
+    <string name="validation.empty">Input can\'t be empty!</string>
+    <string name="validation.number">Input must be number!</string>
+    <string name="validation.email">Input must be valid email address!</string>
+    <string name="validation.ip_address">Input must be valid IP address!</string>
+
     <!-- permissions-->
     <string name="permission.warning.read_storage">If you want to listen to the music, kindly allow us to scan your music files.</string>
 
@@ -41,6 +47,9 @@
 
     <!-- songs -->
     <string name="songs.title">Songs</string>
+    <string name="songs.detail.name">Song name</string>
+    <string name="songs.detail.artist">Artist name</string>
+    <string name="songs.detail.album">Album name</string>
 
     <!-- playback -->
     <string name="playback.title">Now playing</string>
@@ -49,5 +58,8 @@
     <string name="application.welcome">Welcome to MULplayer!</string>
     <string name="menu.sort.artist.albums_number">Albums number</string>
     <string name="menu.sort.artist.tracks_number">Tracks number</string>
+    <string name="songs.detail.title">Edit song metadata</string>
+    <string name="dialog.edit">Edit</string>
+    <string name="dialog.cancel">Cancel</string>
 
 </resources>

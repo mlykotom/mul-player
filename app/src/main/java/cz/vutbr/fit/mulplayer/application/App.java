@@ -24,6 +24,7 @@ public class App extends Application {
 		built.setIndicatorsEnabled(false);
 		built.setLoggingEnabled(false);
 		Picasso.setSingletonInstance(built);
+
 	}
 
 	public static Context getContext() {

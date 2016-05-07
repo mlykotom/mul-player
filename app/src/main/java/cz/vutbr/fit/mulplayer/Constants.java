@@ -35,6 +35,7 @@ public class Constants {
 			MediaStore.Audio.Artists.ARTIST,
 			MediaStore.Audio.Artists.NUMBER_OF_ALBUMS,
 			MediaStore.Audio.Artists.NUMBER_OF_TRACKS,
+			MediaStore.Audio.Artists.ARTIST_KEY,
 	};
 
 	public static final String[] ALBUMS_PROJECTOR = {
