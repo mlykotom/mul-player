@@ -15,6 +15,8 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 
+import cz.vutbr.fit.mulplayer.R;
+
 public class VisualizerView extends View {
 
 	private byte[] mBytes;
@@ -24,6 +26,7 @@ public class VisualizerView extends View {
 	private Rect mRect = new Rect();
 	private Paint mForePaint = new Paint();
 	private int mDivisions;
+	private int mSelectedVisualizerType;
 
 	public VisualizerView(Context context) {
 		super(context);
@@ -43,13 +46,15 @@ public class VisualizerView extends View {
 	private void init() {
 		mBytes = null;
 		mBytesFFT = null;
-//		mForePaint.setStrokeWidth(1f);
-//		mForePaint.setAntiAlias(true);
-//		mForePaint.setColor(Color.rgb(0, 128, 255));
 
-		mForePaint.setStrokeWidth(50f);
+
+		mForePaint.setStrokeWidth(1f);
 		mForePaint.setAntiAlias(true);
-		mForePaint.setColor(Color.argb(200, 56, 138, 252));
+		mForePaint.setColor(Color.rgb(0, 128, 255));
+		mSelectedVisualizerType = R.id.visualizer_line;
+//		mForePaint.setStrokeWidth(50f);
+//		mForePaint.setAntiAlias(true);
+//		mForePaint.setColor(Color.argb(200, 56, 138, 252));
 		mDivisions=16;
 	}
 
@@ -63,12 +68,32 @@ public class VisualizerView extends View {
 		invalidate();
 	}
 
+	public void onVisualizerTypeChanged(int id){
+		if (id == R.id.visualizer_line){
+			mForePaint.setStrokeWidth(1f);
+			mForePaint.setAntiAlias(true);
+			mForePaint.setColor(Color.rgb(0, 128, 255));
+		}
+
+		if (id == R.id.visualizer_bars){
+			mForePaint.setStrokeWidth(50f);
+			mForePaint.setAntiAlias(true);
+			mForePaint.setColor(Color.argb(200, 56, 138, 252));
+		}
+
+		mSelectedVisualizerType = id;
+	}
+
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 
-//		drawAudioData(canvas);
-//		drawFFTData(canvas);
+		if (mSelectedVisualizerType == R.id.visualizer_line) {
+			drawAudioData(canvas);
+		}
+		if (mSelectedVisualizerType == R.id.visualizer_bars) {
+			drawFFTData(canvas);
+		}
 
 	}
 

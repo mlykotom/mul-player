@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -114,9 +115,10 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
-//		item.getItemId();
-
-		return super.onOptionsItemSelected(item);
+		Log.d("vajca",Integer.toString(item.getItemId()));
+		item.setChecked(!item.isChecked());
+		mVisualizerView.onVisualizerTypeChanged(item.getItemId());
+		return true;
 	}
 
 	// ------ UI actions (ui -> presenter) ------ //

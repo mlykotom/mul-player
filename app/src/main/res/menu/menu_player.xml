@@ -3,20 +3,17 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/sort_album_name"
+            android:id="@+id/visualizer_line"
             android:checked="true"
-            android:title="@string/menu.sort.album.name"
+            android:title="@string/visualizer.Line"
             />
 
         <item
-            android:id="@+id/sort_album_year"
-            android:title="@string/menu.sort.album.year"
+            android:id="@+id/visualizer_bars"
+            android:title="@string/visualizer.Bars"
             />
 
-        <item
-            android:id="@+id/sort_album_songs_number"
-            android:title="@string/menu.sort.album.songs_number"
-            />
     </group>
+
 
 </menu>
