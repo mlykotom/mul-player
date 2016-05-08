@@ -15,8 +15,9 @@ public class Song extends BaseModel {
 	public int duration;
 	public long albumId;
 	public String album;
+	private String mimeType;
 
-	public Song(long id, String artist, String title, int duration, String filepath, long albumId, String album) {
+	public Song(long id, String artist, String title, int duration, String filepath, long albumId, String album, String mimeType) {
 		super(id);
 
 		this.artist = artist;
@@ -25,6 +26,7 @@ public class Song extends BaseModel {
 		this.filepath = filepath;
 		this.albumId = albumId;
 		this.album = album;
+		this.mimeType = mimeType;
 	}
 
 	public static Song from(Cursor cursor) {
@@ -35,8 +37,8 @@ public class Song extends BaseModel {
 		String filepath = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
 		String album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
 		long albumId = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
-
-		return new Song(_id, artist, title, duration, filepath, albumId, album);
+		String mimeType = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.MIME_TYPE));
+		return new Song(_id, artist, title, duration, filepath, albumId, album, mimeType);
 	}
 
 	@Override
@@ -50,5 +52,9 @@ public class Song extends BaseModel {
 
 	public String getTitle() {
 		return title;
+	}
+
+	public String getMimeType() {
+		return mimeType;
 	}
 }

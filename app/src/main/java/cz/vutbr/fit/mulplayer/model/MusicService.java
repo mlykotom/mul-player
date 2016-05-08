@@ -17,8 +17,11 @@ import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Set;
+
 import cz.vutbr.fit.mulplayer.Constants;
 import cz.vutbr.fit.mulplayer.model.entity.Song;
+import cz.vutbr.fit.mulplayer.model.event.AnySongInQueueEvent;
 import cz.vutbr.fit.mulplayer.model.event.PlaybackEvent;
 import cz.vutbr.fit.mulplayer.model.persistance.DataRepository;
 
@@ -38,10 +41,11 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	private static final int UI_REFRESH_INTERVAL_MS = 250;
 	private static final int LOADER_SONGS_MUSIC = 0;
 	private MusicNotificationController mNotificationController;
+	private boolean isLoaderRegistered = false;
 
 	@StringDef({
 			// -- queue
-			CMD_PLAY_ARTIST, CMD_PLAY_ALBUM, CMD_PLAY_ALL_SONGS, CMD_PLAY_SONG_FROM_ALBUM,
+			CMD_PLAY_ARTIST, CMD_PLAY_ALBUM, CMD_PLAY_ALL_SONGS, CMD_PLAY_SONG_FROM_ALBUM, CMD_REBUILD_QUEUE,
 			// -- playback
 			CMD_PLAY_FORCE, CMD_PLAY_PAUSE, CMD_SEEK_TO, CMD_PREVIOUS, CMD_NEXT
 	})
@@ -53,6 +57,7 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	public static final String CMD_PLAY_ALBUM = "CMD_PLAY_ALBUM";
 	public static final String CMD_PLAY_ALL_SONGS = "CMD_PLAY_ALL_SONGS";
 	public static final String CMD_PLAY_SONG_FROM_ALBUM = "CMD_PLAY_SONG_FROM_ALBUM";
+	public static final String CMD_REBUILD_QUEUE = "CMD_REBUILD_QUEUE";
 
 	// ----- playback controls
 	public static final String CMD_PLAY_FORCE = "CMD_PLAY_FORCE";
@@ -96,10 +101,10 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 		mSongLoader = new CursorLoader(this);
 		mSongLoader.setUri(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
 		mSongLoader.setProjection(Constants.SONG_PROJECTOR);
-		mSongLoader.registerListener(LOADER_SONGS_MUSIC, this);
 
 		mNotificationController = new MusicNotificationController(this);
-		mPlayback = Playback.getInstance(this);
+		mPlayback = Playback.getInstance();
+		mPlayback.setCallback(this);
 	}
 
 	/**
@@ -160,6 +165,11 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 				long value2 = intent.getLongExtra(ACTION_CMD_VALUE2, Constants.NO_ID);
 
 				switch (command) {
+					// -------- rebuil queue -------- //
+					case CMD_REBUILD_QUEUE:
+						buildQueueFromDisk();
+						return START_STICKY;
+
 					// -------- queue commands -------- //
 					case CMD_PLAY_ARTIST:
 						mPlaySongId = Constants.NO_POSITION;
@@ -210,14 +220,58 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	}
 
 	/**
+	 * Rebuilds queue from saved queue
+	 */
+	private void buildQueueFromDisk() {
+		Set<String> queueIds = mData.getSavedQueue();
+		if (queueIds == null) return;
+
+		String selectIdsPrep = "";
+		for (String ignore : queueIds) {
+			selectIdsPrep += ", ?";
+		}
+
+		String selectionString = String.format("%s AND %s IN (%s)",
+				Constants.MUSIC_SELECTOR,
+				MediaStore.Audio.Media._ID,
+				selectIdsPrep.substring(1)
+		);
+
+		isLoaderRegistered = true;
+		mSongLoader.reset();
+		mSongLoader.setSelection(selectionString);
+		mSongLoader.setSelectionArgs(queueIds.toArray(new String[queueIds.size()]));
+		mSongLoader.registerListener(LOADER_SONGS_MUSIC, new Loader.OnLoadCompleteListener<Cursor>() {
+			@Override
+			public void onLoadComplete(Loader<Cursor> loader, Cursor data) {
+				mData.queueSongs(data);
+				int queueIndex = mData.getSavedActualSongIndex();
+				isLoaderRegistered = false;
+				mSongLoader.unregisterListener(this);
+				if (queueIndex < 0 || queueIndex >= mData.mQueueOrderList.size())
+					queueIndex = 0;
+
+				long songId = mData.mQueueOrderList.get(queueIndex);
+				mActiveQueuePosition = queueIndex;
+				Song actualSong = mData.mQueueSongs.get(songId);
+				mEventBus.post(new AnySongInQueueEvent());
+				mEventBus.post(new PlaybackEvent(actualSong, false, 0));
+			}
+		});
+		mSongLoader.startLoading();
+	}
+
+	/**
 	 * Builds queue based on selected album
 	 *
 	 * @param albumId id from mediastore
 	 */
 	private void buildAlbumQueue(long albumId) {
+		isLoaderRegistered = true;
 		mSongLoader.reset();
 		mSongLoader.setSelection(Constants.MUSIC_SELECTOR + " AND " + MediaStore.Audio.Media.ALBUM_ID + " = ?");
 		mSongLoader.setSelectionArgs(new String[]{String.valueOf(albumId)});
+		mSongLoader.registerListener(LOADER_SONGS_MUSIC, this);
 		mSongLoader.startLoading();
 	}
 
@@ -225,9 +279,11 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	 * Builds all songs and tries to playit from selected song
 	 */
 	private void buildAllSongsQueue() {
+		isLoaderRegistered = true;
 		mSongLoader.reset();
 		mSongLoader.setSelection(Constants.MUSIC_SELECTOR);
 		mSongLoader.setSelectionArgs(null);
+		mSongLoader.registerListener(LOADER_SONGS_MUSIC, this);
 		mSongLoader.startLoading();
 	}
 
@@ -238,31 +294,37 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	 * @param artistId id from mediaStore
 	 */
 	private void buildArtistQueue(long artistId) {
+		isLoaderRegistered = true;
 		mSongLoader.reset();
 		mSongLoader.setSelection(Constants.MUSIC_SELECTOR + " AND " + MediaStore.Audio.Media.ARTIST_ID + " = ?");
 		mSongLoader.setSelectionArgs(new String[]{String.valueOf(artistId)});
+		mSongLoader.registerListener(LOADER_SONGS_MUSIC, this);
 		mSongLoader.startLoading();
+	}
+
+	/**
+	 * Loads songs, force play and unregisters loader
+	 *
+	 * @param loader
+	 * @param data
+	 */
+	@Override
+	public void onLoadComplete(Loader<Cursor> loader, Cursor data) {
+		forcePlay(data);
+		mSongLoader.unregisterListener(this);
+		isLoaderRegistered = false;
 	}
 
 	/**
 	 * Starts playing built queue of songs
 	 * Called on the thread that created the Loader when the load is complete.
 	 *
-	 * @param loader the loader that completed the load
-	 * @param data   the result of the load
+	 * @param data the result of the load
 	 */
-	@Override
-	public void onLoadComplete(Loader<Cursor> loader, Cursor data) {
+	private void forcePlay(Cursor data) {
 		int pos = mData.queueSongsAndFindPosition(data, mPlaySongId);
 		mPlaySongId = Constants.NO_ID;
 		fireAction(this, CMD_PLAY_FORCE, pos);
-	}
-
-	/**
-	 * TODO should rebuild queue from saved or build all songs
-	 */
-	private void rebuildQueue() {
-
 	}
 
 	/**
@@ -274,9 +336,7 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	 */
 	private void playFromQueue(int index) {
 		if (mData.mQueueOrderList.isEmpty()) {
-			// TODO try to rebuild queue first
-			rebuildQueue();
-			// this should never happen
+			// this should never happen ( but happens)
 			Toast.makeText(this, "No queued songs to play!", Toast.LENGTH_LONG).show();
 			return;
 		}
@@ -288,6 +348,8 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 		long songId = mData.mQueueOrderList.get(index);
 		mActiveQueuePosition = index;
 		Song song = mData.mQueueSongs.get(songId); // TODO what to do when song not there?
+		mData.setActualSongIndex(index);
+		mEventBus.post(new AnySongInQueueEvent());
 		mPlayback.play(song);
 	}
 

@@ -1,13 +1,11 @@
 package cz.vutbr.fit.mulplayer.ui.player;
 
 import android.content.ContentUris;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import cz.vutbr.fit.mulplayer.model.MusicService;
 import cz.vutbr.fit.mulplayer.model.Playback;
@@ -28,20 +26,26 @@ public class PlayerPresenter extends BaseFragmentPresenter {
 	int mEndTime;
 	int mActualTime;
 
+	private Playback mPlayback = Playback.getInstance();
+
 	public PlayerPresenter(PlayerFragment fragment) {
 		super(fragment);
 		mFragment = fragment;
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
+	public void onStart() {
+		super.onStart();
+		if (mPlayback.getActiveSong() != null) {
+			onPlaybackEvent(new PlaybackEvent(mPlayback.getActiveSong(), false, mPlayback.getCurrentPosition()));
+		}
+
 		EventBus.getDefault().register(this);
 	}
 
 	@Override
-	public void onPause() {
-		super.onPause();
+	public void onStop() {
+		super.onStop();
 		EventBus.getDefault().unregister(this);
 	}
 
@@ -71,7 +75,7 @@ public class PlayerPresenter extends BaseFragmentPresenter {
 	 * @param event containing information about song and playback info
 	 */
 	@Subscribe
-	public void onEvent(PlaybackEvent event) {
+	public void onPlaybackEvent(PlaybackEvent event) {
 		if (event.song == null) {
 			Log.w(TAG, "Song is null");
 			return;
@@ -79,7 +83,7 @@ public class PlayerPresenter extends BaseFragmentPresenter {
 
 		if (!event.song.equals(mActualSong)) {
 			mActualSong = event.song;
-			mFragment.setPlaybackArtistTitle(mActualSong.artist, mActualSong.title);
+			mFragment.setPlaybackArtistTitle(mActualSong.artist, mActualSong.title, mActualSong.getMimeType());
 			mFragment.setPlaybackSeekbarMax(mActualSong.duration);
 			mEndTime = mActualSong.duration;
 			// getting URI for album artwork
@@ -95,8 +99,5 @@ public class PlayerPresenter extends BaseFragmentPresenter {
 
 		// setup if its playing or stopped
 		mFragment.setPlayerButtonPlayPause(event.isPlaying);
-
-		if(mFragment.mVisualizerView.getPlayer() == null)
-			mFragment.mVisualizerView.link(Playback.getInstance(null).getMediaPlayer());
 	}
 }

@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
 
 android {
     compileSdkVersion 23
@@ -39,4 +40,6 @@ dependencies {
     provided 'frankiesardo:icepick-processor:3.2.0'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.avast:android-styled-dialogs:2.3.3'
+    compile 'com.github.hotchemi:permissionsdispatcher:2.+'
+    apt 'com.github.hotchemi:permissionsdispatcher-processor:2.+'
 }

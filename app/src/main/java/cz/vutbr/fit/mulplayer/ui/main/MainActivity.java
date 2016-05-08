@@ -12,10 +12,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.adapter.base.BaseFragmentPagerAdapter;
+import cz.vutbr.fit.mulplayer.model.event.AnySongInQueueEvent;
+import cz.vutbr.fit.mulplayer.model.persistance.DataRepository;
 import cz.vutbr.fit.mulplayer.ui.BaseActivity;
 import cz.vutbr.fit.mulplayer.ui.IMenuGetter;
 import cz.vutbr.fit.mulplayer.ui.Visualizer.LineRenderer;
@@ -83,8 +88,6 @@ public class MainActivity extends BaseActivity implements BaseActivity.IPlayerVi
 		// Set up the ViewPager with the sections adapter.
 		mViewPager.setAdapter(baseFragmentPagerAdapter);
 		mTabLayout.setupWithViewPager(mViewPager);
-
-
 	}
 
 	@Override
@@ -104,9 +107,25 @@ public class MainActivity extends BaseActivity implements BaseActivity.IPlayerVi
 	}
 
 	@Override
+	protected void onStart() {
+		super.onStart();
+		if(DataRepository.getInstance().mQueueSongs.size() > 0){
+			onAnySongInQueueEvent(new AnySongInQueueEvent());
+		}
+
+		EventBus.getDefault().register(this);
+	}
+
+	@Subscribe
+	public void onAnySongInQueueEvent(AnySongInQueueEvent event){
+		mBottomSheet.setVisibility(View.VISIBLE);
+	}
+
+	@Override
 	protected void onStop() {
 		super.onStop();
 		// TODO somehow prevent leaking menu
+		EventBus.getDefault().unregister(this);
 	}
 
 	@Override

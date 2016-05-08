@@ -28,6 +28,7 @@ public class Constants {
 			MediaStore.Audio.Media.ALBUM_ID,
 			MediaStore.Audio.Media.ALBUM,
 			MediaStore.Audio.Media.TRACK,
+			MediaStore.Audio.Media.MIME_TYPE,
 	};
 
 	public static final String[] ARTISTS_PROJECTOR = {

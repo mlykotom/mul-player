@@ -1,11 +1,13 @@
 package cz.vutbr.fit.mulplayer.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 /**
  * @author mlyko
@@ -17,13 +19,21 @@ public abstract class BaseFragment extends Fragment {
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
-		if(mBasePresenter != null) mBasePresenter.onAttach();
+		if (mBasePresenter != null) mBasePresenter.onAttach();
 	}
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (mBasePresenter != null) mBasePresenter.onCreate(savedInstanceState);
+	}
+
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		View view = super.onCreateView(inflater, container, savedInstanceState);
+		if (mBasePresenter != null) mBasePresenter.onCreateView();
+		return view;
 	}
 
 	@Override
