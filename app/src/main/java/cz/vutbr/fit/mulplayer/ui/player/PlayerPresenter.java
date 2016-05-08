@@ -1,9 +1,7 @@
 package cz.vutbr.fit.mulplayer.ui.player;
 
 import android.content.ContentUris;
-import android.media.audiofx.Visualizer;
 import android.net.Uri;
-import android.os.Bundle;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
@@ -13,7 +11,6 @@ import cz.vutbr.fit.mulplayer.model.MusicService;
 import cz.vutbr.fit.mulplayer.model.Playback;
 import cz.vutbr.fit.mulplayer.model.entity.Song;
 import cz.vutbr.fit.mulplayer.model.event.PlaybackEvent;
-import cz.vutbr.fit.mulplayer.model.persistance.DataRepository;
 import cz.vutbr.fit.mulplayer.ui.BaseFragmentPresenter;
 
 /**
@@ -25,12 +22,10 @@ public class PlayerPresenter extends BaseFragmentPresenter {
 
 	public PlayerFragment mFragment;
 	public Song mActualSong;
-	private Visualizer mVisualizer;
 
 	int mEndTime;
 	int mActualTime;
 
-	private DataRepository mRepository = DataRepository.getInstance();
 	private Playback mPlayback = Playback.getInstance();
 
 	public PlayerPresenter(PlayerFragment fragment) {
@@ -39,42 +34,19 @@ public class PlayerPresenter extends BaseFragmentPresenter {
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-//		setupVisualizerFxAndUI();
-	}
-
-	private void setupVisualizerFxAndUI() {
-		// Create the Visualizer object and attach it to our media player.
-		mVisualizer = new Visualizer(mPlayback.getMediaPlayer().getAudioSessionId());
-		mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
-		mVisualizer.setDataCaptureListener(
-				new Visualizer.OnDataCaptureListener() {
-					public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
-						mFragment.mVisualizerView.updateVisualizer(bytes);
-					}
-
-					public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
-					}
-				}, Visualizer.getMaxCaptureRate() / 2, true, false);
-	}
-
-	@Override
 	public void onStart() {
 		super.onStart();
-		if(mPlayback.getActiveSong() != null){
+		if (mPlayback.getActiveSong() != null) {
 			onPlaybackEvent(new PlaybackEvent(mPlayback.getActiveSong(), false, mPlayback.getCurrentPosition()));
 		}
 
 		EventBus.getDefault().register(this);
-//		mVisualizer.setEnabled(true);
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
 		EventBus.getDefault().unregister(this);
-//		mVisualizer.release();
 	}
 
 	public void playPauseSong() {

@@ -1,9 +1,11 @@
 package cz.vutbr.fit.mulplayer.ui.player;
 
 
+import android.Manifest;
 import android.media.audiofx.Visualizer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
@@ -20,15 +22,19 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cz.vutbr.fit.mulplayer.R;
+import cz.vutbr.fit.mulplayer.model.Playback;
 import cz.vutbr.fit.mulplayer.ui.BaseFragment;
 import cz.vutbr.fit.mulplayer.ui.Visualizer.VisualizerView;
 import cz.vutbr.fit.mulplayer.utils.CircleTransform;
 import cz.vutbr.fit.mulplayer.utils.Utils;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.RuntimePermissions;
 
 /**
  * @author mlyko
  * @since 10.04.2016
  */
+@RuntimePermissions
 public class PlayerFragment extends BaseFragment implements IPlayerView {
 	PlayerPresenter mPresenter;
 	private static Transformation sCircleTransformation = new CircleTransform();
@@ -49,11 +55,31 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 	@Bind(R.id.player_song_mime) TextView mPlayerSongMimeType;
 
 	@Bind(R.id.player_visualizer) public VisualizerView mVisualizerView;
+	private Visualizer mVisualizer;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		mBasePresenter = mPresenter = new PlayerPresenter(this);
 		super.onCreate(savedInstanceState);
+		PlayerFragmentPermissionsDispatcher.setupVisualizerFxAndUIWithCheck(this);
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		PlayerFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		if (mVisualizer != null) mVisualizer.setEnabled(true);
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		if (mVisualizer != null) mVisualizer.setEnabled(false);
 	}
 
 	@Override
@@ -133,10 +159,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 		mPlayerTitle.setText(title);
 
 		String[] mimeSong = mimeType.split("/");
-		if(mimeSong.length > 0){
+		if (mimeSong.length > 0) {
 			mPlayerSongMimeType.setText(mimeSong[1].toUpperCase());
-		}
-		else{
+		} else {
 			mPlayerSongMimeType.setText(null);
 		}
 
@@ -155,6 +180,25 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 	@Override
 	public void setPlaybackSeekbarMax(int duration) {
 		mPlayerSeekbar.setMax(duration);
+	}
+
+
+	@NeedsPermission(Manifest.permission.RECORD_AUDIO)
+	public void setupVisualizerFxAndUI() {
+		// Create the Visualizer object and attach it to our media player.
+		mVisualizer = new Visualizer(Playback.getInstance().getMediaPlayer().getAudioSessionId());
+		mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
+		mVisualizer.setDataCaptureListener(
+				new Visualizer.OnDataCaptureListener() {
+					public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
+						mVisualizerView.updateVisualizer(bytes);
+					}
+
+					public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
+					}
+				}, Visualizer.getMaxCaptureRate() / 2, true, false);
+
+		mVisualizer.setEnabled(true);
 	}
 
 	private void addLineRenderer() {
