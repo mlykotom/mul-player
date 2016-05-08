@@ -13,7 +13,6 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
@@ -220,13 +219,29 @@ public class MusicService extends Service implements Playback.IPlaybackCallback,
 	}
 
 	/**
-	 * TODO should rebuild queue from saved or build all songs
+	 * Rebuilds queue from saved queue
 	 */
 	private void buildQueueFromDisk() {
 		DataRepository dataRepository = DataRepository.getInstance();
 		Set<String> queueIds = dataRepository.getSavedQueue();
-		if(queueIds == null) return;
-		Log.d(TAG, queueIds.toString());
+		if (queueIds == null) return;
+
+		String selectIdsPrep = "";
+		for (String ignore : queueIds) {
+			selectIdsPrep += ", ?";
+		}
+		selectIdsPrep = selectIdsPrep.substring(1);
+
+		String selectionString = String.format("%s AND %s IN (%s)",
+				Constants.MUSIC_SELECTOR,
+				MediaStore.Audio.Media._ID,
+				selectIdsPrep
+		);
+
+		mSongLoader.reset();
+		mSongLoader.setSelection(selectionString);
+		mSongLoader.setSelectionArgs(queueIds.toArray(new String[queueIds.size()]));
+		mSongLoader.startLoading();
 	}
 
 	/**

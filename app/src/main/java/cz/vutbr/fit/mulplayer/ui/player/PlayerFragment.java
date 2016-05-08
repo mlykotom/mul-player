@@ -46,6 +46,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 	@Bind(R.id.player_title) TextView mPlayerTitle;
 	@Bind(R.id.player_playback_time) TextView mPlayerPlaybackTime;
 	@Bind(R.id.player_album_art) ImageView mPlayerAlbumArt;
+	@Bind(R.id.player_song_mime) TextView mPlayerSongMimeType;
 
 	@Bind(R.id.player_visualizer) public VisualizerView mVisualizerView;
 
@@ -125,11 +126,20 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 	}
 
 	@Override
-	public void setPlaybackArtistTitle(String artist, String title) {
+	public void setPlaybackArtistTitle(String artist, String title, String mimeType) {
 		mMiniPlayerArtist.setText(artist);
 		mMiniPlayerTitle.setText(title);
 		mPlayerArtist.setText(artist);
 		mPlayerTitle.setText(title);
+
+		String[] mimeSong = mimeType.split("/");
+		if(mimeSong.length > 0){
+			mPlayerSongMimeType.setText(mimeSong[1].toUpperCase());
+		}
+		else{
+			mPlayerSongMimeType.setText(null);
+		}
+
 	}
 
 	@Override

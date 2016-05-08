@@ -7,6 +7,15 @@
     android:paddingTop="30dp"
     >
 
+    <TextView
+        android:id="@+id/player_song_mime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        tools:text="MP3"
+        />
+
     <ImageView
         android:id="@+id/player_album_art"
         android:layout_width="200dp"

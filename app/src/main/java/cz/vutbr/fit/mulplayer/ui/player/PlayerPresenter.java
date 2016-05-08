@@ -111,7 +111,7 @@ public class PlayerPresenter extends BaseFragmentPresenter {
 
 		if (!event.song.equals(mActualSong)) {
 			mActualSong = event.song;
-			mFragment.setPlaybackArtistTitle(mActualSong.artist, mActualSong.title);
+			mFragment.setPlaybackArtistTitle(mActualSong.artist, mActualSong.title, mActualSong.getMimeType());
 			mFragment.setPlaybackSeekbarMax(mActualSong.duration);
 			mEndTime = mActualSong.duration;
 			// getting URI for album artwork
