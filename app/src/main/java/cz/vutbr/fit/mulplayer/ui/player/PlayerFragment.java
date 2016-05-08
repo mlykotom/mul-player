@@ -69,6 +69,20 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 	}
 
 	@Override
+	public void onPause()
+	{
+		mVisualizer.release();
+		super.onPause();
+	}
+
+	@Override
+	public void onDestroy()
+	{
+		if (mVisualizer != null) mVisualizer.release();
+		super.onDestroy();
+	}
+
+	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		PlayerFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
@@ -83,7 +97,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 	@Override
 	public void onStop() {
 		super.onStop();
-		if (mVisualizer != null) mVisualizer.setEnabled(false);
+		if (mVisualizer != null) mVisualizer.release();
+//		if (mVisualizer != null) mVisualizer.setEnabled(false);
 	}
 
 	@Override
