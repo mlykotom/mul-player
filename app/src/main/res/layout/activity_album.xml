@@ -62,7 +62,6 @@
         android:layout_margin="16dp"
         android:clickable="true"
         android:src="@drawable/ic_shuffle_black_24dp"
-        android:tint="@color/overlay_text"
         app:layout_anchor="@+id/appbar"
         app:layout_anchorGravity="bottom|right|end"
         />

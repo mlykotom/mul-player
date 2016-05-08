@@ -137,10 +137,8 @@ public class VisualizerView extends View {
 			float magnitude = (rfk * rfk + ifk * ifk);
 			int dbValue = (int) (10 * Math.log10(magnitude));
 
-
 			mFFTPoints[i * 4 + 1] = mRect.height();
-			mFFTPoints[i * 4 + 3] = mRect.height() - (dbValue * 2 - 10);
-
+			mFFTPoints[i * 4 + 3] = mRect.height() - (dbValue * 2);
 		}
 
 		canvas.drawLines(mFFTPoints, mForePaint);
