@@ -9,6 +9,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -89,6 +92,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 		ButterKnife.bind(this, view);
 		mPlayerSeekbar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
 
+		setHasOptionsMenu(true);
+
 		addLineRenderer();
 
 		return view;
@@ -98,6 +103,20 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 	public void onDestroyView() {
 		super.onDestroyView();
 		ButterKnife.unbind(this);
+	}
+
+//	@Override
+//	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//		inflater.inflate(R.menu.menu_player, menu);
+//		super.onCreateOptionsMenu(menu, inflater);
+//	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+//		item.getItemId();
+
+		return super.onOptionsItemSelected(item);
 	}
 
 	// ------ UI actions (ui -> presenter) ------ //
@@ -195,8 +214,9 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 					}
 
 					public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
+						mVisualizerView.updateVisualizerFFT(bytes);
 					}
-				}, Visualizer.getMaxCaptureRate() / 2, true, false);
+				}, Visualizer.getMaxCaptureRate() / 2, true, true);
 
 		mVisualizer.setEnabled(true);
 	}

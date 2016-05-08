@@ -62,4 +62,8 @@
     <string name="dialog.edit">Edit</string>
     <string name="dialog.cancel">Cancel</string>
 
+    <!-- Visualizers -->
+    <string name="visualizer.Line">Line</string>
+    <string name="visualizer.Bars">Bars</string>
+
 </resources>

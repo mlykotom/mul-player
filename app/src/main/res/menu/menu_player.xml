@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/sort_album_name"
+            android:checked="true"
+            android:title="@string/menu.sort.album.name"
+            />
+
+        <item
+            android:id="@+id/sort_album_year"
+            android:title="@string/menu.sort.album.year"
+            />
+
+        <item
+            android:id="@+id/sort_album_songs_number"
+            android:title="@string/menu.sort.album.songs_number"
+            />
+    </group>
+
 </menu>

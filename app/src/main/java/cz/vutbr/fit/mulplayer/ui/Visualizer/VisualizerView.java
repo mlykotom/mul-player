@@ -1,3 +1,10 @@
+/**
+ * Copyright 2011, Felix Palmer
+ *
+ * Licensed under the MIT license:
+ * http://creativecommons.org/licenses/MIT/
+ */
+
 package cz.vutbr.fit.mulplayer.ui.Visualizer;
 
 import android.content.Context;
@@ -11,9 +18,12 @@ import android.view.View;
 public class VisualizerView extends View {
 
 	private byte[] mBytes;
+	private byte[] mBytesFFT;
 	private float[] mPoints;
+	private float[] mFFTPoints;
 	private Rect mRect = new Rect();
 	private Paint mForePaint = new Paint();
+	private int mDivisions;
 
 	public VisualizerView(Context context) {
 		super(context);
@@ -32,9 +42,15 @@ public class VisualizerView extends View {
 
 	private void init() {
 		mBytes = null;
-		mForePaint.setStrokeWidth(1f);
+		mBytesFFT = null;
+//		mForePaint.setStrokeWidth(1f);
+//		mForePaint.setAntiAlias(true);
+//		mForePaint.setColor(Color.rgb(0, 128, 255));
+
+		mForePaint.setStrokeWidth(50f);
 		mForePaint.setAntiAlias(true);
-		mForePaint.setColor(Color.rgb(0, 128, 255));
+		mForePaint.setColor(Color.argb(200, 56, 138, 252));
+		mDivisions=16;
 	}
 
 	public void updateVisualizer(byte[] bytes) {
@@ -42,9 +58,21 @@ public class VisualizerView extends View {
 		invalidate();
 	}
 
+	public void updateVisualizerFFT(byte[] bytes) {
+		mBytesFFT = bytes;
+		invalidate();
+	}
+
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
+
+//		drawAudioData(canvas);
+//		drawFFTData(canvas);
+
+	}
+
+	private void drawAudioData(Canvas canvas){
 		if (mBytes == null) {
 			return;
 		}
@@ -62,6 +90,33 @@ public class VisualizerView extends View {
 					/ 128;
 		}
 		canvas.drawLines(mPoints, mForePaint);
+	}
+
+	private void drawFFTData(Canvas canvas){
+		if (mBytesFFT == null) {
+			return;
+		}
+		if (mFFTPoints == null || mFFTPoints.length < mBytesFFT.length * 4) {
+			mFFTPoints = new float[mBytesFFT.length * 4];
+		}
+
+		mRect.set(0, 0, getWidth(), getHeight());
+
+		for (int i = 0; i < mBytesFFT.length / mDivisions; i++) {
+			mFFTPoints[i * 4] = i * 4 * mDivisions;
+			mFFTPoints[i * 4 + 2] = i * 4 * mDivisions;
+			byte rfk = mBytesFFT[mDivisions * i];
+			byte ifk = mBytesFFT[mDivisions * i + 1];
+			float magnitude = (rfk * rfk + ifk * ifk);
+			int dbValue = (int) (10 * Math.log10(magnitude));
+
+
+			mFFTPoints[i * 4 + 1] = mRect.height();
+			mFFTPoints[i * 4 + 3] = mRect.height() - (dbValue * 2 - 10);
+
+		}
+
+		canvas.drawLines(mFFTPoints, mForePaint);
 	}
 
 }
