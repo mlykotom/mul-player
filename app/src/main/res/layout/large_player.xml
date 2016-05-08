@@ -6,76 +6,99 @@
     android:layout_height="match_parent"
     >
 
-    <TextView
-        android:id="@+id/player_song_mime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        tools:text="MP3"
-        />
-
-    <ImageView
+    <cz.vutbr.fit.mulplayer.ui.ImageViewSquare
         android:id="@+id/player_album_art"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:layout_margin="16dp"
+        android:background="@color/primary"
         android:src="@drawable/ic_audio_placeholder"
         />
 
+    <cz.vutbr.fit.mulplayer.ui.Visualizer.VisualizerView
+        android:id="@+id/player_visualizer"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/player_album_art"
+        />
+
+    <TextView
+        android:id="@+id/player_artist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/player_visualizer"
+        android:layout_marginStart="16dp"
+        android:layout_toStartOf="@+id/player_playback_time"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        tools:text="Chet Faker"
+        />
+
+    <TextView
+        android:id="@+id/player_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/player_artist"
+        android:layout_marginBottom="4dp"
+        android:layout_marginStart="16dp"
+        android:layout_toStartOf="@+id/player_song_mime"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        tools:text="Gold"
+        />
 
     <TextView
         android:id="@+id/player_playback_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/player_album_art"
-        android:layout_centerHorizontal="true"
+        android:layout_alignBottom="@+id/player_artist"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         tools:text="00:34/03:35"
+        />
+
+    <TextView
+        android:id="@+id/player_song_mime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/player_playback_time"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        tools:text="MP3"
         />
 
     <SeekBar
         android:id="@+id/player_seekbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/playback_wrapper"
-        android:layout_alignLeft="@+id/playback_wrapper"
-        android:layout_alignRight="@+id/playback_wrapper"
-        android:layout_alignStart="@+id/playback_wrapper"
-        android:layout_below="@id/player_playback_time"
-        />
-
-    <TextView
-        android:id="@+id/player_artist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/player_seekbar"
-        android:layout_centerHorizontal="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        tools:text="Chet Faker"
-        />
-
-    <TextView
-        android:id="@+id/player_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/player_artist"
-        android:layout_centerHorizontal="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        tools:text="Gold"
+        android:layout_above="@+id/playback_wrapper"
+        android:layout_alignParentStart="true"
+        android:background="@color/primary"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
         />
 
     <LinearLayout
         android:id="@+id/playback_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/player_title"
-        android:layout_marginEnd="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
-        android:layout_marginStart="32dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/primary"
         android:gravity="center"
         android:orientation="horizontal"
+        android:paddingEnd="32dp"
+        android:paddingStart="32dp"
         >
 
         <android.support.design.widget.FloatingActionButton
@@ -93,7 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:src="@drawable/ic_play_arrow_black_24dp"
-            app:backgroundTint="@color/primary"
+            app:backgroundTint="@color/accent"
             />
 
         <android.support.design.widget.FloatingActionButton
@@ -104,24 +127,5 @@
             app:backgroundTint="@color/accent"
             app:fabSize="mini"
             />
-
     </LinearLayout>
-
-    <cz.vutbr.fit.mulplayer.ui.Visualizer.VisualizerView
-        android:id="@+id/player_visualizer"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_below="@+id/playback_wrapper"
-        />
-
-    <!--<android.support.design.widget.FloatingActionButton-->
-    <!--android:id="@+id/player_queue_button"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentBottom="true"-->
-    <!--android:layout_alignParentEnd="true"-->
-    <!--android:layout_margin="16dp"-->
-    <!--android:src="@drawable/ic_queue_music_black_24dp"-->
-    <!--/>-->
-
 </RelativeLayout>

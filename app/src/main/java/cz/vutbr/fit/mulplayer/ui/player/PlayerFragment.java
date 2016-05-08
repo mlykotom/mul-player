@@ -136,7 +136,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 
 	@Override
 	public void setAlbumArtwork(Uri albumArtwork) {
-		Picasso.with(getActivity()).load(albumArtwork).transform(sCircleTransformation).placeholder(R.drawable.ic_audio_placeholder).into(mPlayerAlbumArt);
+		Picasso.with(getActivity()).load(albumArtwork).placeholder(R.drawable.ic_audio_placeholder).into(mPlayerAlbumArt);
 		// TODO maybe optimize for loading only once
 		Picasso.with(getActivity()).load(albumArtwork).placeholder(R.drawable.ic_audio_placeholder).into(mMiniPlayerAlbumArt);
 	}
