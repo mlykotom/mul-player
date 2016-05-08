@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
-
+    <!--
     <cz.vutbr.fit.mulplayer.ui.ImageViewSquare
         android:id="@+id/player_album_art"
         android:layout_width="match_parent"
@@ -17,54 +17,63 @@
         android:background="@color/primary"
         android:src="@drawable/ic_audio_placeholder"
         />
-
-    <cz.vutbr.fit.mulplayer.ui.Visualizer.VisualizerView
-        android:id="@+id/player_visualizer"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_below="@+id/player_album_art"
+    -->
+    <cz.vutbr.fit.mulplayer.ui.ImageViewSquare
+        android:id="@+id/player_album_art"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
+        android:layout_margin="16dp"
+        android:background="@color/primary"
+        android:src="@drawable/ic_audio_placeholder"
         />
 
     <TextView
         android:id="@+id/player_artist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/player_visualizer"
-        android:layout_marginStart="16dp"
-        android:layout_toStartOf="@+id/player_playback_time"
+        android:gravity="center"
         android:ellipsize="end"
         android:maxLines="1"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         tools:text="Chet Faker"
-        />
+        android:layout_alignStart="@+id/player_visualizer"
+        android:layout_below="@+id/player_album_art"
+        android:layout_alignEnd="@+id/player_visualizer" />
 
     <TextView
         android:id="@+id/player_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/player_artist"
         android:layout_marginBottom="4dp"
-        android:layout_marginStart="16dp"
-        android:layout_toStartOf="@+id/player_song_mime"
         android:ellipsize="end"
+        android:gravity="center"
         android:maxLines="1"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         tools:text="Gold"
+        android:layout_below="@+id/player_artist"
+        android:layout_alignStart="@+id/player_artist"
+        android:layout_alignEnd="@+id/player_artist" />
+
+    <cz.vutbr.fit.mulplayer.ui.Visualizer.VisualizerView
+        android:id="@+id/player_visualizer"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_below="@+id/player_title"
         />
 
     <TextView
         android:id="@+id/player_playback_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/player_artist"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         tools:text="00:34/03:35"
-        />
+        android:layout_below="@+id/player_seekbar"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/player_song_mime"
@@ -82,9 +91,9 @@
         android:id="@+id/player_seekbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/playback_wrapper"
+        android:layout_below="@+id/playback_wrapper"
         android:layout_alignParentStart="true"
-        android:background="@color/primary"
+
         android:paddingBottom="8dp"
         android:paddingTop="8dp"
         />
@@ -93,8 +102,8 @@
         android:id="@+id/playback_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/primary"
+        android:layout_below="@+id/player_visualizer"
+
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingEnd="32dp"

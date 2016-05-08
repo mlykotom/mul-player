@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/player.mini.height"
-    android:background="@color/primary"
+    android:background="@color/gray_light"
     >
 
     <ImageView
@@ -29,7 +29,7 @@
         android:layout_toEndOf="@+id/mini_player_album_art"
         android:layout_toStartOf="@+id/mini_player_button_play_pause"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        android:textColor="@color/overlay_text"
+        android:textColor="@color/primary_light"
         tools:text="Chet Faker"
         />
 

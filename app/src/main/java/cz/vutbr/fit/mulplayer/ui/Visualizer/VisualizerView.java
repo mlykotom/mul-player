@@ -50,7 +50,7 @@ public class VisualizerView extends View {
 
 		mForePaint.setStrokeWidth(1f);
 		mForePaint.setAntiAlias(true);
-		mForePaint.setColor(Color.rgb(0, 128, 255));
+		mForePaint.setColor(Color.rgb(255, 237, 235));
 		mSelectedVisualizerType = R.id.visualizer_line;
 //		mForePaint.setStrokeWidth(50f);
 //		mForePaint.setAntiAlias(true);
@@ -70,15 +70,15 @@ public class VisualizerView extends View {
 
 	public void onVisualizerTypeChanged(int id){
 		if (id == R.id.visualizer_line){
-			mForePaint.setStrokeWidth(1f);
+			mForePaint.setStrokeWidth(3f);
 			mForePaint.setAntiAlias(true);
-			mForePaint.setColor(Color.rgb(0, 128, 255));
+			mForePaint.setColor(Color.rgb(255, 237, 235));
 		}
 
 		if (id == R.id.visualizer_bars){
 			mForePaint.setStrokeWidth(50f);
 			mForePaint.setAntiAlias(true);
-			mForePaint.setColor(Color.argb(200, 56, 138, 252));
+			mForePaint.setColor(Color.argb(255, 237, 235, 252));
 		}
 
 		mSelectedVisualizerType = id;
