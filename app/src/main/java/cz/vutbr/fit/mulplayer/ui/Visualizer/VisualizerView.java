@@ -1,6 +1,6 @@
 /**
  * Copyright 2011, Felix Palmer
- *
+ * <p/>
  * Licensed under the MIT license:
  * http://creativecommons.org/licenses/MIT/
  */
@@ -47,15 +47,11 @@ public class VisualizerView extends View {
 		mBytes = null;
 		mBytesFFT = null;
 
-
 		mForePaint.setStrokeWidth(1f);
 		mForePaint.setAntiAlias(true);
 		mForePaint.setColor(Color.rgb(255, 237, 235));
 		mSelectedVisualizerType = R.id.visualizer_line;
-//		mForePaint.setStrokeWidth(50f);
-//		mForePaint.setAntiAlias(true);
-//		mForePaint.setColor(Color.argb(200, 56, 138, 252));
-		mDivisions=16;
+		mDivisions = 16;
 	}
 
 	public void updateVisualizer(byte[] bytes) {
@@ -68,17 +64,20 @@ public class VisualizerView extends View {
 		invalidate();
 	}
 
-	public void onVisualizerTypeChanged(int id){
-		if (id == R.id.visualizer_line){
-			mForePaint.setStrokeWidth(3f);
-			mForePaint.setAntiAlias(true);
-			mForePaint.setColor(Color.rgb(255, 237, 235));
-		}
+	public void onVisualizerTypeChanged(int id) {
+		switch (id) {
+			case R.id.visualizer_line:
+				mForePaint.setStrokeWidth(3f);
+				mForePaint.setAntiAlias(true);
+				mForePaint.setColor(Color.rgb(255, 237, 235));
+				break;
 
-		if (id == R.id.visualizer_bars){
-			mForePaint.setStrokeWidth(50f);
-			mForePaint.setAntiAlias(true);
-			mForePaint.setColor(Color.argb(255, 237, 235, 252));
+			default:
+			case R.id.visualizer_bars:
+				mForePaint.setStrokeWidth(50f);
+				mForePaint.setAntiAlias(true);
+				mForePaint.setColor(Color.argb(255, 237, 235, 252));
+				break;
 		}
 
 		mSelectedVisualizerType = id;
@@ -88,16 +87,19 @@ public class VisualizerView extends View {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 
-		if (mSelectedVisualizerType == R.id.visualizer_line) {
-			drawAudioData(canvas);
-		}
-		if (mSelectedVisualizerType == R.id.visualizer_bars) {
-			drawFFTData(canvas);
-		}
+		switch (mSelectedVisualizerType) {
+			case R.id.visualizer_line:
+				drawAudioData(canvas);
+				break;
 
+			default: // if we dont have type, set this
+			case R.id.visualizer_bars:
+				drawFFTData(canvas);
+				break;
+		}
 	}
 
-	private void drawAudioData(Canvas canvas){
+	private void drawAudioData(Canvas canvas) {
 		if (mBytes == null) {
 			return;
 		}
@@ -117,7 +119,7 @@ public class VisualizerView extends View {
 		canvas.drawLines(mPoints, mForePaint);
 	}
 
-	private void drawFFTData(Canvas canvas){
+	private void drawFFTData(Canvas canvas) {
 		if (mBytesFFT == null) {
 			return;
 		}

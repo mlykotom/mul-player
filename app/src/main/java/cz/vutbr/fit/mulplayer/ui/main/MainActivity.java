@@ -147,6 +147,9 @@ public class MainActivity extends BaseActivity implements BaseActivity.IPlayerVi
 		setIndicator(INDICATOR_DISCARD);
 		mMenu.clear();
 		getMenuInflater().inflate(R.menu.menu_player, mMenu);
+
+		MenuItem selectedItem = mMenu.findItem(mPlayerFragment.mVisualizerType);
+		if (selectedItem != null) selectedItem.setChecked(true);
 	}
 
 	/**

@@ -1,12 +1,15 @@
 package cz.vutbr.fit.mulplayer.model;
 
 import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import cz.vutbr.fit.mulplayer.R;
 import cz.vutbr.fit.mulplayer.model.entity.Song;
+import cz.vutbr.fit.mulplayer.ui.main.MainActivity;
 
 /**
  * @author mlyko
@@ -39,9 +42,12 @@ public class MusicNotificationController {
 			mMusicService.stopForeground(true);
 		}
 	};
+	private PendingIntent mOnClickPending;
 
 	public MusicNotificationController(MusicService service) {
 		mMusicService = service;
+
+		mOnClickPending = PendingIntent.getActivity(service, 0, new Intent(service, MainActivity.class), 0);
 
 		mBuilder = new Notification.Builder(mMusicService);
 		mPrevAction = new Notification.Action(R.drawable.ic_skip_previous_black_24dp, "Previous", MusicService.getFireActionPending(mMusicService, REQUEST_PREV, MusicService.CMD_PREVIOUS));
@@ -70,13 +76,13 @@ public class MusicNotificationController {
 				.addAction(mPrevAction)
 				.addAction(mPlayAction)
 				.addAction(mNextAction)
+				.setContentIntent(mOnClickPending)
 				.setSmallIcon(R.drawable.ic_play_arrow_black_24dp)
 				.setContentTitle(activeSong.getArtist())
 				.setContentText(activeSong.getTitle());
 
 
 		Notification notification = mBuilder.build();
-
 		cancel();
 		mMusicService.startForeground(NOTIFICATION_ID, notification);
 		mStarted = true;

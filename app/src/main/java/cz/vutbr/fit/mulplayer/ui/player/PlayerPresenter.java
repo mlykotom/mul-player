@@ -19,10 +19,10 @@ import cz.vutbr.fit.mulplayer.ui.BaseFragmentPresenter;
  */
 public class PlayerPresenter extends BaseFragmentPresenter {
 	private static final String TAG = PlayerPresenter.class.getSimpleName();
+	private static final Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 
 	public PlayerFragment mFragment;
 	public Song mActualSong;
-
 	int mEndTime;
 	int mActualTime;
 
@@ -65,8 +65,6 @@ public class PlayerPresenter extends BaseFragmentPresenter {
 		if (actualTime == mActualTime) return;
 		MusicService.fireAction(mFragment.getActivity(), MusicService.CMD_SEEK_TO, actualTime);
 	}
-
-	final public static Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 
 	/**
 	 * When song is playing and time changed (called every 100ms) so that UI can be refreshed

@@ -2,6 +2,8 @@ package cz.vutbr.fit.mulplayer.ui.player;
 
 
 import android.Manifest;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.audiofx.Visualizer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
@@ -40,10 +41,11 @@ import permissions.dispatcher.RuntimePermissions;
  * @since 10.04.2016
  */
 @RuntimePermissions
-public class PlayerFragment extends BaseFragment implements IPlayerView {
+public class PlayerFragment extends BaseFragment implements IPlayerView, Visualizer.OnDataCaptureListener {
 	private static final String TAG = PlayerFragment.class.getSimpleName();
-	PlayerPresenter mPresenter;
 	private static Transformation sCircleTransformation = new CircleTransform();
+	private static final String PREF_VISUALIZER = "pref_visualizer";
+
 	// mini player
 	@Bind(R.id.mini_player_album_art) ImageView mMiniPlayerAlbumArt;
 	@Bind(R.id.mini_player_artist) TextView mMiniPlayerArtist;
@@ -59,36 +61,21 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 	@Bind(R.id.player_playback_time) TextView mPlayerPlaybackTime;
 	@Bind(R.id.player_album_art) ImageView mPlayerAlbumArt;
 	@Bind(R.id.player_song_mime) TextView mPlayerSongMimeType;
-
 	@Bind(R.id.player_visualizer) public VisualizerView mVisualizerView;
+
 	private Visualizer mVisualizer;
+	PlayerPresenter mPresenter;
+	protected SharedPreferences mPreferences;
+	public int mVisualizerType;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		mBasePresenter = mPresenter = new PlayerPresenter(this);
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+		mPreferences = getPreferences(Context.MODE_PRIVATE);
+		mVisualizerType = mPreferences.getInt(PREF_VISUALIZER, R.id.visualizer_bars);
 		PlayerFragmentPermissionsDispatcher.setupVisualizerFxAndUIWithCheck(this);
-	}
-
-	@Override
-	public void onPause()
-	{
-		mVisualizer.release();
-		super.onPause();
-	}
-
-	@Override
-	public void onDestroy()
-	{
-		if (mVisualizer != null) mVisualizer.release();
-		super.onDestroy();
-	}
-
-	@Override
-	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		PlayerFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
 	}
 
 	@Override
@@ -100,7 +87,19 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 	@Override
 	public void onStop() {
 		super.onStop();
+		if (mVisualizer != null) mVisualizer.setEnabled(false);
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
 		if (mVisualizer != null) mVisualizer.release();
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		PlayerFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
 	}
 
 	@Override
@@ -109,11 +108,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 		View view = inflater.inflate(R.layout.fragment_player, container, false);
 		ButterKnife.bind(this, view);
 		mPlayerSeekbar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
-
 		setHasOptionsMenu(true);
-
-		addLineRenderer();
-
+		mVisualizerView.onVisualizerTypeChanged(mVisualizerType);
 		return view;
 	}
 
@@ -126,6 +122,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		item.setChecked(!item.isChecked());
+		mVisualizerType = item.getItemId();
+		mPreferences.edit().putInt(PREF_VISUALIZER, mVisualizerType).apply();
 		mVisualizerView.onVisualizerTypeChanged(item.getItemId());
 		return true;
 	}
@@ -166,7 +164,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 
 	@Override
 	public void setAlbumArtwork(Uri albumArtwork) {
-		Picasso.with(getActivity()).load(albumArtwork).placeholder(R.drawable.ic_audio_placeholder).into(mPlayerAlbumArt);
+		Picasso.with(getActivity()).load(albumArtwork).placeholder(R.drawable.ic_audio_placeholder).transform(sCircleTransformation).into(mPlayerAlbumArt);
 		// TODO maybe optimize for loading only once
 		Picasso.with(getActivity()).load(albumArtwork).placeholder(R.drawable.ic_audio_placeholder).into(mMiniPlayerAlbumArt);
 	}
@@ -194,7 +192,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 		} else {
 			mPlayerSongMimeType.setText(null);
 		}
-
 	}
 
 	@Override
@@ -218,37 +215,44 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 		// Create the Visualizer object and attach it to our media player.
 		mVisualizer = new Visualizer(Playback.getInstance().getMediaPlayer().getAudioSessionId());
 		mVisualizer.setCaptureSize(Visualizer.getCaptureSizeRange()[1]);
-		mVisualizer.setDataCaptureListener(
-				new Visualizer.OnDataCaptureListener() {
-					public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
-						if (mVisualizerView == null) {
-							Log.w(TAG, "attempt to update visualizer on empty view");
-							return;
-						}
-						mVisualizerView.updateVisualizer(bytes);
-					}
-
-					public void onFftDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
-						mVisualizerView.updateVisualizerFFT(bytes);
-					}
-				}, Visualizer.getMaxCaptureRate() / 2, true, true);
-
-		mVisualizer.setEnabled(true);
+		mVisualizer.setDataCaptureListener(this, Visualizer.getMaxCaptureRate() / 2, true, true);
 	}
 
-	private void addLineRenderer() {
-//		Paint linePaint = new Paint();
-//		linePaint.setStrokeWidth(1f);
-//		linePaint.setAntiAlias(true);
-//		linePaint.setColor(Color.argb(88, 0, 128, 255));
-//
-//		Paint lineFlashPaint = new Paint();
-//		lineFlashPaint.setStrokeWidth(5f);
-//		lineFlashPaint.setAntiAlias(true);
-//		lineFlashPaint.setColor(Color.argb(188, 255, 255, 255));
-//		LineRenderer lineRenderer = new LineRenderer(linePaint, lineFlashPaint, true);
-//		mVisualizerView.addRenderer(lineRenderer);
-		//mVisualizer.link(Playback.getInstance(null).getMediaPlayer());
+	/**
+	 * Method called when a new waveform capture is available.
+	 * <p>Data in the waveform buffer is valid only within the scope of the callback.
+	 * Applications which needs access to the waveform data after returning from the callback
+	 * should make a copy of the data instead of holding a reference.
+	 *
+	 * @param visualizer   Visualizer object on which the listener is registered.
+	 * @param waveform     array of bytes containing the waveform representation.
+	 * @param samplingRate sampling rate of the audio visualized.
+	 */
+	@Override
+	public void onWaveFormDataCapture(Visualizer visualizer, byte[] waveform, int samplingRate) {
+		if (mVisualizerView == null) {
+			Log.w(TAG, "attempt to update visualizer on empty view");
+			return;
+		}
+		mVisualizerView.updateVisualizer(waveform);
 	}
 
+	/**
+	 * Method called when a new frequency capture is available.
+	 * <p>Data in the fft buffer is valid only within the scope of the callback.
+	 * Applications which needs access to the fft data after returning from the callback
+	 * should make a copy of the data instead of holding a reference.
+	 *
+	 * @param visualizer   Visualizer object on which the listener is registered.
+	 * @param fft          array of bytes containing the frequency representation.
+	 * @param samplingRate sampling rate of the audio visualized.
+	 */
+	@Override
+	public void onFftDataCapture(Visualizer visualizer, byte[] fft, int samplingRate) {
+		if (mVisualizerView == null) {
+			Log.w(TAG, "attempt to update visualizer on empty view");
+			return;
+		}
+		mVisualizerView.updateVisualizerFFT(fft);
+	}
 }

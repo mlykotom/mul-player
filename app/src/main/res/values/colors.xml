@@ -4,9 +4,9 @@
     <color name="primary">#ED1600</color>
     <color name="primary_dark">#C21200</color>
     <color name="primary_light">#FF2913</color>
-    <color name="accent">#FF2913</color>
-    <color name="primary_text">#FFF</color>
-    <color name="secondary_text">#FFF</color>
+    <color name="accent">#03A9F4</color>
+    <color name="primary_text">#FFFFFF</color>
+    <color name="secondary_text">#FFFFFF</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#60B6B6B6</color>
 
