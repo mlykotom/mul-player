@@ -147,7 +147,6 @@ public class MainActivity extends BaseActivity implements BaseActivity.IPlayerVi
 		setIndicator(INDICATOR_DISCARD);
 		mMenu.clear();
 		getMenuInflater().inflate(R.menu.menu_player, mMenu);
-//		mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 	}
 
 	/**
@@ -163,7 +162,6 @@ public class MainActivity extends BaseActivity implements BaseActivity.IPlayerVi
 			if (menuGetter.getMenuResource() <= 0) return;
 			getMenuInflater().inflate(menuGetter.getMenuResource(), mMenu);
 		}
-//		mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 	}
 
 

@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
@@ -40,6 +41,7 @@ import permissions.dispatcher.RuntimePermissions;
  */
 @RuntimePermissions
 public class PlayerFragment extends BaseFragment implements IPlayerView {
+	private static final String TAG = PlayerFragment.class.getSimpleName();
 	PlayerPresenter mPresenter;
 	private static Transformation sCircleTransformation = new CircleTransform();
 	// mini player
@@ -65,6 +67,7 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		mBasePresenter = mPresenter = new PlayerPresenter(this);
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 		PlayerFragmentPermissionsDispatcher.setupVisualizerFxAndUIWithCheck(this);
 	}
 
@@ -98,7 +101,6 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 	public void onStop() {
 		super.onStop();
 		if (mVisualizer != null) mVisualizer.release();
-//		if (mVisualizer != null) mVisualizer.setEnabled(false);
 	}
 
 	@Override
@@ -121,16 +123,8 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 		ButterKnife.unbind(this);
 	}
 
-//	@Override
-//	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//		inflater.inflate(R.menu.menu_player, menu);
-//		super.onCreateOptionsMenu(menu, inflater);
-//	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-
-		Log.d("vajca",Integer.toString(item.getItemId()));
 		item.setChecked(!item.isChecked());
 		mVisualizerView.onVisualizerTypeChanged(item.getItemId());
 		return true;
@@ -227,6 +221,10 @@ public class PlayerFragment extends BaseFragment implements IPlayerView {
 		mVisualizer.setDataCaptureListener(
 				new Visualizer.OnDataCaptureListener() {
 					public void onWaveFormDataCapture(Visualizer visualizer, byte[] bytes, int samplingRate) {
+						if (mVisualizerView == null) {
+							Log.w(TAG, "attempt to update visualizer on empty view");
+							return;
+						}
 						mVisualizerView.updateVisualizer(bytes);
 					}
 
