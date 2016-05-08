@@ -28,6 +28,7 @@ public class App extends Application {
 		built.setLoggingEnabled(false);
 		Picasso.setSingletonInstance(built);
 
+		// tries to rebuild queue if none
 		if (DataRepository.getInstance().mQueueSongs.size() == 0) {
 			Log.i(this.getPackageName(), "No queue in App, trying to rebuild it.");
 			MusicService.fireAction(this, MusicService.CMD_REBUILD_QUEUE);

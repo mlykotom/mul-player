@@ -1,7 +1,6 @@
 package cz.vutbr.fit.mulplayer.model.persistance;
 
 import android.content.Context;
-import android.content.CursorLoader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.util.LongSparseArray;
@@ -62,7 +61,7 @@ public class DataRepository {
 		}
 		while (cursor.moveToNext());
 		// save queue of song ids
-		setQueue(findSongId, mStoreQueueIds);
+		setQueue(foundSongPos, mStoreQueueIds);
 		return foundSongPos;
 	}
 
@@ -75,26 +74,10 @@ public class DataRepository {
 		queueSongsAndFindPosition(cursor, 0);
 	}
 
-	public void rebuildQueue() {
-		long actualSongId = mSharedPreferences.getLong(PERSISTENCE_ACTUAL_ID, Constants.NO_ID);
-		Set<String> queuedIds = mSharedPreferences.getStringSet(PERSISTENCE_QUEUE_IDS, null);
-		if (queuedIds == null) return;
-
-		CursorLoader cursorLoader = new CursorLoader(App.getContext());
-//		cursorLoader.setUri(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
-//		cursorLoader.setProjection(Constants.SONG_PROJECTOR);
-////		cursorLoader.registerListener(1, this);
-//		cursorLoader.setSelection();
-//		cursorLoader.startLoading();
-//		for (String idParsed : queuedIds) {
-//
-//		}
-	}
-
-	public void setQueue(long queueId, Set<String> queueIds) {
+	public void setQueue(int queueIndex, Set<String> queueIds) {
 		mSharedPreferences.edit()
 				.putStringSet(PERSISTENCE_QUEUE_IDS, queueIds)
-				.putLong(PERSISTENCE_ACTUAL_ID, queueId)
+				.putInt(PERSISTENCE_ACTUAL_ID, queueIndex)
 				.apply();
 	}
 
@@ -102,10 +85,13 @@ public class DataRepository {
 		return mSharedPreferences.getStringSet(PERSISTENCE_QUEUE_IDS, null);
 	}
 
-	public void saveActualSongId(long queueId) {
+	public void setActualSongIndex(int queueIndex) {
 		mSharedPreferences.edit()
-				.putLong(PERSISTENCE_ACTUAL_ID, queueId)
+				.putInt(PERSISTENCE_ACTUAL_ID, queueIndex)
 				.apply();
 	}
 
+	public int getSavedActualSongIndex() {
+		return mSharedPreferences.getInt(PERSISTENCE_ACTUAL_ID, Constants.NO_POSITION);
+	}
 }

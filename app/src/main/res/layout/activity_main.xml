@@ -53,9 +53,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
+        android:visibility="gone"
         app:behavior_hideable="false"
         app:behavior_peekHeight="@dimen/player.mini.height.with_shadow"
         app:layout_behavior="@string/bottom_sheet_behavior"
+        tools:visibility="visible"
         >
 
         <LinearLayout
