@@ -12,6 +12,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -19,6 +20,7 @@ import cz.vutbr.fit.mulplayer.R;
 
 public class VisualizerView extends View {
 
+	private Context mContext;
 	private byte[] mBytes;
 	private byte[] mBytesFFT;
 	private float[] mPoints;
@@ -30,16 +32,19 @@ public class VisualizerView extends View {
 
 	public VisualizerView(Context context) {
 		super(context);
+		mContext = context;
 		init();
 	}
 
 	public VisualizerView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		mContext = context;
 		init();
 	}
 
 	public VisualizerView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
+		mContext = context;
 		init();
 	}
 
@@ -49,7 +54,7 @@ public class VisualizerView extends View {
 
 		mForePaint.setStrokeWidth(1f);
 		mForePaint.setAntiAlias(true);
-		mForePaint.setColor(Color.rgb(255, 237, 235));
+		mForePaint.setColor(ContextCompat.getColor(mContext, R.color.primary));
 		mSelectedVisualizerType = R.id.visualizer_line;
 		mDivisions = 16;
 	}
@@ -65,18 +70,20 @@ public class VisualizerView extends View {
 	}
 
 	public void onVisualizerTypeChanged(int id) {
+		int color = ContextCompat.getColor(mContext, R.color.primary);
+
 		switch (id) {
 			case R.id.visualizer_line:
 				mForePaint.setStrokeWidth(3f);
 				mForePaint.setAntiAlias(true);
-				mForePaint.setColor(Color.rgb(255, 237, 235));
+				mForePaint.setColor(color);
 				break;
 
 			default:
 			case R.id.visualizer_bars:
 				mForePaint.setStrokeWidth(50f);
 				mForePaint.setAntiAlias(true);
-				mForePaint.setColor(Color.argb(255, 237, 235, 252));
+				mForePaint.setColor(color);
 				break;
 		}
 

@@ -1,63 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/player.mini.height"
-    android:background="@color/gray_light"
-    >
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="@dimen/player.mini.height"
+	android:background="@color/overlay_text"
+	>
 
-    <ImageView
-        android:id="@+id/mini_player_album_art"
-        android:layout_width="@dimen/player.mini.height"
-        android:layout_height="@dimen/player.mini.height"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:background="@color/primary_light"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_audio_placeholder"
-        />
+	<ImageView
+		android:id="@+id/mini_player_album_art"
+		android:layout_width="@dimen/player.mini.height"
+		android:layout_height="@dimen/player.mini.height"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"
+		android:layout_alignParentTop="true"
+		android:background="@color/primary_light"
+		android:scaleType="fitCenter"
+		android:src="@drawable/ic_audio_placeholder"
+		/>
 
-    <TextView
-        android:id="@+id/mini_player_artist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_toEndOf="@+id/mini_player_album_art"
-        android:layout_toStartOf="@+id/mini_player_button_play_pause"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        android:textColor="@color/primary_light"
-        tools:text="Chet Faker"
-        />
+	<TextView
+		android:id="@+id/mini_player_artist"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="8dp"
+		android:layout_marginTop="4dp"
+		android:layout_toEndOf="@+id/mini_player_album_art"
+		android:layout_toStartOf="@+id/mini_player_button_play_pause"
+		android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+		android:textColor="@color/primary_dark"
+		tools:text="Chet Faker"
+		/>
 
-    <TextView
-        android:id="@+id/mini_player_title"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_below="@id/mini_player_artist"
-        android:layout_marginStart="8dp"
-        android:layout_toEndOf="@+id/mini_player_album_art"
-        android:layout_toStartOf="@+id/mini_player_button_play_pause"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textColor="@color/overlay_text"
-        tools:text="Gold"
-        />
+	<TextView
+		android:id="@+id/mini_player_title"
+		android:layout_width="wrap_content"
+		android:layout_height="match_parent"
+		android:layout_below="@id/mini_player_artist"
+		android:layout_marginStart="8dp"
+		android:layout_toEndOf="@+id/mini_player_album_art"
+		android:layout_toStartOf="@+id/mini_player_button_play_pause"
+		android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+		tools:text="Gold"
+		/>
 
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/mini_player_button_play_pause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:src="@drawable/ic_play_arrow_black_24dp"
-        app:fabSize="mini"
-        />
+	<android.support.design.widget.FloatingActionButton
+		android:id="@+id/mini_player_button_play_pause"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentEnd="true"
+		android:layout_alignParentRight="true"
+		android:layout_centerVertical="true"
+		android:layout_marginEnd="8dp"
+		android:layout_marginRight="8dp"
+		android:src="@drawable/ic_play_arrow_black_24dp"
+		app:fabSize="mini"
+		/>
 
 </RelativeLayout>

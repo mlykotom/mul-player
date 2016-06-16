@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -170,12 +171,12 @@ public class SongDetailDialog extends SimpleDialogFragment {
 		// setup delete button as red
 		Button neutralButton = (Button) getDialog().findViewById(R.id.sdl_button_neutral);
 		if (neutralButton != null) {
-			neutralButton.setTextColor(getResources().getColor(R.color.red));
+			neutralButton.setTextColor(ContextCompat.getColor(getActivity(), R.color.red));
 		}
 
 		Button negativeButton = (Button) getDialog().findViewById(R.id.sdl_button_negative);
 		if (negativeButton != null) {
-			negativeButton.setTextColor(getResources().getColor(R.color.gray));
+			negativeButton.setTextColor(ContextCompat.getColor(getActivity(), R.color.gray));
 		}
 	}
 
