@@ -121,11 +121,18 @@ public class PlayerFragment extends BaseFragment implements IPlayerView, Visuali
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		item.setChecked(!item.isChecked());
-		mVisualizerType = item.getItemId();
-		mPreferences.edit().putInt(PREF_VISUALIZER, mVisualizerType).apply();
-		mVisualizerView.onVisualizerTypeChanged(item.getItemId());
-		return true;
+		int itemId = item.getItemId();
+		switch (itemId) {
+			case R.id.visualizer_line:
+			case R.id.visualizer_bars:
+				item.setChecked(!item.isChecked());
+				mVisualizerType = itemId;
+				mPreferences.edit().putInt(PREF_VISUALIZER, mVisualizerType).apply();
+				mVisualizerView.onVisualizerTypeChanged(itemId);
+				return true;
+		}
+
+		return super.onOptionsItemSelected(item);
 	}
 
 	// ------ UI actions (ui -> presenter) ------ //
